@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<help>
+  <intestazione>Help articolo</intestazione>
+  <tipodatabase>SQLSERVER</tipodatabase>
+  <query>
+    SELECT ar_codart,
+    ar_descr,
+    ar_desint,
+    ar_unmis
+    FROM artico
+  </query>
+
+  <queryDescrizione>
+    SELECT ar_codart,
+    ar_descr,
+    ar_desint,
+    ar_unmis
+    FROM artico
+  </queryDescrizione>
+  <campoRitorno>ar_codart</campoRitorno>
+  <inserimento></inserimento>
+  <modifica></modifica>
+  <campi>
+    <campo>
+      <nomeSql>ar_codart</nomeSql>
+      <descrizione>Codice Anagrafico</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>ar_descr</nomeSql>
+      <descrizione>Descrizione</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>ar_desint</nomeSql>
+      <descrizione>Nomignolo</descrizione>
+      <numerico>false</numerico>
+    </campo>
+  </campi>
+</help>

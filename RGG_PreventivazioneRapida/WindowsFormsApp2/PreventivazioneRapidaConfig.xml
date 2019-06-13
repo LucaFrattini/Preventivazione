@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <ip>10.32.11.191</ip>
+  <port>1434</port><!-- la porta non viene presa per il momento-->
+  <database>RGG</database>
+  <user>sa</user>
+  <password>X$agilis</password>
+
+  <AllQuery>
+    <Articolo>
+      <Query>
+        SELECT ar_codart, ar_descr, ar_desint, ar_unmis, ar_coddb
+        FROM dbo.artico
+        <!--WHERE ar_codart=@articolo-->
+      </Query>
+      <PK>ar_codart</PK>
+    </Articolo>
+    <Cliente>
+      <Query>
+        SELECT an_conto, an_descr1, an_tipo, an_indir, an_cap, an_citta, an_pariva
+        FROM anagra
+        WHERE an_tipo='C'
+        <!--AND an_conto=@cliente-->
+      </Query>
+      <PK>an_conto</PK>
+    </Cliente>
+    <!-- questa query serve per ottenere il codice della distinta base. @articolo viene passato dal programma.
+    Non dovrebbe venire mai modificata-->
+    <CodDistintaBase>
+      SELECT  ar_coddb FROM artico WHERE ar_codart = '@articolo' AND ar_coddb IS NOT NULL
+    </CodDistintaBase>
+    <!--Query per popolare la datagrid del programma. Rinominare le colonne con un "as" per avere la giusta intestazione anche nella datagrid.-->
+    <!--Usa questo articolo per fare le prove:
+    SB02AL1505.0-1_02: una sola lavorazione e SB02AL1505.0ANELLO: due lavorazioni e un solo materiale-->
+    <DistintaBase>
+      select cast(ROW_NUMBER() OVER(ORDER BY CODICE_PADRE) as varchar) as rowindex, * from(
+      (select md_coddb AS CODICE_PADRE, md_codfigli AS 'Codice Art', 0 AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Quantita`', ROUND(0, 4) AS 'Setup Mac',  ROUND(0, 4) AS 'Setup Uomo',
+      ROUND(0, 4) AS 'Tempo Mac',  ROUND(0, 4) AS 'Tempo Uomo',  apx_ultcos AS 'Costo Art',  ROUND(0, 2) AS 'Costo Att Mac',  ROUND(0, 2) AS 'Costo Att Uomo',  ROUND(0, 2) AS 'Costo Mac',  ROUND(0, 2) AS 'Costo Uomo',  ROUND(cast(0 as float), 2) as 'Totale',  ROUND(cast(0 as float), 2) as 'Totale + %Var'
+      from movdis join artico on md_codfigli=ar_codart  join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' )
+      UNION
+      (select dd_coddb AS 'CODICE PADRE', '' AS 'CODICE ART', dd_codlavo AS CODICE_LAV, tb_deslavo AS DESCRIZIONE_ART__CENTRO_DI_LAVORO, 1 AS QUANTITA, dd_tempatt AS SETUP_MAC, dd_tempattmo AS SETUP_UOMO,
+      dd_tempese AS TEMPO_MAC, dd_tempesemo AS TEMPO_UOMO, 0 AS COSTO_ART, tb_cmacoratt AS COSTO_ATT_MACC, tb_pagaoratt AS COSTO_ATT_UOMO, tb_cmacora AS COSTO_MACC, tb_pagaora AS COSTO_UOMO,
+      0 as Totale, 0 as TotaleVar
+      from cicli join tablavo on dd_codlavo=tb_codlavo  join tabcent on dd_codcent=tb_codcent where dd_coddb = '@CodDistBase')) as distintabase
+    </DistintaBase>
+  </AllQuery>
+
+  <!--Lista dei campi della tabella che è possibile modificare-->
+  <CampiModificabili>
+    <Campo>md_quantUMP</Campo>
+    <Campo>md_UMP</Campo>
+  </CampiModificabili>
+
+  <Quantita>
+    <q1>1</q1>
+    <q2>10</q2>
+    <q3>100</q3>
+  </Quantita>
+  <!--XML per l'helper-->
+  <helpArticolo>Help_articoli.xml</helpArticolo>
+  <helpCliente>Help_clienti.xml</helpCliente>
+  
+  <FO>Arial-12</FO>
+  <FL>Arial-15</FL>
+
+</configuration>
+

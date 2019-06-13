@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<help>
+  <intestazione>Help clienti</intestazione>
+  <tipodatabase>SQLSERVER</tipodatabase>
+  <query>
+    SELECT an_tipo, an_conto, an_descr1, an_indir, an_cap, an_citta, an_pariva
+    FROM anagra
+    WHERE an_tipo='C'
+  </query>
+
+  <queryDescrizione>
+    SELECT an_tipo, an_conto, an_descr1, an_indir, an_cap, an_citta, an_pariva
+    FROM anagra
+    WHERE an_tipo='C'
+  </queryDescrizione>
+  <campoRitorno>an_conto</campoRitorno>
+  <inserimento></inserimento>
+  <modifica></modifica>
+  <campi>
+    <campo>
+      <nomeSql>an_conto</nomeSql>
+      <descrizione>Codice Anagrafico</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>an_descr1</nomeSql>
+      <descrizione>Descrizione</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>an_indir</nomeSql>
+      <descrizione>Nomignolo</descrizione>
+      <numerico>false</numerico>
+    </campo>
+  </campi>
+</help>

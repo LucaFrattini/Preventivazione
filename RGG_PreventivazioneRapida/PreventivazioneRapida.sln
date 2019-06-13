@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreventivazioneRapida", "WindowsFormsApp2\PreventivazioneRapida.csproj", "{94465CA5-7055-4223-9B4A-AE01DF7A6970}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94465CA5-7055-4223-9B4A-AE01DF7A6970}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94465CA5-7055-4223-9B4A-AE01DF7A6970}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94465CA5-7055-4223-9B4A-AE01DF7A6970}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94465CA5-7055-4223-9B4A-AE01DF7A6970}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {671B64AA-10F5-4A0C-95C1-5E569FAA80EA}
+	EndGlobalSection
+EndGlobal

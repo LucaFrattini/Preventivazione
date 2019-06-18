@@ -99,6 +99,13 @@ namespace PreventivazioneRapida
                     key[0] = ds.Tables["Preventivi"].Columns[0];
                     ds.Tables["Preventivi"].PrimaryKey = key;
                 }
+                else if(nomeTabella == "DistintaBase")
+                {
+                    ds.Tables["DistintaBase"].Columns.Add("setup mac decimale");
+                    ds.Tables["DistintaBase"].Columns.Add("setup uomo decimale");
+                    ds.Tables["DistintaBase"].Columns.Add("tempo mac decimale");
+                    ds.Tables["DistintaBase"].Columns.Add("tempo uomo decimale");
+                }
                 sqlserverConn.Close();               
             }
             catch
@@ -125,9 +132,9 @@ namespace PreventivazioneRapida
             {
                 sqlserverConn.Open();
                 int idpreventivo = 0, idpreventivoass = 0;
-                string queryTestata = "INSERT INTO preventivi (cliente, articolo, quantita, variazione, totale, totalevar, datacreazione, note) VALUES ('" 
+                string queryTestata = "INSERT INTO preventivi (cliente, articolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note) VALUES ('" 
                     + valoriTestata[0] + "', '" + valoriTestata[1] + "', " + valoriTestata[2].Replace(',','.') + ", " + valoriTestata[3].Replace(',', '.') + ", " + valoriTestata[4].Replace(',', '.') + ", " 
-                    + valoriTestata[5].Replace(',', '.') + ", CURRENT_TIMESTAMP, '" + valoriTestata[6] + "')";
+                    + valoriTestata[5].Replace(',', '.') + ", " + valoriTestata[6].Replace(',', '.') + ", CURRENT_TIMESTAMP, '" + valoriTestata[7] + "')";
                 SqlCommand command = new SqlCommand(queryTestata, sqlserverConn);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Close();
@@ -209,7 +216,7 @@ namespace PreventivazioneRapida
         public List<string> OttieniTestata(string idpreventivo)
         {
             List<string> testata = new List<string>();
-            string query = "select cliente, articolo, quantita, note, variazione, datacreazione from preventivi where id = '" + idpreventivo + "'";
+            string query = "select cliente, articolo, quantita, note, variazione, variazionelav, datacreazione from preventivi where id = '" + idpreventivo + "'";
             sqlserverConn.Open();
             using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))
             {
@@ -221,6 +228,7 @@ namespace PreventivazioneRapida
                 testata.Add(dr[3].ToString());
                 testata.Add(dr[4].ToString());
                 testata.Add(dr[5].ToString());
+                testata.Add(dr[6].ToString());
                 dr.Close();
             }
             sqlserverConn.Close();
@@ -259,6 +267,125 @@ namespace PreventivazioneRapida
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+            }
+        }
+
+        public void FromDecimalToTime()
+        {          
+            foreach (DataRow dr in ds.Tables["DistintaBase"].Rows)
+            {
+                try
+                {
+                    double tempoDecimale = Double.Parse(dr["setup mac decimale"].ToString());
+                    int ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    double tempo = Math.Round((tempoDecimale * 60), 2);
+                    double minuti = (int)tempo;
+                    tempo = tempo - minuti;
+                    double secondi = tempo * 60;
+                    tempo = ore + (minuti / 100) + (secondi / 10000);
+                    string s = String.Format("{0:N4}", tempo);
+                    dr["Setup Mac"] = s;
+
+                    tempoDecimale = Double.Parse(dr["setup uomo decimale"].ToString());
+                    ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempo = Math.Round((tempoDecimale * 60), 2);
+                    minuti = (int)tempo;
+                    tempo = tempo - minuti;
+                    secondi = tempo * 60;
+                    tempo = ore + (minuti / 100) + (secondi / 10000);
+                    s = String.Format("{0:N4}", tempo);
+                    dr["Setup uomo"] = s;
+
+                    tempoDecimale = Double.Parse(dr["tempo mac decimale"].ToString());
+                    ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempo = Math.Round((tempoDecimale * 60), 2);
+                    minuti = (int)tempo;
+                    tempo = tempo - minuti;
+                    secondi = tempo * 60;
+                    tempo = ore + (minuti / 100) + (secondi / 10000);
+                    s = String.Format("{0:N4}", tempo);
+                    dr["tempo mac"] = s;
+
+                    tempoDecimale = Double.Parse(dr["tempo uomo decimale"].ToString());
+                    ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempo = Math.Round((tempoDecimale * 60), 2);
+                    minuti = (int)tempo;
+                    tempo = tempo - minuti;
+                    secondi = tempo * 60;
+                    tempo = ore + (minuti / 100) + (secondi / 10000);
+                    s = String.Format("{0:N4}", tempo);
+                    dr["tempo uomo"] = s;
+                }
+                catch { }
+            }           
+        }
+
+        public void FromTimeToDecimal()
+        {
+            foreach (DataRow dr in ds.Tables["DistintaBase"].Rows)
+            {
+                try
+                {
+                    double tempoDecimale = Double.Parse(dr["setup Mac"].ToString());
+                    int ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempoDecimale = tempoDecimale * 100;
+                    double minuti = (int)(tempoDecimale);
+                    tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
+                    double secondi = (int)tempoDecimale;
+                    secondi = Math.Round(secondi + (minuti * 60));
+                    double tempo = Math.Truncate((secondi * 10000 / 3600));
+                    dr["setup mac decimale"] = ore.ToString() + "," + tempo.ToString();
+
+                    tempoDecimale = Double.Parse(dr["setup uomo"].ToString());
+                    ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempoDecimale = tempoDecimale * 100;
+                    minuti = (int)(tempoDecimale);
+                    tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
+                    secondi = (int)tempoDecimale;
+                    secondi = Math.Round(secondi + (minuti * 60));
+                    tempo = Math.Truncate((secondi * 10000 / 3600));
+                    dr["setup uomo decimale"] = ore.ToString() + "," + tempo.ToString();
+
+                    tempoDecimale = Double.Parse(dr["tempo mac"].ToString());
+                    ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempoDecimale = tempoDecimale * 100;
+                    minuti = (int)(tempoDecimale);
+                    tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
+                    secondi = (int)tempoDecimale;
+                    secondi = Math.Round(secondi + (minuti * 60));
+                    tempo = Math.Truncate((secondi * 10000 / 3600));
+                    dr["tempo mac decimale"] = ore.ToString() + "," + tempo.ToString();
+
+                    tempoDecimale = Double.Parse(dr["tempo uomo"].ToString());
+                    ore = (int)tempoDecimale;
+                    tempoDecimale -= ore;
+                    tempoDecimale = tempoDecimale * 100;
+                    minuti = (int)(tempoDecimale);
+                    tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
+                    secondi = (int)tempoDecimale;
+                    secondi = Math.Round(secondi + (minuti * 60));
+                    tempo = Math.Truncate((secondi * 10000 / 3600));
+                    dr["tempo uomo decimale"] = ore.ToString() + "," + tempo.ToString();
+                }
+                catch { }               
+            }
+        }
+
+        public void InizializzaColonneTempo()
+        {
+            foreach (DataRow datarow in ds.Tables["DistintaBase"].Rows)
+            {
+                datarow["setup mac decimale"] = datarow["Setup Mac"];
+                datarow["setup uomo decimale"] = datarow["Setup Uomo"];
+                datarow["tempo mac decimale"] = datarow["Tempo Mac"];
+                datarow["tempo uomo decimale"] = datarow["Tempo Uomo"];
             }
         }
     }

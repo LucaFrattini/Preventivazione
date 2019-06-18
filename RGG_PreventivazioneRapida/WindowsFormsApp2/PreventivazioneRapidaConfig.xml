@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-  <ip>10.32.11.191</ip>
+  <ip>LUCA</ip>
   <port>1434</port><!-- la porta non viene presa per il momento-->
   <database>RGG</database>
   <user>sa</user>
@@ -34,13 +34,13 @@
     SB02AL1505.0-1_02: una sola lavorazione e SB02AL1505.0ANELLO: due lavorazioni e un solo materiale-->
     <DistintaBase>
       select cast(ROW_NUMBER() OVER(ORDER BY CODICE_PADRE) as varchar) as rowindex, * from(
-      (select md_coddb AS CODICE_PADRE, md_codfigli AS 'Codice Art', 0 AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Quantita`', ROUND(0, 4) AS 'Setup Mac',  ROUND(0, 4) AS 'Setup Uomo',
-      ROUND(0, 4) AS 'Tempo Mac',  ROUND(0, 4) AS 'Tempo Uomo',  apx_ultcos AS 'Costo Art',  ROUND(0, 2) AS 'Costo Att Mac',  ROUND(0, 2) AS 'Costo Att Uomo',  ROUND(0, 2) AS 'Costo Mac',  ROUND(0, 2) AS 'Costo Uomo',  ROUND(cast(0 as float), 2) as 'Totale',  ROUND(cast(0 as float), 2) as 'Totale + %Var'
+      (select md_coddb AS CODICE_PADRE, md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Quantita`', '' AS 'Setup Mac',  '' AS 'Setup Uomo',
+      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  cast(apx_ultcos as varchar) AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '' as 'Totale',  '' as 'Totale + %Var'
       from movdis join artico on md_codfigli=ar_codart  join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' )
       UNION
-      (select dd_coddb AS 'CODICE PADRE', '' AS 'CODICE ART', dd_codlavo AS CODICE_LAV, tb_deslavo AS DESCRIZIONE_ART__CENTRO_DI_LAVORO, 1 AS QUANTITA, dd_tempatt AS SETUP_MAC, dd_tempattmo AS SETUP_UOMO,
-      dd_tempese AS TEMPO_MAC, dd_tempesemo AS TEMPO_UOMO, 0 AS COSTO_ART, tb_cmacoratt AS COSTO_ATT_MACC, tb_pagaoratt AS COSTO_ATT_UOMO, tb_cmacora AS COSTO_MACC, tb_pagaora AS COSTO_UOMO,
-      0 as Totale, 0 as TotaleVar
+      (select dd_coddb AS 'CODICE PADRE', '' AS 'CODICE ART', cast(dd_codcent as varchar) as 'Codice Centro', cast(dd_codlavo as varchar) AS CODICE_LAV, tb_deslavo AS DESCRIZIONE_ART__CENTRO_DI_LAVORO, 1 AS QUANTITA, replace(cast(dd_tempatt as varchar), '.', ',') AS SETUP_MAC, replace(cast(dd_tempattmo as varchar), '.', ',')  AS SETUP_UOMO,
+      replace(cast(dd_tempese as varchar), '.', ',') AS TEMPO_MAC, replace(cast(dd_tempesemo as varchar), '.', ',') AS TEMPO_UOMO, '' AS COSTO_ART, replace(cast(tb_cmacoratt as varchar), '.', ',') AS COSTO_ATT_MACC, replace(cast(tb_pagaoratt as varchar), '.', ',') AS COSTO_ATT_UOMO, replace(cast(tb_cmacora as varchar), '.', ',') AS COSTO_MACC, replace(cast(tb_pagaora as varchar), '.', ',') AS COSTO_UOMO,
+      '' as Totale, '' as TotaleVar
       from cicli join tablavo on dd_codlavo=tb_codlavo  join tabcent on dd_codcent=tb_codcent where dd_coddb = '@CodDistBase')) as distintabase
     </DistintaBase>
   </AllQuery>

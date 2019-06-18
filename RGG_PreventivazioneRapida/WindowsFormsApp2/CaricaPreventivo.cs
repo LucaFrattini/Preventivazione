@@ -105,7 +105,7 @@ namespace WindowsFormsApp2
                     string idpreventivo = textBoxID.Text;
                     string idEffettivo = id[Int32.Parse(idpreventivo)].ToString();
                     List<string> testata = m.OttieniTestata(idEffettivo);
-                    labelNote.Text = testata[5].ToString() + "\n" + testata[3].ToString();
+                    labelNote.Text = testata[6].ToString() + "\n" + testata[3].ToString();
 
                 }
                 catch

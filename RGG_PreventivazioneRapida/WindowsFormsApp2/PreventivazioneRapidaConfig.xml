@@ -35,14 +35,21 @@
     <DistintaBase>
       select cast(ROW_NUMBER() OVER(ORDER BY CODICE_PADRE) as varchar) as rowindex, * from(
       (select md_coddb AS CODICE_PADRE, md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Quantita`', '' AS 'Setup Mac',  '' AS 'Setup Uomo',
-      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  cast(apx_ultcos as varchar) AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '' as 'Totale',  '' as 'Totale + %Var'
-      from movdis join artico on md_codfigli=ar_codart  join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' )
+      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var'
+      from movdis left join artico on md_codfigli=ar_codart  left join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' )
       UNION
       (select dd_coddb AS 'CODICE PADRE', '' AS 'CODICE ART', cast(dd_codcent as varchar) as 'Codice Centro', cast(dd_codlavo as varchar) AS CODICE_LAV, tb_deslavo AS DESCRIZIONE_ART__CENTRO_DI_LAVORO, 1 AS QUANTITA, replace(cast(dd_tempatt as varchar), '.', ',') AS SETUP_MAC, replace(cast(dd_tempattmo as varchar), '.', ',')  AS SETUP_UOMO,
       replace(cast(dd_tempese as varchar), '.', ',') AS TEMPO_MAC, replace(cast(dd_tempesemo as varchar), '.', ',') AS TEMPO_UOMO, '' AS COSTO_ART, replace(cast(tb_cmacoratt as varchar), '.', ',') AS COSTO_ATT_MACC, replace(cast(tb_pagaoratt as varchar), '.', ',') AS COSTO_ATT_UOMO, replace(cast(tb_cmacora as varchar), '.', ',') AS COSTO_MACC, replace(cast(tb_pagaora as varchar), '.', ',') AS COSTO_UOMO,
-      '' as Totale, '' as TotaleVar
+      '0' as Totale, '0' as TotaleVar
       from cicli join tablavo on dd_codlavo=tb_codlavo  join tabcent on dd_codcent=tb_codcent where dd_coddb = '@CodDistBase')) as distintabase
     </DistintaBase>
+    <LavorazioneEsterna>
+      select lc_prezzo from cicli
+      join tabcent on dd_codcent = tb_codcent
+      join tabmaga on tb_codmaga = tb_magterz
+      join listini on lc_codlavo = dd_codlavo and lc_conto = tb_magconto and lc_codart = dd_coddb
+      where dd_codcent > 500 and lc_tipo = 'F' and lc_datscad = '2099-12-31T00:00:00.000' and lc_codart='@LavorazioneEsterna' and dd_codcent='@LavorazioneCentro'
+    </LavorazioneEsterna>
   </AllQuery>
 
   <!--Lista dei campi della tabella che è possibile modificare-->

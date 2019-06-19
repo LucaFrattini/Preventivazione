@@ -338,8 +338,8 @@ namespace PreventivazioneRapida
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
                     double secondi = (int)tempoDecimale;
                     secondi = Math.Round(secondi + (minuti * 60));
-                    double tempo = Math.Truncate((secondi * 10000 / 3600));
-                    dr["setup mac decimale"] = ore.ToString() + "," + tempo.ToString();
+                    double tempo = secondi / 3600;
+                    dr["setup mac decimale"] = (ore + tempo).ToString();
 
                     tempoDecimale = Double.Parse(dr["setup uomo"].ToString());
                     ore = (int)tempoDecimale;
@@ -349,8 +349,8 @@ namespace PreventivazioneRapida
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
                     secondi = (int)tempoDecimale;
                     secondi = Math.Round(secondi + (minuti * 60));
-                    tempo = Math.Truncate((secondi * 10000 / 3600));
-                    dr["setup uomo decimale"] = ore.ToString() + "," + tempo.ToString();
+                    tempo = secondi / 3600;
+                    dr["setup uomo decimale"] = (ore + tempo).ToString();
 
                     tempoDecimale = Double.Parse(dr["tempo mac"].ToString());
                     ore = (int)tempoDecimale;
@@ -360,8 +360,8 @@ namespace PreventivazioneRapida
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
                     secondi = (int)tempoDecimale;
                     secondi = Math.Round(secondi + (minuti * 60));
-                    tempo = Math.Truncate((secondi * 10000 / 3600));
-                    dr["tempo mac decimale"] = ore.ToString() + "," + tempo.ToString();
+                    tempo = secondi / 3600;
+                    dr["tempo mac decimale"] = (ore + tempo).ToString();
 
                     tempoDecimale = Double.Parse(dr["tempo uomo"].ToString());
                     ore = (int)tempoDecimale;
@@ -371,8 +371,8 @@ namespace PreventivazioneRapida
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
                     secondi = (int)tempoDecimale;
                     secondi = Math.Round(secondi + (minuti * 60));
-                    tempo = Math.Truncate((secondi * 10000 / 3600));
-                    dr["tempo uomo decimale"] = ore.ToString() + "," + tempo.ToString();
+                    tempo = secondi / 3600;
+                    dr["tempo uomo decimale"] = (ore + tempo).ToString();
                 }
                 catch { }               
             }
@@ -387,6 +387,33 @@ namespace PreventivazioneRapida
                 datarow["tempo mac decimale"] = datarow["Tempo Mac"];
                 datarow["tempo uomo decimale"] = datarow["Tempo Uomo"];
             }
+        }
+
+        public void GestisciLavorazioneEsterna(DataRow rowLavorazione, string articolo)
+        {
+            rowLavorazione["Codice Art"] = rowLavorazione["Descrizione art / Centro di Lavoro"].ToString();
+            string query = Setting.Istance.QueryLavorazioneEsterna.Replace("@LavorazioneCentro", rowLavorazione["Codice Centro"].ToString());
+            query = query.Replace("@LavorazioneEsterna", articolo);
+            SqlDataAdapter da;
+            sqlserverConn.Open();
+            string prezzo;
+            using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                dr.Read();
+                prezzo = dr[0].ToString();
+                dr.Close();
+            }
+            sqlserverConn.Close();
+            rowLavorazione["Costo art"] = prezzo;
+            rowLavorazione["Setup mac"] = "";
+            rowLavorazione["Setup uomo"] = "";
+            rowLavorazione["Tempo mac"] = "";
+            rowLavorazione["Tempo uomo"] = "";
+            rowLavorazione["Costo att mac"] = "";
+            rowLavorazione["Costo att uomo"] = "";
+            rowLavorazione["Costo mac"] = "";
+            rowLavorazione["Costo uomo"] = "";
         }
     }
 }

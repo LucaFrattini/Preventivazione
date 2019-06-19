@@ -51,6 +51,7 @@ namespace PreventivazioneRapida
                 this.pkCliente = xmlDoc.SelectSingleNode("configuration/AllQuery/Cliente/PK").InnerText;
                 this.queryCodDistBase = xmlDoc.SelectSingleNode("configuration/AllQuery/CodDistintaBase").InnerText;
                 this.queryDistintaBase = xmlDoc.SelectSingleNode("configuration/AllQuery/DistintaBase").InnerText;
+                this.queryLavorazioneEsterna = xmlDoc.SelectSingleNode("configuration/AllQuery/LavorazioneEsterna").InnerText;
 
                 this.campiModificabili = xmlDoc.SelectSingleNode("configuration/CampiModificabili");
 
@@ -124,6 +125,9 @@ namespace PreventivazioneRapida
 
         private string queryCodDistBase;
         public string QueryCodDistBase { get { return this.queryCodDistBase; } }
+
+        private string queryLavorazioneEsterna;
+        public string QueryLavorazioneEsterna { get { return this.queryLavorazioneEsterna; } }
 
         private XmlNode campiModificabili;
         public XmlNode CampiModificabili { get { return this.campiModificabili; } }

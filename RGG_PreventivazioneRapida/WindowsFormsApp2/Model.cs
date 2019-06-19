@@ -150,12 +150,13 @@ namespace PreventivazioneRapida
 
                 foreach (DataRow row in ds.Tables["DistintaBase"].Rows)
                 {
-                    string queryRighi = "INSERT INTO preventivirighi (idpreventivo, rowindex, codicepadre, codiceart, codicelav, descrizione, quantita, setupmac, setupuomo, tempomac, tempouomo, costoart" +
-                    ", costoattmac, costoattuomo, costomac, costouomo, totale, totalevar) VALUES (" + idpreventivo + ", '" + row["rowindex"].ToString() + "', '" + row["CODICE_PADRE"].ToString() + "', '" +
-                    row["CODICE ART"].ToString() + "', '" + row["Codice lav"].ToString() + "', '" + row["Descrizione art / Centro di Lavoro"].ToString() + "', " + row["Quantita`"].ToString().Replace(',', '.') +
-                    ", " + row["Setup Mac"].ToString().Replace(',', '.') + ", " + row["Setup Uomo"].ToString().Replace(',', '.') + ", " + row["Tempo Mac"].ToString().Replace(',', '.') + ", " + row["Tempo Uomo"].ToString().Replace(',', '.') +
-                    ", " + row["Costo Art"].ToString().Replace(',', '.') + ", " + row["Costo Att Mac"].ToString().Replace(',', '.') + ", " + row["Costo Att Uomo"].ToString().Replace(',', '.') + ", " + row["Costo Mac"].ToString().Replace(',', '.') +
-                    ", " + row["Costo Uomo"].ToString().Replace(',', '.') + ", " + row["Totale"].ToString().Replace(',', '.') + ", " + row["Totale + %Var"].ToString().Replace(',', '.') + ")";
+                    string queryRighi = "INSERT INTO preventivirighi (idpreventivo, rowindex, codicepadre, codiceart, codicecentro, codicelav, descrizione, quantita, setupmac, setupuomo, tempomac, tempouomo, costoart" +
+                    ", costoattmac, costoattuomo, costomac, costouomo, totale, totalevar, setupmacdec, setupuomodec, tempomacdec, tempouomodec) VALUES (" + idpreventivo + ", '" + row["rowindex"].ToString() + "', '" + row["CODICE_PADRE"].ToString() + "', '" +
+                    row["CODICE ART"].ToString() + "', '" +row["Codice centro"].ToString() + "', '" + row["Codice lav"].ToString() + "', '" + row["Descrizione art / Centro di Lavoro"].ToString() + "', '" + row["Quantita`"].ToString() +
+                    "', '" + row["Setup Mac"].ToString() + "', '" + row["Setup Uomo"].ToString() + "', '" + row["Tempo Mac"].ToString() + "', '" + row["Tempo Uomo"].ToString() +
+                    "', '" + row["Costo Art"].ToString() + "', '" + row["Costo Att Mac"].ToString() + "', '" + row["Costo Att Uomo"].ToString() + "', '" + row["Costo Mac"].ToString() +
+                    "', '" + row["Costo Uomo"].ToString() + "', '" + row["Totale"].ToString() + "', '" + row["Totale + %Var"].ToString() +
+                    "', '" + row["Setup Mac decimale"].ToString() +"', '"+ row["Setup Uomo decimale"].ToString() + "', '"+ row["Tempo Mac decimale"].ToString() + "', '"+ row["Tempo Uomo decimale"].ToString() + "')";
                     command = new SqlCommand(queryRighi, sqlserverConn);
                     command.ExecuteNonQuery();
                 }
@@ -242,10 +243,11 @@ namespace PreventivazioneRapida
             {
                 SqlDataAdapter da;
                 sqlserverConn.Open();
-                string query = "SELECT rowindex,codicepadre as CODICE_PADRE,codiceart AS 'Codice Art', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
+                string query = "SELECT rowindex,codicepadre as CODICE_PADRE,codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
                     "quantita AS 'Quantita`', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
                     "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
-                    "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var' FROM preventivirighi WHERE idpreventivo = (SELECT id FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, id FROM preventivi" +
+                    "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var', setupmacdec AS 'setup mac decimale', setupuomodec AS 'setup uomo decimale'," +
+                    " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = (SELECT id FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, id FROM preventivi" +
                     " WHERE cliente = '"+cliente+"') AS clientepreventivi WHERE rowindex = "+Int32.Parse(idpreventivo)+")";
                 da = new SqlDataAdapter(query, sqlserverConn);
                 if (ds.Tables.IndexOf("DistintaBase") > 0)

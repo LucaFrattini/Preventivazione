@@ -7,6 +7,47 @@
   <password>X$agilis</password>
 
   <AllQuery>
+    <CreateTablePreventivi>
+      CREATE TABLE preventivi(
+      id int identity(1,1) PRIMARY KEY,
+      cliente varchar(255),
+      articolo varchar(255),
+      quantita float,
+      variazione float,
+      variazionelav float,
+      totale float,
+      totalevar float,
+      datacreazione datetime,
+      note text
+      )
+    </CreateTablePreventivi>
+    <CreateTablePreventiviRighi>
+      CREATE TABLE preventivirighi(
+      id int identity(1,1) primary key,
+      idpreventivo int,
+      rowindex varchar(255),
+      codicepadre varchar(255),
+      codiceart varchar(255),
+      codicelav varchar(255),
+      descrizione varchar(255),
+      quantita varchar(255),
+      setupmac varchar(255),
+      setupuomo varchar(255),
+      tempomac varchar(255),
+      tempouomo varchar(255),
+      costoart varchar(255),
+      costoattmac varchar(255),
+      costoattuomo varchar(255),
+      costomac varchar(255),
+      costouomo varchar(255),
+      totale varchar(255),
+      totalevar varchar(255),
+      setupmacdec varchar(255),
+      setupuomodec varchar(255),
+      tempomacdec varchar(255),
+      tempouomodec varchar(255)
+      )
+    </CreateTablePreventiviRighi>
     <Articolo>
       <Query>
         SELECT ar_codart, ar_descr, ar_desint, ar_unmis, ar_coddb

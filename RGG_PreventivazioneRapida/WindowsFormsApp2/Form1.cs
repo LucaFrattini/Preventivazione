@@ -552,14 +552,23 @@ namespace PreventivazioneRapida
             if (!String.IsNullOrEmpty(textBoxArticolo.Text) || !String.IsNullOrEmpty(textBoxCliente.Text) || !String.IsNullOrEmpty(textBoxQuantita.Text) ||
                 !String.IsNullOrEmpty(textBoxVariazione.Text) || !String.IsNullOrEmpty(textBoxNote.Text))
             {
-                textBoxCliente.Text = "";
-                textBoxArticolo.Text = "";
-                textBoxQuantita.Text = "1";
-                textBoxVariazione.Text = "0";
-                textBoxVariazioneLav.Text = "0";
-                textBoxNote.Text = "";
-                dataGridView.Rows.Clear();
-                textBoxCliente.Focus();
+                try {
+                    textBoxCliente.Text = "";
+                    textBoxArticolo.Text = "";
+                    textBoxQuantita.Text = "1";
+                    textBoxVariazione.Text = "0";
+                    textBoxVariazioneLav.Text = "0";
+                    textBoxNote.Text = "";
+                    m.ds.Tables.Remove("DistintaBase");
+                    dataGridView.DataSource = null;
+                    textBoxCliente.Focus();
+                    textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
+                    labelArticolo.Text = "<Descrizione articolo>";
+                    textBoxVariazione.Enabled = false;
+                    textBoxVariazioneLav.Enabled = false;
+                    textBoxQuantita.Enabled = false;
+                } catch { }
+                
             }
             CostoMac1.Text = "0";
             CostoMac2.Text = "0";
@@ -581,6 +590,8 @@ namespace PreventivazioneRapida
             QIarticoli.Text = "0";
             QItotale.Text = "0";
             QItotalevar.Text = "0";
+            QICostoSingolo.Text = "0";
+            QIRicavoSingolo.Text = "0";
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -1172,7 +1183,7 @@ namespace PreventivazioneRapida
 
         private void buttonEspandi_Click(object sender, EventArgs e)
         {
-            int a = this.MaximumSize.Height;
+            int a = this.Height;
             int b = dataGridView.Location.Y;
             if(dataGridView.Height > 550)
             {

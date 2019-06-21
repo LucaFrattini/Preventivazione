@@ -396,7 +396,6 @@ namespace PreventivazioneRapida
             rowLavorazione["Codice Art"] = rowLavorazione["Descrizione art / Centro di Lavoro"].ToString();
             string query = Setting.Istance.QueryLavorazioneEsterna.Replace("@LavorazioneCentro", rowLavorazione["Codice Centro"].ToString());
             query = query.Replace("@LavorazioneEsterna", articolo);
-            SqlDataAdapter da;
             sqlserverConn.Open();
             string prezzo;
             using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))

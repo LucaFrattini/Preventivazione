@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.labelNote = new System.Windows.Forms.Label();
             this.buttonConferma = new System.Windows.Forms.Button();
+            this.buttonHelpID = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxCliente
@@ -87,11 +88,20 @@
             this.buttonConferma.UseVisualStyleBackColor = false;
             this.buttonConferma.Click += new System.EventHandler(this.buttonConferma_Click);
             // 
+            // buttonHelpID
+            // 
+            resources.ApplyResources(this.buttonHelpID, "buttonHelpID");
+            this.buttonHelpID.BackColor = System.Drawing.Color.GreenYellow;
+            this.buttonHelpID.Name = "buttonHelpID";
+            this.buttonHelpID.UseVisualStyleBackColor = false;
+            this.buttonHelpID.Click += new System.EventHandler(this.buttonHelpID_Click);
+            // 
             // CaricaPreventivo
             // 
-            resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
+            resources.ApplyResources(this, "$this");
+            this.Controls.Add(this.buttonHelpID);
             this.Controls.Add(this.buttonConferma);
             this.Controls.Add(this.labelNote);
             this.Controls.Add(this.label1);
@@ -100,6 +110,7 @@
             this.Controls.Add(this.buttonHelpClienti);
             this.Controls.Add(this.labelCliente);
             this.Controls.Add(this.label2);
+            this.MaximizeBox = false;
             this.Name = "CaricaPreventivo";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -116,5 +127,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelNote;
         private System.Windows.Forms.Button buttonConferma;
+        private System.Windows.Forms.Button buttonHelpID;
     }
 }

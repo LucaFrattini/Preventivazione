@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<help>
+  <intestazione>Help preventivi</intestazione>
+  <tipodatabase>SQLSERVER</tipodatabase>
+  <query>
+    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = $val1
+  </query>
+
+  <queryDescrizione>
+    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = $val2
+  </queryDescrizione>
+  <campoRitorno>idpreventivocliente</campoRitorno>
+  <inserimento></inserimento>
+  <modifica></modifica>
+  <campi>
+    <campo>
+      <nomeSql>articolo</nomeSql>
+      <descrizione>Articolo</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>totale</nomeSql>
+      <descrizione>Costo</descrizione>
+      <numerico>true</numerico>
+    </campo>
+    <campo>
+      <nomeSql>totalevar</nomeSql>
+      <descrizione>Ricavo</descrizione>
+      <numerico>true</numerico>
+    </campo>
+    <campo>
+      <nomeSql>datacreazione</nomeSql>
+      <descrizione>Data Creazione</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>note</nomeSql>
+      <descrizione>Note</descrizione>
+      <numerico>false</numerico>
+    </campo>
+  </campi>
+</help>

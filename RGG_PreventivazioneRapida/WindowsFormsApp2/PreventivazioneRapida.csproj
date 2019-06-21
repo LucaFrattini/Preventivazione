@@ -55,6 +55,12 @@
     <Compile Include="CaricaPreventivo.Designer.cs">
       <DependentUpon>CaricaPreventivo.cs</DependentUpon>
     </Compile>
+    <Compile Include="InserisciRigo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InserisciRigo.Designer.cs">
+      <DependentUpon>InserisciRigo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -70,6 +76,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InserisciRigo.resx">
+      <DependentUpon>InserisciRigo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -102,6 +111,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="HelpXML_PreventivazioneRapida\Help_preventivi.xml" />
     <Content Include="PreventivazioneRapidaConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

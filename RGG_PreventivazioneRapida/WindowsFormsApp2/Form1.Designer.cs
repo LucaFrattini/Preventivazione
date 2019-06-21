@@ -50,6 +50,7 @@
             this.textBoxCliente = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonPulisci = new System.Windows.Forms.Button();
             this.buttonEspandi = new System.Windows.Forms.Button();
             this.btnCarica = new System.Windows.Forms.Button();
             this.btnModifica = new System.Windows.Forms.Button();
@@ -95,6 +96,8 @@
             this.QItotale = new System.Windows.Forms.Label();
             this.QItotalevar = new System.Windows.Forms.Label();
             this.groupBoxQI = new System.Windows.Forms.GroupBox();
+            this.labelIDpreventivo = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.QIRicavoSingolo = new System.Windows.Forms.Label();
             this.QICostoSingolo = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -242,7 +245,7 @@
             this.textBoxNote.Location = new System.Drawing.Point(127, 202);
             this.textBoxNote.MaxLength = 60;
             this.textBoxNote.Name = "textBoxNote";
-            this.textBoxNote.Size = new System.Drawing.Size(1093, 30);
+            this.textBoxNote.Size = new System.Drawing.Size(813, 30);
             this.textBoxNote.TabIndex = 6;
             // 
             // label7
@@ -278,7 +281,7 @@
             // btnRefresh
             // 
             this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
-            this.btnRefresh.Location = new System.Drawing.Point(333, 12);
+            this.btnRefresh.Location = new System.Drawing.Point(395, 12);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(56, 53);
             this.btnRefresh.TabIndex = 7;
@@ -287,6 +290,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonPulisci);
             this.groupBox1.Controls.Add(this.buttonEspandi);
             this.groupBox1.Controls.Add(this.btnCarica);
             this.groupBox1.Controls.Add(this.btnModifica);
@@ -304,10 +308,20 @@
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             // 
+            // buttonPulisci
+            // 
+            this.buttonPulisci.Image = ((System.Drawing.Image)(resources.GetObject("buttonPulisci.Image")));
+            this.buttonPulisci.Location = new System.Drawing.Point(85, 12);
+            this.buttonPulisci.Name = "buttonPulisci";
+            this.buttonPulisci.Size = new System.Drawing.Size(56, 53);
+            this.buttonPulisci.TabIndex = 27;
+            this.buttonPulisci.UseVisualStyleBackColor = true;
+            this.buttonPulisci.Click += new System.EventHandler(this.buttonPulisci_Click);
+            // 
             // buttonEspandi
             // 
             this.buttonEspandi.Image = ((System.Drawing.Image)(resources.GetObject("buttonEspandi.Image")));
-            this.buttonEspandi.Location = new System.Drawing.Point(147, 12);
+            this.buttonEspandi.Location = new System.Drawing.Point(333, 12);
             this.buttonEspandi.Name = "buttonEspandi";
             this.buttonEspandi.Size = new System.Drawing.Size(56, 53);
             this.buttonEspandi.TabIndex = 26;
@@ -317,7 +331,7 @@
             // btnCarica
             // 
             this.btnCarica.Image = ((System.Drawing.Image)(resources.GetObject("btnCarica.Image")));
-            this.btnCarica.Location = new System.Drawing.Point(85, 12);
+            this.btnCarica.Location = new System.Drawing.Point(271, 12);
             this.btnCarica.Name = "btnCarica";
             this.btnCarica.Size = new System.Drawing.Size(56, 53);
             this.btnCarica.TabIndex = 25;
@@ -327,7 +341,7 @@
             // btnModifica
             // 
             this.btnModifica.Image = ((System.Drawing.Image)(resources.GetObject("btnModifica.Image")));
-            this.btnModifica.Location = new System.Drawing.Point(209, 12);
+            this.btnModifica.Location = new System.Drawing.Point(147, 12);
             this.btnModifica.Name = "btnModifica";
             this.btnModifica.Size = new System.Drawing.Size(56, 53);
             this.btnModifica.TabIndex = 24;
@@ -337,7 +351,7 @@
             // btnReset
             // 
             this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
-            this.btnReset.Location = new System.Drawing.Point(519, 12);
+            this.btnReset.Location = new System.Drawing.Point(581, 12);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(56, 53);
             this.btnReset.TabIndex = 23;
@@ -357,7 +371,7 @@
             // btnMeno
             // 
             this.btnMeno.Image = ((System.Drawing.Image)(resources.GetObject("btnMeno.Image")));
-            this.btnMeno.Location = new System.Drawing.Point(457, 12);
+            this.btnMeno.Location = new System.Drawing.Point(519, 12);
             this.btnMeno.Name = "btnMeno";
             this.btnMeno.Size = new System.Drawing.Size(56, 53);
             this.btnMeno.TabIndex = 22;
@@ -367,7 +381,7 @@
             // btnConferma
             // 
             this.btnConferma.Image = ((System.Drawing.Image)(resources.GetObject("btnConferma.Image")));
-            this.btnConferma.Location = new System.Drawing.Point(271, 12);
+            this.btnConferma.Location = new System.Drawing.Point(209, 12);
             this.btnConferma.Name = "btnConferma";
             this.btnConferma.Size = new System.Drawing.Size(56, 53);
             this.btnConferma.TabIndex = 20;
@@ -379,7 +393,7 @@
             this.btnPiu.AccessibleName = "";
             this.btnPiu.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnPiu.Image = ((System.Drawing.Image)(resources.GetObject("btnPiu.Image")));
-            this.btnPiu.Location = new System.Drawing.Point(395, 12);
+            this.btnPiu.Location = new System.Drawing.Point(457, 12);
             this.btnPiu.Name = "btnPiu";
             this.btnPiu.Size = new System.Drawing.Size(56, 53);
             this.btnPiu.TabIndex = 21;
@@ -389,7 +403,7 @@
             // btnEsci
             // 
             this.btnEsci.Image = ((System.Drawing.Image)(resources.GetObject("btnEsci.Image")));
-            this.btnEsci.Location = new System.Drawing.Point(581, 12);
+            this.btnEsci.Location = new System.Drawing.Point(643, 12);
             this.btnEsci.Name = "btnEsci";
             this.btnEsci.Size = new System.Drawing.Size(56, 53);
             this.btnEsci.TabIndex = 20;
@@ -802,6 +816,8 @@
             // 
             this.groupBoxQI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxQI.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.groupBoxQI.Controls.Add(this.labelIDpreventivo);
+            this.groupBoxQI.Controls.Add(this.label17);
             this.groupBoxQI.Controls.Add(this.QItotale);
             this.groupBoxQI.Controls.Add(this.label24);
             this.groupBoxQI.Controls.Add(this.QIRicavoSingolo);
@@ -822,6 +838,30 @@
             this.groupBoxQI.TabIndex = 22;
             this.groupBoxQI.TabStop = false;
             this.groupBoxQI.Text = "Quantità impostata:";
+            // 
+            // labelIDpreventivo
+            // 
+            this.labelIDpreventivo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelIDpreventivo.BackColor = System.Drawing.Color.Transparent;
+            this.labelIDpreventivo.Font = new System.Drawing.Font("Arial Narrow", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelIDpreventivo.Location = new System.Drawing.Point(209, 57);
+            this.labelIDpreventivo.Name = "labelIDpreventivo";
+            this.labelIDpreventivo.Size = new System.Drawing.Size(220, 75);
+            this.labelIDpreventivo.TabIndex = 43;
+            this.labelIDpreventivo.Text = "Nuovo preventivo";
+            this.labelIDpreventivo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label17
+            // 
+            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label17.BackColor = System.Drawing.Color.Transparent;
+            this.label17.Font = new System.Drawing.Font("Arial Narrow", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(209, 35);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(220, 25);
+            this.label17.TabIndex = 42;
+            this.label17.Text = "ID Preventivo Cliente";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // QIRicavoSingolo
             // 
@@ -996,7 +1036,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(1251, 830);
+            this.MinimumSize = new System.Drawing.Size(1251, 824);
             this.Name = "Form1";
             this.Text = "Preventivazione Rapida";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1085,6 +1125,9 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button buttonEspandi;
+        private System.Windows.Forms.Button buttonPulisci;
+        private System.Windows.Forms.Label labelIDpreventivo;
+        private System.Windows.Forms.Label label17;
     }
 }
 

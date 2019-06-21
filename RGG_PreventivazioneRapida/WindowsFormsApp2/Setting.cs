@@ -52,11 +52,13 @@ namespace PreventivazioneRapida
                 this.queryCodDistBase = xmlDoc.SelectSingleNode("configuration/AllQuery/CodDistintaBase").InnerText;
                 this.queryDistintaBase = xmlDoc.SelectSingleNode("configuration/AllQuery/DistintaBase").InnerText;
                 this.queryLavorazioneEsterna = xmlDoc.SelectSingleNode("configuration/AllQuery/LavorazioneEsterna").InnerText;
+                this.queryCercaArticolo = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaArticolo").InnerText;
 
                 this.campiModificabili = xmlDoc.SelectSingleNode("configuration/CampiModificabili");
 
                 this.helpCliente = xmlDoc.SelectSingleNode("configuration/helpCliente").InnerText;
                 this.helpArticolo = xmlDoc.SelectSingleNode("configuration/helpArticolo").InnerText;
+                this.helpPreventivo = xmlDoc.SelectSingleNode("configuration/helpPreventivo").InnerText;
 
                 if (xmlDoc.SelectSingleNode("configuration/FL") != null)
                 {
@@ -129,6 +131,9 @@ namespace PreventivazioneRapida
         private string queryLavorazioneEsterna;
         public string QueryLavorazioneEsterna { get { return this.queryLavorazioneEsterna; } }
 
+        private string queryCercaArticolo;
+        public string QueryCercaArticolo { get { return this.queryCercaArticolo; } }
+
         private XmlNode campiModificabili;
         public XmlNode CampiModificabili { get { return this.campiModificabili; } }
 
@@ -140,6 +145,9 @@ namespace PreventivazioneRapida
 
         private string helpArticolo;
         public string HelpArticolo { get { return this.helpArticolo; } }
+
+        private string helpPreventivo;
+        public string HelpPreventivo { get { return this.helpPreventivo; } }
 
         private string fontlabel = "";
         public string FontLabel { get { return this.fontlabel; } }

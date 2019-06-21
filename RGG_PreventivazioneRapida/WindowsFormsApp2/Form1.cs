@@ -17,7 +17,7 @@ namespace PreventivazioneRapida
     {
         //modello dei dati
         Model m;
-        private int zoom = 0;
+        private int zoom = 0, altezzaDataGrid = 0;
         private double precedenteQuantita = 1;
         public TextBox TbCLiente { get; set; }
         public TextBox TbArticolo { get; set; }
@@ -54,7 +54,15 @@ namespace PreventivazioneRapida
             textBoxQuantita.Enter += textBox_Enter;
             textBoxVariazioneLav.Enter += textBox_Enter;
             textBoxVariazione.Enter += textBox_Enter;
+            this.Load += Form1_Load;
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            altezzaDataGrid = dataGridView.Height;
+        }
+
+        public string Articolo { get { return this.textBoxArticolo.Text; } }
 
         public void textBox_Enter(object sender, EventArgs e)
         {
@@ -156,6 +164,11 @@ namespace PreventivazioneRapida
             {
                 this.textBoxArticolo.Text = temp;
             }
+        }
+
+        private void buttonPulisci_Click(object sender, EventArgs e)
+        {
+            PulisciSchermata();
         }
 
         private void textBoxCliente_TextChanged(object sender, EventArgs e)
@@ -273,6 +286,7 @@ namespace PreventivazioneRapida
                 {
                     textBoxArticolo.BackColor = Color.LightGreen;
                     labelArticolo.Text = dr[1].ToString();
+                    PulisciSchermata();
                     string getDistBase = Setting.Istance.QueryCodDistBase.Replace("@articolo", textBoxArticolo.Text);
                     m.EstraiRisultatoQuery(getDistBase, "CodDistBase");
                     if (m.ds.Tables["CodDistBase"].Rows.Count > 0)
@@ -547,29 +561,26 @@ namespace PreventivazioneRapida
             Close();
         }
 
-        private void btnNuovo_Click(object sender, EventArgs e)
+        private void PulisciSchermata()
         {
-            if (!String.IsNullOrEmpty(textBoxArticolo.Text) || !String.IsNullOrEmpty(textBoxCliente.Text) || !String.IsNullOrEmpty(textBoxQuantita.Text) ||
-                !String.IsNullOrEmpty(textBoxVariazione.Text) || !String.IsNullOrEmpty(textBoxNote.Text))
+            try
             {
-                try {
-                    textBoxCliente.Text = "";
-                    textBoxArticolo.Text = "";
-                    textBoxQuantita.Text = "1";
-                    textBoxVariazione.Text = "0";
-                    textBoxVariazioneLav.Text = "0";
-                    textBoxNote.Text = "";
-                    m.ds.Tables.Remove("DistintaBase");
-                    dataGridView.DataSource = null;
-                    textBoxCliente.Focus();
-                    textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
-                    labelArticolo.Text = "<Descrizione articolo>";
-                    textBoxVariazione.Enabled = false;
-                    textBoxVariazioneLav.Enabled = false;
-                    textBoxQuantita.Enabled = false;
-                } catch { }
-                
+                m.ds.Tables.Remove("DistintaBase");
+                textBoxCliente.Text = "";
+                textBoxArticolo.Text = "";
+                textBoxQuantita.Text = "1";
+                textBoxVariazione.Text = "0";
+                textBoxVariazioneLav.Text = "0";
+                textBoxNote.Text = "";               
+                dataGridView.DataSource = null;
+                textBoxCliente.Focus();
+                textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
+                labelArticolo.Text = "<Descrizione articolo>";
+                textBoxVariazione.Enabled = false;
+                textBoxVariazioneLav.Enabled = false;
+                textBoxQuantita.Enabled = false;
             }
+            catch { }
             CostoMac1.Text = "0";
             CostoMac2.Text = "0";
             CostoMac3.Text = "0";
@@ -592,6 +603,12 @@ namespace PreventivazioneRapida
             QItotalevar.Text = "0";
             QICostoSingolo.Text = "0";
             QIRicavoSingolo.Text = "0";
+            labelIDpreventivo.Text = "Nuovo preventivo";
+        }
+
+        private void btnNuovo_Click(object sender, EventArgs e)
+        {
+            PulisciSchermata();
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -726,13 +743,7 @@ namespace PreventivazioneRapida
 
         private void btnModifica_Click(object sender, EventArgs e)
         {
-            /*foreach(XmlNode c in Setting.Istance.CampiModificabili)
-            {
-                string campo = c.InnerText;
-                dataGridView.Columns[campo].ReadOnly = false;
-                dataGridView.Columns[campo].DefaultCellStyle.BackColor = Color.LightBlue;
-            }*/
-            dataGridView.Columns["Quantita`"].ReadOnly = false;
+            /*dataGridView.Columns["Quantita`"].ReadOnly = false;
             dataGridView.Columns["Setup Mac"].ReadOnly = false;
             dataGridView.Columns["Setup Uomo"].ReadOnly = false;
             dataGridView.Columns["Tempo Mac"].ReadOnly = false;
@@ -758,8 +769,9 @@ namespace PreventivazioneRapida
             dataGridView.Columns["Costo Att Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
             dataGridView.Columns["Costo Att Mac"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
             dataGridView.Columns["Costo Mac"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Costo Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-
+            dataGridView.Columns["Costo Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;*/
+            InserisciRigo inserisciRigo = new InserisciRigo(this, m);
+            inserisciRigo.Show();
         }
 
         private void textBoxQuantita_TextChanged(object sender, EventArgs e)
@@ -817,25 +829,31 @@ namespace PreventivazioneRapida
         //Fare il test con questo codice --> SB02AL1505.0-1_02
         private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            int rowcount = m.ds.Tables["DistintaBase"].Rows.Count;
-            string valoreCella = dataGridView.CurrentCell.Value.ToString();
-            for (int i = dataGridView.Rows.Count - 2; i >= 0; i--)
+            try
             {
-                if (valoreCella == dataGridView["CODICE_PADRE", i].Value.ToString())
+                int rowcount = m.ds.Tables["DistintaBase"].Rows.Count;
+                string valoreCella = dataGridView.CurrentCell.Value.ToString();
+                for (int i = dataGridView.Rows.Count - 2; i >= 0; i--)
                 {
-                    if(dataGridView.Rows[i].Visible == false)
+                    if (valoreCella == dataGridView["CODICE_PADRE", i].Value.ToString() && i != rowcount - 1)
                     {
-                        dataGridView.Rows[i].Visible = true;
+                        if (dataGridView.Rows[i].Visible == false)
+                        {
+                            dataGridView.Rows[i].Visible = true;
+                        }
+                        else
+                        {
+                            dataGridView.Rows[i].Visible = false;
+                        }
                     }
-                    else
+                    else if (valoreCella == dataGridView["CODICE_PADRE", i].Value.ToString() && dataGridView["CODICE_PADRE", i].Value.ToString() != "")
                     {
                         dataGridView.Rows[i].Visible = false;
-                    }                  
-                }else if(valoreCella == dataGridView["CODICE_PADRE", i].Value.ToString() && dataGridView["CODICE_PADRE", i].Value.ToString() != "")
-                {
-                    dataGridView.Rows[i].Visible = false;
+                    }
                 }
             }
+            catch { }
+            
         }
 
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1148,6 +1166,7 @@ namespace PreventivazioneRapida
             textBoxVariazione.Enabled = true;
             textBoxVariazioneLav.Text = testata[5];
             textBoxVariazioneLav.Enabled = true;
+            labelIDpreventivo.Text = testata[7];
         }
 
         public void BindingGrid()
@@ -1185,13 +1204,14 @@ namespace PreventivazioneRapida
         {
             int a = this.Height;
             int b = dataGridView.Location.Y;
-            if(dataGridView.Height > 550)
+            int c = dataGridView.Height;
+            if(dataGridView.Height > altezzaDataGrid)
             {
-                dataGridView.Height = a-b-10;
+                dataGridView.Height = altezzaDataGrid;
             }
             else
             {
-                dataGridView.Height = 560;
+                dataGridView.Height = (a - b) - 50;
             }
         }
     }

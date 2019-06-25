@@ -60,6 +60,31 @@ namespace PreventivazioneRapida
             }
         }
 
+        private int FindNumberOfChar(Char target, String searched)
+        {
+            Console.Write(
+                target);
+
+            int startIndex = -1;
+            int hitCount = 0;
+
+            // Search for all occurrences of the target.
+            while (true)
+            {
+                startIndex = searched.IndexOf(
+                    target, startIndex + 1,
+                    searched.Length - startIndex - 1);
+
+                // Exit the loop if the target is not found.
+                if (startIndex < 0)
+                    break;
+
+                hitCount++;
+            }
+            return hitCount;
+
+        }
+
         //Funzione per estrarre dati correttamete dal database ed inserirli in una Datatable
         //Viene usata questa funzione perchè prende la query dal file XML cosi che questa ultima può
         // essere modificata e la DataTable che si va a creare si adatta alle colonee che sono state estratte dalla query
@@ -105,6 +130,10 @@ namespace PreventivazioneRapida
                     ds.Tables["DistintaBase"].Columns.Add("setup uomo decimale");
                     ds.Tables["DistintaBase"].Columns.Add("tempo mac decimale");
                     ds.Tables["DistintaBase"].Columns.Add("tempo uomo decimale");
+                }else if(nomeTabella == "Lavorazioni")
+                {
+                    key[0] = ds.Tables["Lavorazioni"].Columns[Setting.Istance.PKLavorazione];
+                    ds.Tables["Lavorazioni"].PrimaryKey = key;
                 }
                 sqlserverConn.Close();               
             }
@@ -114,15 +143,31 @@ namespace PreventivazioneRapida
             }                      
         }
 
-        public int VerificaSemilavorato(string articolo)
+        public int VerificaSemilavorato(DataRow row)
         {
             SqlDataAdapter da;
             sqlserverConn.Open();
-            string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", articolo);
+            string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", row["CODICE ART"].ToString());
             da = new SqlDataAdapter(distintaBase, sqlserverConn);
             int count = da.Fill(ds.Tables["DistintaBase"]);
             sqlserverConn.Close();
-
+            /*if (count == 0)
+            {
+                string rowindex = row["rowindex"].ToString();
+                
+                string rowindexfiglio = rowindex + ",1";
+                int countvirgole = FindNumberOfChar(',', rowindexfiglio);
+                foreach (DataRow dr in ds.Tables["DistintaBase"].Rows)
+                {
+                    string prova = dr["rowindex"].ToString().Substring(0, rowindex.Length);
+                    int countvirgolefiglio = FindNumberOfChar(',', dr["rowindex"].ToString());
+                    if (countvirgole == countvirgolefiglio && rowindex == dr["rowindex"].ToString().Substring(0,rowindex.Length))
+                    {
+                        count++;
+                    }
+                }
+            }*/
+            
             return count;
         }
 

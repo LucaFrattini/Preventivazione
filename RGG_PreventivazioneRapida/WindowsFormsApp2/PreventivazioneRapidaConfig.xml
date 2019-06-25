@@ -56,6 +56,10 @@
       </Query>
       <PK>ar_codart</PK>
     </Articolo>
+    <Lavorazione>
+      <Query>select * from tablavo where tb_codlavo &lt; 500</Query>
+      <PK>tb_codlavo</PK>
+    </Lavorazione>
     <Cliente>
       <Query>
         SELECT an_conto, an_descr1, an_tipo, an_indir, an_cap, an_citta, an_pariva
@@ -92,10 +96,16 @@
       where dd_codcent > 500 and lc_tipo = 'F' and lc_datscad = '2099-12-31T00:00:00.000' and lc_codart='@LavorazioneEsterna' and dd_codcent='@LavorazioneCentro'
     </LavorazioneEsterna>
     <CercaArticolo>
-      select '' AS CODICE_PADRE, ar_codart AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  '' AS 'Quantita`', '' AS 'Setup Mac',  '' AS 'Setup Uomo',
+      select '' AS 'rowindex', '' AS CODICE_PADRE, ar_codart AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  cast(0 as float) AS 'Quantita`', '' AS 'Setup Mac',  '' AS 'Setup Uomo',
       '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var'
       from artico left join artprox on ar_codart=apx_codart where ar_codart = '@CodArticolo'
     </CercaArticolo>
+    <CercaLavorazione>
+      
+    </CercaLavorazione>
+    <CercaPreventivo>
+      SELECT * FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, * FROM preventivi WHERE cliente = 'RGG') AS clientepreventivi WHERE rowindex = '@idpreventivo'
+    </CercaPreventivo>
   </AllQuery>
 
   <!--Lista dei campi della tabella che è possibile modificare-->

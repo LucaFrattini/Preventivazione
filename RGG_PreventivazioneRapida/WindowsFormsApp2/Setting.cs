@@ -49,10 +49,13 @@ namespace PreventivazioneRapida
                 this.pkArticolo = xmlDoc.SelectSingleNode("configuration/AllQuery/Articolo/PK").InnerText;
                 this.queryCliente = xmlDoc.SelectSingleNode("configuration/AllQuery/Cliente/Query").InnerText;
                 this.pkCliente = xmlDoc.SelectSingleNode("configuration/AllQuery/Cliente/PK").InnerText;
+                this.queryLavorazione = xmlDoc.SelectSingleNode("configuration/AllQuery/Lavorazione/Query").InnerText;
+                this.pkLavorazione = xmlDoc.SelectSingleNode("configuration/AllQuery/Lavorazione/PK").InnerText;
                 this.queryCodDistBase = xmlDoc.SelectSingleNode("configuration/AllQuery/CodDistintaBase").InnerText;
                 this.queryDistintaBase = xmlDoc.SelectSingleNode("configuration/AllQuery/DistintaBase").InnerText;
                 this.queryLavorazioneEsterna = xmlDoc.SelectSingleNode("configuration/AllQuery/LavorazioneEsterna").InnerText;
                 this.queryCercaArticolo = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaArticolo").InnerText;
+                this.queryCercaPreventivo = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaPreventivo").InnerText;
 
                 this.campiModificabili = xmlDoc.SelectSingleNode("configuration/CampiModificabili");
 
@@ -125,6 +128,12 @@ namespace PreventivazioneRapida
         private string pkCliente;
         public string PKCliente { get { return this.pkCliente; } }
 
+        private string queryLavorazione;
+        public string QueryLavorazione { get { return this.queryLavorazione; } }
+
+        private string pkLavorazione;
+        public string PKLavorazione { get { return this.pkLavorazione; } }
+
         private string queryCodDistBase;
         public string QueryCodDistBase { get { return this.queryCodDistBase; } }
 
@@ -133,6 +142,9 @@ namespace PreventivazioneRapida
 
         private string queryCercaArticolo;
         public string QueryCercaArticolo { get { return this.queryCercaArticolo; } }
+
+        private string queryCercaPreventivo;
+        public string QueryCercaPreventivo { get { return this.queryCercaPreventivo; } }
 
         private XmlNode campiModificabili;
         public XmlNode CampiModificabili { get { return this.campiModificabili; } }

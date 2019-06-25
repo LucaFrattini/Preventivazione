@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -200,12 +201,12 @@ namespace PreventivazioneRapida
             //NON DEVO CERCARE PER CODICE ARTICOLO, NEL CASO FOSSE UNA LAVORAZIONE COME LO CERCO!?!?!?!?!?!
             IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("rowindex") == padre select row;
             DataRow rowpadre = query.First();
-            int rows = m.VerificaSemilavorato(rowpadre["CODICE ART"].ToString());
+            int rows = m.VerificaSemilavorato(rowpadre);
             try
             {
                 if (Double.Parse(rowpadre["Codice Centro"].ToString()) > 499)
                 {
-                    m.GestisciLavorazioneEsterna(rowpadre, textBoxArticolo.Text);
+                    m.GestisciLavorazioneEsterna(rowpadre, rowpadre["CODICE_PADRE"].ToString());
                 }
             }
             catch { }
@@ -277,6 +278,7 @@ namespace PreventivazioneRapida
         //Fare il test con questo codice --> SB02AL1505.0-1_02
         private void textBoxArticolo_TextChanged(object sender, EventArgs e)
         {
+            textBoxArticolo.Text = textBoxArticolo.Text.ToUpper();
             if(textBoxArticolo.Text != articolo)
             {
                 DataTable dtArt, dtDistBase;
@@ -317,7 +319,6 @@ namespace PreventivazioneRapida
                             column.ReadOnly = true;
                         }
                         //Fare il test con questo codice --> SB02AL1505.0-1_02
-                        DataTable table = m.ds.Tables["DistintaBase"];
                         ColoraDataGrid();
                         CalcolaPrezzoQuantitaImpostata();
                         CalcolaPrezzoTotaliPerQuantita();
@@ -1213,6 +1214,306 @@ namespace PreventivazioneRapida
             {
                 dataGridView.Height = (a - b) - 50;
             }
+        }
+
+        public void InserisciRigo(int tipologiaInserimento, string padre, DataRow datarow)
+        {
+            switch (tipologiaInserimento)
+            {
+                case 1:
+                    {
+                        if(textBoxArticolo.Text == padre)
+                        {
+                            IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
+                            int risultato = query.Max();
+                            datarow["rowindex"] = (risultato + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            m.ds.Tables["DistintaBase"].ImportRow(datarow);
+                            EsplodiDistintaBase(datarow["rowindex"].ToString(), 1);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        else
+                        {
+                            IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == padre select row;
+                            DataRow datarowpadre = query.First();
+                            string rowindexpadre = datarowpadre["rowindex"].ToString();
+                            int numerodifigli = 0;
+                            foreach(DataRow r in m.ds.Tables["DistintaBase"].Rows)
+                            {
+                                if(r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
+                                {
+                                    try
+                                    {
+                                        string prova = r["rowindex"].ToString().Substring(rowindexpadre.Length+1);
+                                        int rowindexfigli = Int32.Parse(r["rowindex"].ToString().Substring(rowindexpadre.Length+1));
+                                        if(rowindexfigli > numerodifigli)
+                                        {
+                                            numerodifigli = rowindexfigli;
+                                        }
+                                    }
+                                    catch { }                                    
+                                }
+                            }
+                            datarow["rowindex"] = rowindexpadre + "," + (numerodifigli+1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            m.ds.Tables["DistintaBase"].ImportRow(datarow);
+                            int livello = FindNumberOfChar(',', datarow["rowindex"].ToString()) + 1;
+                            EsplodiDistintaBase(datarow["rowindex"].ToString(), livello);
+
+                            AggiornaParentela(datarow);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        break;
+                    }
+                case 2:
+                    {
+                        break;
+                    }
+                case 3:
+                    {
+                        if (textBoxArticolo.Text == padre)
+                        {
+                            IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
+                            int risultato = query.Max();
+                            DataTable datatable = new DataTable();
+                            SqlDataAdapter da;
+                            SqlConnection sqlserverConn = new SqlConnection(Setting.Istance.ConnStr);
+                            sqlserverConn.Open();
+                            string selectrighipreventivo = "SELECT rowindex,codicepadre as CODICE_PADRE,codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
+                                "quantita AS 'Quantita`', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
+                                "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
+                                "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var', setupmacdec AS 'setup mac decimale', setupuomodec AS 'setup uomo decimale'," +
+                                " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = (SELECT id FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, id FROM preventivi" +
+                                " WHERE cliente = 'RGG') AS clientepreventivi WHERE rowindex = " + Int32.Parse(datarow["rowindex"].ToString()) + ")";
+                            da = new SqlDataAdapter(selectrighipreventivo, sqlserverConn);
+                            da.Fill(datatable);
+                            DataRow rigotestata = m.ds.Tables["DistintaBase"].NewRow();
+                            rigotestata["rowindex"] = (risultato + 1).ToString();
+                            rigotestata["CODICE_PADRE"] = padre;
+                            rigotestata["Quantita`"] = datarow["quantita"];
+                            rigotestata["Totale"] = datarow["totale"];
+                            rigotestata["Codice Art"] = datarow["articolo"];
+                            rigotestata["Descrizione art / Centro di Lavoro"] = datarow["note"];
+                            rigotestata["Totale + %Var"] = Double.Parse(rigotestata["Totale"].ToString()) + (Double.Parse(rigotestata["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigotestata);
+                            foreach(DataRow dr in datatable.Rows)
+                            {
+                                dr["rowindex"] = rigotestata["rowindex"].ToString() + "," + dr["rowindex"].ToString();
+                                m.ds.Tables["DistintaBase"].ImportRow(dr);
+                            }
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        else
+                        {
+                            IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == padre select row;
+                            DataRow datarowpadre = query.First();
+                            string rowindexpadre = datarowpadre["rowindex"].ToString();
+                            int numerodifigli = 0;
+                            foreach (DataRow r in m.ds.Tables["DistintaBase"].Rows)
+                            {
+                                if (r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
+                                {
+                                    try
+                                    {
+                                        string prova = r["rowindex"].ToString().Substring(rowindexpadre.Length + 1);
+                                        int rowindexfigli = Int32.Parse(r["rowindex"].ToString().Substring(rowindexpadre.Length + 1));
+                                        if (rowindexfigli > numerodifigli)
+                                        {
+                                            numerodifigli = rowindexfigli;
+                                        }
+                                    }
+                                    catch { }
+                                }
+                            }
+                            DataTable datatable = new DataTable();
+                            SqlDataAdapter da;
+                            SqlConnection sqlserverConn = new SqlConnection(Setting.Istance.ConnStr);
+                            sqlserverConn.Open();
+                            string selectrighipreventivo = "SELECT rowindex,codicepadre as CODICE_PADRE,codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
+                                "quantita AS 'Quantita`', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
+                                "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
+                                "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var', setupmacdec AS 'setup mac decimale', setupuomodec AS 'setup uomo decimale'," +
+                                " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = (SELECT id FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, id FROM preventivi" +
+                                " WHERE cliente = 'RGG') AS clientepreventivi WHERE rowindex = " + Int32.Parse(datarow["rowindex"].ToString()) + ")";
+                            da = new SqlDataAdapter(selectrighipreventivo, sqlserverConn);
+                            da.Fill(datatable);
+                            DataRow rigotestata = m.ds.Tables["DistintaBase"].NewRow();
+                            rigotestata["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            rigotestata["CODICE_PADRE"] = padre;
+                            rigotestata["Quantita`"] = datarow["quantita"];
+                            rigotestata["Totale"] = datarow["totale"];
+                            rigotestata["Codice Art"] = datarow["articolo"];
+                            rigotestata["Descrizione art / Centro di Lavoro"] = datarow["note"];
+                            rigotestata["Totale + %Var"] = Double.Parse(rigotestata["Totale"].ToString()) + (Double.Parse(rigotestata["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigotestata);
+                            foreach (DataRow dr in datatable.Rows)
+                            {
+                                dr["rowindex"] = rigotestata["rowindex"].ToString() + "," + dr["rowindex"].ToString();
+                                m.ds.Tables["DistintaBase"].ImportRow(dr);
+                            }
+
+                            AggiornaParentela(rigotestata);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        break;
+                    }
+                case 4:
+                    {
+                        if (textBoxArticolo.Text == padre)
+                        {
+                            IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
+                            int risultato = query.Max();
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = (risultato + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
+                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                            rigodainserire["Costo Art"] = datarow["Prezzo"].ToString();
+                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        else
+                        {
+                            IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == padre select row;
+                            DataRow datarowpadre = query.First();
+                            string rowindexpadre = datarowpadre["rowindex"].ToString();
+                            int numerodifigli = 0;
+                            foreach (DataRow r in m.ds.Tables["DistintaBase"].Rows)
+                            {
+                                if (r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
+                                {
+                                    try
+                                    {
+                                        string prova = r["rowindex"].ToString().Substring(rowindexpadre.Length + 1);
+                                        int rowindexfigli = Int32.Parse(r["rowindex"].ToString().Substring(rowindexpadre.Length + 1));
+                                        if (rowindexfigli > numerodifigli)
+                                        {
+                                            numerodifigli = rowindexfigli;
+                                        }
+                                    }
+                                    catch { }
+                                }
+                            }
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
+                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                            rigodainserire["Costo Art"] = datarow["Prezzo"].ToString();
+                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            AggiornaParentela(rigodainserire);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        break;
+                    }
+                case 5:
+                    {
+                        if (textBoxArticolo.Text == padre)
+                        {
+                            IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
+                            int risultato = query.Max();
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = (risultato + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
+                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                            rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
+                            rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
+                            rigodainserire["Tempo mac"] = datarow["Tempo mac"].ToString();
+                            rigodainserire["Tempo uomo"] = datarow["Tempo uomo"].ToString();
+                            rigodainserire["Costo att mac"] = datarow["Costo setup mac"].ToString();
+                            rigodainserire["Costo att uomo"] = datarow["Costo setup uomo"].ToString();
+                            rigodainserire["Costo mac"] = datarow["Costo tempo mac"].ToString();
+                            rigodainserire["Costo uomo"] = datarow["Costo tempo uomo"].ToString();
+
+                            rigodainserire["Totale"] = (Double.Parse(rigodainserire["Setup mac"].ToString()) * Double.Parse(rigodainserire["Costo att mac"].ToString())) + (Double.Parse(rigodainserire["Setup uomo"].ToString()) * Double.Parse(rigodainserire["Costo att uomo"].ToString()))
+                                + (Double.Parse(rigodainserire["Tempo mac"].ToString()) * Double.Parse(rigodainserire["Costo mac"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()))
+                                + (Double.Parse(rigodainserire["Tempo uomo"].ToString()) * Double.Parse(rigodainserire["Costo uomo"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()));
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        else
+                        {
+                            IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == padre select row;
+                            DataRow datarowpadre = query.First();
+                            string rowindexpadre = datarowpadre["rowindex"].ToString();
+                            int numerodifigli = 0;
+                            foreach (DataRow r in m.ds.Tables["DistintaBase"].Rows)
+                            {
+                                if (r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
+                                {
+                                    try
+                                    {
+                                        string prova = r["rowindex"].ToString().Substring(rowindexpadre.Length + 1);
+                                        int rowindexfigli = Int32.Parse(r["rowindex"].ToString().Substring(rowindexpadre.Length + 1));
+                                        if (rowindexfigli > numerodifigli)
+                                        {
+                                            numerodifigli = rowindexfigli;
+                                        }
+                                    }
+                                    catch { }
+                                }
+                            }
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
+                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                            rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
+                            rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
+                            rigodainserire["Tempo mac"] = datarow["Tempo mac"].ToString();
+                            rigodainserire["Tempo uomo"] = datarow["Tempo uomo"].ToString();
+                            rigodainserire["Costo att mac"] = datarow["Costo setup mac"].ToString();
+                            rigodainserire["Costo att uomo"] = datarow["Costo setup uomo"].ToString();
+                            rigodainserire["Costo mac"] = datarow["Costo tempo mac"].ToString();
+                            rigodainserire["Costo uomo"] = datarow["Costo tempo uomo"].ToString();
+                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            AggiornaParentela(rigodainserire);
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        break;
+                    }
+                default:
+                    break;
+                    
+            }
+               
+
         }
     }
 }

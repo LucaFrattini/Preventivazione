@@ -3,11 +3,11 @@
   <intestazione>Help preventivi</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = $val1
+    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = 'RGG'
   </query>
 
   <queryDescrizione>
-    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = $val2
+    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = 'RGG'
   </queryDescrizione>
   <campoRitorno>idpreventivocliente</campoRitorno>
   <inserimento></inserimento>

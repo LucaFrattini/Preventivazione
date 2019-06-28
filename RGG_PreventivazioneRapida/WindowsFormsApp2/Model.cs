@@ -378,45 +378,45 @@ namespace PreventivazioneRapida
                 try
                 {
                     double tempoDecimale = Double.Parse(dr["setup Mac"].ToString());
-                    int ore = (int)tempoDecimale;
+                    int ore = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale -= ore;
                     tempoDecimale = tempoDecimale * 100;
-                    double minuti = (int)(tempoDecimale);
+                    double minuti = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
-                    double secondi = (int)tempoDecimale;
+                    double secondi = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     secondi = Math.Round(secondi + (minuti * 60));
                     double tempo = secondi / 3600;
                     dr["setup mac decimale"] = (ore + tempo).ToString();
 
                     tempoDecimale = Double.Parse(dr["setup uomo"].ToString());
-                    ore = (int)tempoDecimale;
+                    ore = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale -= ore;
                     tempoDecimale = tempoDecimale * 100;
-                    minuti = (int)(tempoDecimale);
+                    minuti = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
-                    secondi = (int)tempoDecimale;
+                    secondi = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     secondi = Math.Round(secondi + (minuti * 60));
                     tempo = secondi / 3600;
                     dr["setup uomo decimale"] = (ore + tempo).ToString();
 
                     tempoDecimale = Double.Parse(dr["tempo mac"].ToString());
-                    ore = (int)tempoDecimale;
+                    ore = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale -= ore;
                     tempoDecimale = tempoDecimale * 100;
-                    minuti = (int)(tempoDecimale);
+                    minuti = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
-                    secondi = (int)tempoDecimale;
+                    secondi = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     secondi = Math.Round(secondi + (minuti * 60));
                     tempo = secondi / 3600;
                     dr["tempo mac decimale"] = (ore + tempo).ToString();
 
                     tempoDecimale = Double.Parse(dr["tempo uomo"].ToString());
-                    ore = (int)tempoDecimale;
+                    ore = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale -= ore;
                     tempoDecimale = tempoDecimale * 100;
-                    minuti = (int)(tempoDecimale);
+                    minuti = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     tempoDecimale = Math.Round((tempoDecimale - minuti) * 100, 2);
-                    secondi = (int)tempoDecimale;
+                    secondi = Int32.Parse(Math.Floor(tempoDecimale).ToString());
                     secondi = Math.Round(secondi + (minuti * 60));
                     tempo = secondi / 3600;
                     dr["tempo uomo decimale"] = (ore + tempo).ToString();

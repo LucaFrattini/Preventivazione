@@ -6,7 +6,7 @@
     SELECT ar_codart,
     ar_descr,
     ar_desint,
-    ar_unmis
+    ar_unmis AS 'Unità Misura'
     FROM artico
   </query>
 
@@ -14,7 +14,7 @@
     SELECT ar_codart,
     ar_descr,
     ar_desint,
-    ar_unmis
+    ar_unmis AS 'Unità Misura'
     FROM artico
   </queryDescrizione>
   <campoRitorno>ar_codart</campoRitorno>

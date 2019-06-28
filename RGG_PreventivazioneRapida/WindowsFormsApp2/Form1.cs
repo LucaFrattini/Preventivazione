@@ -18,6 +18,7 @@ namespace PreventivazioneRapida
     {
         //modello dei dati
         Model m;
+        public bool creaArticolo = false;
         private int zoom = 0, altezzaDataGrid = 0;
         private double precedenteQuantita = 1;
         public TextBox TbCLiente { get; set; }
@@ -56,6 +57,7 @@ namespace PreventivazioneRapida
             textBoxVariazioneLav.Enter += textBox_Enter;
             textBoxVariazione.Enter += textBox_Enter;
             this.Load += Form1_Load;
+       
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -92,7 +94,7 @@ namespace PreventivazioneRapida
                     {
                         DataRow datarow = m.ds.Tables["DistintaBase"].Rows[i];
                         
-                        if (datarow["Codice Art"].ToString() == codiceart || datarow["Codice_Padre"].ToString() == codiceart)
+                        if (datarow["Codice_Padre"].ToString() == codiceart)
                         {
                             m.ds.Tables["DistintaBase"].Rows.Remove(datarow);
                             i--;
@@ -101,6 +103,14 @@ namespace PreventivazioneRapida
                     }
                     catch { }                  
                 }
+                DataColumn[] key = new DataColumn[1];
+                if (m.ds.Tables["DistintaBase"].PrimaryKey.Length < 1)
+                {
+                    key[0] = m.ds.Tables["DistintaBase"].Columns["rowindex"];
+                    m.ds.Tables["DistintaBase"].PrimaryKey = key;
+                }
+                DataRow datarowselezionata = m.ds.Tables["DistintaBase"].Rows.Find(row.Cells["rowindex"].Value.ToString());
+                m.ds.Tables["DistintaBase"].Rows.Remove(datarowselezionata);
                 CalcolaPrezzoQuantitaImpostata();
                 CalcolaPrezzoTotaliPerQuantita();
             }
@@ -170,30 +180,44 @@ namespace PreventivazioneRapida
         private void buttonPulisci_Click(object sender, EventArgs e)
         {
             PulisciSchermata();
+            if (creaArticolo)
+            {
+                creaArticolo = true;
+                textBoxQuantita.Enabled = true;
+                textBoxVariazioneLav.Enabled = true;
+                textBoxVariazione.Enabled = true;
+                textBoxCliente.Text = "RGG";
+                labelCliente.Text = "RGG";
+                textBoxArticolo.Text = "CREA_ARTICOLO";
+            }
         }
 
         private void textBoxCliente_TextChanged(object sender, EventArgs e)
         {
-            if(textBoxCliente.Text != cliente)
+            if (!creaArticolo)
             {
-                DataTable dt;
-                dt = m.ds.Tables["Clienti"];
-                try
+                if (textBoxCliente.Text != cliente)
                 {
-                    DataRow dr = dt.Rows.Find(textBoxCliente.Text);
-                    if (dr != null)
+                    DataTable dt;
+                    dt = m.ds.Tables["Clienti"];
+                    try
                     {
-                        textBoxCliente.BackColor = Color.LightGreen;
-                        labelCliente.Text = dr[1].ToString();
+                        DataRow dr = dt.Rows.Find(textBoxCliente.Text);
+                        if (dr != null)
+                        {
+                            textBoxCliente.BackColor = Color.LightGreen;
+                            labelCliente.Text = dr[1].ToString();
+                        }
+                        else
+                        {
+                            textBoxCliente.BackColor = (textBoxCliente.Text == "" ? Color.White : Color.OrangeRed);
+                            labelCliente.Text = "<Descrizione cliente>";
+                        }
                     }
-                    else
-                    {
-                        textBoxCliente.BackColor = (textBoxCliente.Text == "" ? Color.White : Color.OrangeRed);
-                        labelCliente.Text = "<Descrizione cliente>";
-                    }
+                    catch { }
                 }
-                catch { }
-            }                      
+            }
+                              
         }
 
         void EsplodiDistintaBase(string padre, int livello)
@@ -278,81 +302,91 @@ namespace PreventivazioneRapida
         //Fare il test con questo codice --> SB02AL1505.0-1_02
         private void textBoxArticolo_TextChanged(object sender, EventArgs e)
         {
-            textBoxArticolo.Text = textBoxArticolo.Text.ToUpper();
-            if(textBoxArticolo.Text != articolo)
+            if (!creaArticolo)
             {
-                DataTable dtArt, dtDistBase;
-                dtArt = m.ds.Tables["Articoli"];
-                DataRow dr = dtArt.Rows.Find(textBoxArticolo.Text);
-                if (dr != null)
-                {
-                    textBoxArticolo.BackColor = Color.LightGreen;
-                    labelArticolo.Text = dr[1].ToString();
-                    PulisciSchermata();
-                    string getDistBase = Setting.Istance.QueryCodDistBase.Replace("@articolo", textBoxArticolo.Text);
-                    m.EstraiRisultatoQuery(getDistBase, "CodDistBase");
-                    if (m.ds.Tables["CodDistBase"].Rows.Count > 0)
-                    {
-                        string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", m.ds.Tables["CodDistBase"].Rows[0][0].ToString());
-                        m.EstraiRisultatoQuery(distintaBase, "DistintaBase");
-                        BindingSource bindingSource1 = new BindingSource();
-                        bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
-                        dataGridView.DataSource = bindingSource1;
-                        dtDistBase = m.ds.Tables["DistintaBase"];
-                        int righeDataGrid = m.ds.Tables["DistintaBase"].Rows.Count;
-                        m.InizializzaColonneTempo();
-                        int livello = 1;
-                        for (int i = 0; i < righeDataGrid; i++)
-                        {
-                            DataRow figlio = m.ds.Tables["DistintaBase"].Rows[i];
-                            figlio["Quantita`"] = Math.Round(Double.Parse(figlio["Quantita`"].ToString()) * Double.Parse(textBoxQuantita.Text.Replace('.', ',')), 4);
-                            string rowindex = figlio["rowindex"].ToString();
-                            EsplodiDistintaBase(rowindex, livello);
-                        }
-                        m.FromDecimalToTime();
-
-                        //dataGridView.Columns["rowindex"].Visible = false;
-                        dataGridView.Sort(dataGridView.Columns["rowindex"], ListSortDirection.Ascending);
-                        foreach (DataGridViewColumn column in dataGridView.Columns)
-                        {
-                            column.SortMode = DataGridViewColumnSortMode.NotSortable;
-                            column.ReadOnly = true;
-                        }
-                        //Fare il test con questo codice --> SB02AL1505.0-1_02
-                        ColoraDataGrid();
-                        CalcolaPrezzoQuantitaImpostata();
-                        CalcolaPrezzoTotaliPerQuantita();
-                        //Fare il test con questo codice --> SB02AL1505.0-1_02                 
-                    }
-                    else
-                    {
-                        MessageBox.Show("L'articolo non ha una distinta base");
-                    }
-                    groupBoxQI.Text = "Quantità impostata: " + textBoxQuantita.Text;
-                    textBoxVariazione.Enabled = true;
-                    textBoxVariazioneLav.Enabled = true;
-                    textBoxQuantita.Enabled = true;
-                }
-                else
+                textBoxArticolo.Text = textBoxArticolo.Text.ToUpper();
+                if (textBoxArticolo.Text != articolo)
                 {
                     try
                     {
-                        if (m.ds.Tables.Count > 2)
-                        {
-                            m.ds.Tables.Remove("DistintaBase");
-                            m.ds.Tables.Remove("CodDistBase");
-                            dataGridView.DataSource = null;
-                        }
-                        textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
-                        labelArticolo.Text = "<Descrizione articolo>";
-                        textBoxVariazione.Enabled = false;
-                        textBoxVariazioneLav.Enabled = false;
-                        textBoxQuantita.Enabled = false;
-                        //dataGridView.Rows.Clear();
+                        m.ds.Tables.Remove("DistintaBase");
+                        m.ds.Tables.Remove("CodDistBase");
+                        dataGridView.DataSource = null;
                     }
-                    catch
+                    catch { }
+                    DataTable dtArt, dtDistBase;
+                    dtArt = m.ds.Tables["Articoli"];
+                    DataRow dr = dtArt.Rows.Find(textBoxArticolo.Text);
+                    if (dr != null)
                     {
+                        textBoxArticolo.BackColor = Color.LightGreen;
+                        labelArticolo.Text = dr[1].ToString();
+                        //PulisciSchermata();
+                        string getDistBase = Setting.Istance.QueryCodDistBase.Replace("@articolo", textBoxArticolo.Text);
+                        m.EstraiRisultatoQuery(getDistBase, "CodDistBase");
+                        if (m.ds.Tables["CodDistBase"].Rows.Count > 0)
+                        {
+                            string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", m.ds.Tables["CodDistBase"].Rows[0][0].ToString());
+                            m.EstraiRisultatoQuery(distintaBase, "DistintaBase");
+                            BindingSource bindingSource1 = new BindingSource();
+                            bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
+                            dataGridView.DataSource = bindingSource1;
+                            dtDistBase = m.ds.Tables["DistintaBase"];
+                            int righeDataGrid = m.ds.Tables["DistintaBase"].Rows.Count;
+                            m.InizializzaColonneTempo();
+                            int livello = 1;
+                            for (int i = 0; i < righeDataGrid; i++)
+                            {
+                                DataRow figlio = m.ds.Tables["DistintaBase"].Rows[i];
+                                figlio["Quantita`"] = Math.Round(Double.Parse(figlio["Quantita`"].ToString()) * Double.Parse(textBoxQuantita.Text.Replace('.', ',')), 4);
+                                string rowindex = figlio["rowindex"].ToString();
+                                EsplodiDistintaBase(rowindex, livello);
+                            }
+                            m.FromDecimalToTime();
 
+                            //dataGridView.Columns["rowindex"].Visible = false;
+                            dataGridView.Sort(dataGridView.Columns["rowindex"], ListSortDirection.Ascending);
+                            foreach (DataGridViewColumn column in dataGridView.Columns)
+                            {
+                                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                                column.ReadOnly = true;
+                            }
+                            //Fare il test con questo codice --> SB02AL1505.0-1_02
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                            //Fare il test con questo codice --> SB02AL1505.0-1_02                 
+                        }
+                        else
+                        {
+                            MessageBox.Show("L'articolo non ha una distinta base");
+                        }
+                        groupBoxQI.Text = "Quantità impostata: " + textBoxQuantita.Text;
+                        textBoxVariazione.Enabled = true;
+                        textBoxVariazioneLav.Enabled = true;
+                        textBoxQuantita.Enabled = true;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            if (m.ds.Tables.Count > 2)
+                            {
+                                m.ds.Tables.Remove("DistintaBase");
+                                m.ds.Tables.Remove("CodDistBase");
+                                dataGridView.DataSource = null;
+                            }
+                            textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
+                            labelArticolo.Text = "<Descrizione articolo>";
+                            textBoxVariazione.Enabled = false;
+                            textBoxVariazioneLav.Enabled = false;
+                            textBoxQuantita.Enabled = false;
+                            //dataGridView.Rows.Clear();
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
             }
@@ -567,21 +601,23 @@ namespace PreventivazioneRapida
             try
             {
                 m.ds.Tables.Remove("DistintaBase");
-                textBoxCliente.Text = "";
-                textBoxArticolo.Text = "";
-                textBoxQuantita.Text = "1";
-                textBoxVariazione.Text = "0";
-                textBoxVariazioneLav.Text = "0";
-                textBoxNote.Text = "";               
+                m.ds.Tables.Remove("CodDistBase");
                 dataGridView.DataSource = null;
-                textBoxCliente.Focus();
-                textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
-                labelArticolo.Text = "<Descrizione articolo>";
-                textBoxVariazione.Enabled = false;
-                textBoxVariazioneLav.Enabled = false;
-                textBoxQuantita.Enabled = false;
             }
             catch { }
+            textBoxCliente.Focus();
+            labelArticolo.Text = "<Descrizione articolo>";
+            textBoxVariazione.Enabled = false;
+            textBoxVariazioneLav.Enabled = false;
+            textBoxQuantita.Enabled = false;
+            textBoxCliente.Text = "";
+            textBoxArticolo.Text = "";
+            textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
+            textBoxQuantita.Text = "1";
+            textBoxVariazione.Text = "0";
+            textBoxVariazioneLav.Text = "0";
+            textBoxNote.Text = "";
+            precedenteQuantita = 1;
             CostoMac1.Text = "0";
             CostoMac2.Text = "0";
             CostoMac3.Text = "0";
@@ -610,29 +646,28 @@ namespace PreventivazioneRapida
         private void btnNuovo_Click(object sender, EventArgs e)
         {
             PulisciSchermata();
+            if (!creaArticolo)
+            {
+                creaArticolo = true;
+                this.BackColor = Color.NavajoWhite;
+                textBoxQuantita.Enabled = true;
+                textBoxVariazioneLav.Enabled = true;
+                textBoxVariazione.Enabled = true;
+                textBoxCliente.Text = "RGG";
+                labelCliente.Text = "RGG";
+                textBoxArticolo.Text = "CREA_ARTICOLO";
+            }
+            else
+            {
+                creaArticolo = false;
+                this.BackColor = Color.WhiteSmoke;
+            }
+
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            string articolotemp = textBoxArticolo.Text;
-            string clientetemp = textBoxCliente.Text;
-            string quantitatemp = textBoxQuantita.Text;
-            string variazionetemp = textBoxVariazione.Text;
-            string notetemp = textBoxNote.Text;
-
-            textBoxArticolo.Text = "";
-            textBoxCliente.Text = " ";
-            textBoxQuantita.Text = "";
-            textBoxVariazione.Text = "";
-            textBoxNote.Text = "";
-
-            m = new Model();
-
-            textBoxArticolo.Text = articolotemp;
-            textBoxCliente.Text = clientetemp;
-            textBoxQuantita.Text = quantitatemp;
-            textBoxVariazione.Text = variazionetemp;
-            textBoxNote.Text = notetemp;
+            BindingGrid();
         }
 
         private void textBoxVariazione_KeyPress(object sender, KeyPressEventArgs e)
@@ -667,8 +702,6 @@ namespace PreventivazioneRapida
                     for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
                     {
                         DataGridViewRow row = dataGridView.Rows[rowcount];
-                        string indiceriga = row.Cells["rowindex"].Value.ToString();
-                        int generazione = FindNumberOfChar(',', indiceriga);
                         try
                         {
                             if (row.Cells["Totale"].ToString() != null && row.Cells["Codice Art"].Value.ToString() != "" && row.Cells["Codice centro"].Value.ToString() == "")
@@ -708,12 +741,9 @@ namespace PreventivazioneRapida
                 {
                     double variazioneInserita = Double.Parse(textBoxVariazioneLav.Text);
                     double Totale, variazione;
-                    int ultimaGenerazione = FindNumberOfChar(',', m.ds.Tables["DistintaBase"].Rows[m.ds.Tables["DistintaBase"].Rows.Count - 1]["rowindex"].ToString());
                     for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
                     {
                         DataGridViewRow row = dataGridView.Rows[rowcount];
-                        string indiceriga = row.Cells["rowindex"].Value.ToString();
-                        int generazione = FindNumberOfChar(',', indiceriga);
                         try
                         {
                             if ((row.Cells["Totale"].ToString() != null && row.Cells["Codice Art"].Value.ToString() == "") || Double.Parse(row.Cells["Codice Centro"].Value.ToString()) > 499)
@@ -744,33 +774,6 @@ namespace PreventivazioneRapida
 
         private void btnModifica_Click(object sender, EventArgs e)
         {
-            /*dataGridView.Columns["Quantita`"].ReadOnly = false;
-            dataGridView.Columns["Setup Mac"].ReadOnly = false;
-            dataGridView.Columns["Setup Uomo"].ReadOnly = false;
-            dataGridView.Columns["Tempo Mac"].ReadOnly = false;
-            dataGridView.Columns["Tempo Uomo"].ReadOnly = false;
-            dataGridView.Columns["Costo Att Mac"].ReadOnly = false;
-            dataGridView.Columns["Costo Att Uomo"].ReadOnly = false;
-            dataGridView.Columns["Costo Mac"].ReadOnly = false;
-            dataGridView.Columns["Costo Uomo"].ReadOnly = false;
-            dataGridView.Columns["Quantita`"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Setup Mac"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Setup Uomo"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Tempo Mac"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Tempo Uomo"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Costo Att Uomo"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Costo Att Mac"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Costo Mac"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Costo Uomo"].DefaultCellStyle.BackColor = Color.LightSkyBlue;
-            dataGridView.Columns["Quantita`"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Setup Mac"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Setup Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Tempo Mac"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Tempo Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Costo Att Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Costo Att Mac"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Costo Mac"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;
-            dataGridView.Columns["Costo Uomo"].DefaultCellStyle.SelectionBackColor = Color.DeepSkyBlue;*/
             InserisciRigo inserisciRigo = new InserisciRigo(this, m);
             inserisciRigo.Show();
         }
@@ -863,6 +866,7 @@ namespace PreventivazioneRapida
             {
                 //double valoreCella = Double.Parse(dataGridView.CurrentCell.Value.ToString());
                 int colindex = e.ColumnIndex;// dataGridView.CurrentCell.ColumnIndex;
+
                 int rowindex = e.RowIndex;//dataGridView.CurrentCell.RowIndex;
                 DataColumn[] key = new DataColumn[1];
                 if (m.ds.Tables["DistintaBase"].PrimaryKey.Length < 1)
@@ -873,8 +877,14 @@ namespace PreventivazioneRapida
                 }
                 string indiceriga = dataGridView["rowindex", rowindex].Value.ToString();
                 DataRow r = m.ds.Tables["DistintaBase"].Rows.Find(indiceriga);
+                r[colindex] = r[colindex].ToString().Replace('.', ',');
                 int generazione = FindNumberOfChar(',', indiceriga);
                 int ultimaGenerazione = FindNumberOfChar(',', m.ds.Tables["DistintaBase"].Rows[m.ds.Tables["DistintaBase"].Rows.Count-1]["rowindex"].ToString());
+                string nomeColonna = m.ds.Tables["DistintaBase"].Columns[colindex].ColumnName;
+                if (nomeColonna == "Setup Mac" || nomeColonna == "Setup Uomo" || nomeColonna == "Tempo Mac" || nomeColonna == "Tempo Uomo")
+                {
+                    m.FromTimeToDecimal();
+                }
 
                 if (generazione==ultimaGenerazione || r["CODICE ART"].ToString() == "")
                 {
@@ -916,7 +926,6 @@ namespace PreventivazioneRapida
                     AggiornaParentela(r);
                 }
 
-                m.FromTimeToDecimal();
                 BindingGrid();
 
             }
@@ -998,8 +1007,8 @@ namespace PreventivazioneRapida
             QIarticoli.Text = Math.Round(colCostoMat, 2).ToString();
             QItotale.Text = Math.Round(colTotale,2).ToString();
             QItotalevar.Text = Math.Round(colTotaleVar,2).ToString();
-            QICostoSingolo.Text = (Double.Parse(QItotale.Text) / Double.Parse(textBoxQuantita.Text)).ToString();
-            QIRicavoSingolo.Text = (Double.Parse(QItotalevar.Text) / Double.Parse(textBoxQuantita.Text)).ToString();
+            QICostoSingolo.Text = Math.Round(Double.Parse(QItotale.Text) / Double.Parse(textBoxQuantita.Text),2).ToString();
+            QIRicavoSingolo.Text = Math.Round(Double.Parse(QItotalevar.Text) / Double.Parse(textBoxQuantita.Text),2).ToString();
         }
 
         private void CalcolaPrezzoTotaliPerQuantita()
@@ -1218,6 +1227,16 @@ namespace PreventivazioneRapida
 
         public void InserisciRigo(int tipologiaInserimento, string padre, DataRow datarow)
         {
+            if (m.ds.Tables.IndexOf("DistintaBase") < 1)
+            {
+                DataTable distintaBase = new DataTable();
+                distintaBase = datarow.Table.Clone();
+                distintaBase.TableName = "DistintaBase";
+                m.ds.Tables.Add(distintaBase);
+                BindingSource bindingSource1 = new BindingSource();
+                bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
+                dataGridView.DataSource = bindingSource1;
+            }
             switch (tipologiaInserimento)
             {
                 case 1:
@@ -1225,15 +1244,23 @@ namespace PreventivazioneRapida
                         if(textBoxArticolo.Text == padre)
                         {
                             IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
-                            int risultato = query.Max();
+                            
+                            int risultato = 0;
+                            List<int> qqqq = query.ToList();
+                            if (qqqq.Count > 0)
+                            {
+                                risultato = query.Max();
+                            }
                             datarow["rowindex"] = (risultato + 1).ToString();
                             datarow["CODICE_PADRE"] = padre;
                             m.ds.Tables["DistintaBase"].ImportRow(datarow);
                             EsplodiDistintaBase(datarow["rowindex"].ToString(), 1);
                             m.FromDecimalToTime();
+                            BindingGrid();
+                            /*
                             ColoraDataGrid();
                             CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
+                            CalcolaPrezzoTotaliPerQuantita();*/
                         }
                         else
                         {
@@ -1273,6 +1300,110 @@ namespace PreventivazioneRapida
                     }
                 case 2:
                     {
+                        if (textBoxArticolo.Text == padre)
+                        {
+                            IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
+                            int risultato = query.Max();
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = (risultato + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Totale"] = "0";
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["LavDesc"].ToString() + " - " + datarow["CenDesc"].ToString();
+                            rigodainserire["Totale + %Var"] = "0";
+                            if (Int32.Parse(datarow["Lavorazione"].ToString()) <= 500)
+                            {
+                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
+                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                                rigodainserire["Setup mac"] = "0";
+                                rigodainserire["Setup uomo"] = "0";
+                                rigodainserire["Tempo mac"] = "0";
+                                rigodainserire["Tempo uomo"] = "0";
+                                rigodainserire["Costo att mac"] = datarow["CostoAttMac"].ToString();
+                                rigodainserire["Costo att uomo"] = datarow["CostoAttUomo"].ToString();
+                                rigodainserire["Costo mac"] = datarow["CostoMac"].ToString();
+                                rigodainserire["Costo uomo"] = datarow["CostoUomo"].ToString();
+                            }
+                            else
+                            {
+                                rigodainserire["Codice Art"] = rigodainserire["Descrizione art / Centro di Lavoro"].ToString();
+                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
+                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                                rigodainserire["Costo Art"] = "0";
+
+                            }
+
+                                                        m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            EsplodiDistintaBase(rigodainserire["rowindex"].ToString(), 1);
+                            m.FromTimeToDecimal();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        else
+                        {
+                            IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == padre select row;
+                            DataRow datarowpadre = query.First();
+                            string rowindexpadre = datarowpadre["rowindex"].ToString();
+                            int numerodifigli = 0;
+                            foreach (DataRow r in m.ds.Tables["DistintaBase"].Rows)
+                            {
+                                if (r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
+                                {
+                                    try
+                                    {
+                                        string prova = r["rowindex"].ToString().Substring(rowindexpadre.Length + 1);
+                                        int rowindexfigli = Int32.Parse(r["rowindex"].ToString().Substring(rowindexpadre.Length + 1));
+                                        if (rowindexfigli > numerodifigli)
+                                        {
+                                            numerodifigli = rowindexfigli;
+                                        }
+                                    }
+                                    catch { }
+                                }
+                            }
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            if (Int32.Parse(datarow["Lavorazione"].ToString()) <= 500)
+                            {
+                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
+                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                                rigodainserire["Setup mac"] = "0";
+                                rigodainserire["Setup uomo"] = "0";
+                                rigodainserire["Tempo mac"] = "0";
+                                rigodainserire["Tempo uomo"] = "0";
+                                rigodainserire["Costo att mac"] = datarow["CostoAttMac"].ToString();
+                                rigodainserire["Costo att uomo"] = datarow["CostoAttUomo"].ToString();
+                                rigodainserire["Costo mac"] = datarow["CostoMac"].ToString();
+                                rigodainserire["Costo uomo"] = datarow["CostoUomo"].ToString();
+                            }
+                            else
+                            {
+                                rigodainserire["Codice Art"] = datarow["LavDesc"].ToString();
+                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
+                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                                rigodainserire["Costo Art"] = "0";
+
+                            }
+
+                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["LavDesc"].ToString() + " - " + datarow["CenDesc"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
+
+                            m.ds.Tables["DistintaBase"].ImportRow(datarow);
+                            int livello = FindNumberOfChar(',', datarow["rowindex"].ToString()) + 1;
+                            EsplodiDistintaBase(datarow["rowindex"].ToString(), livello);
+
+                            AggiornaParentela(datarow);
+                            m.FromTimeToDecimal();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
                         break;
                     }
                 case 3:
@@ -1439,7 +1570,8 @@ namespace PreventivazioneRapida
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
                             rigodainserire["rowindex"] = (risultato + 1).ToString();
                             rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
+                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
                             rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
                             rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
                             rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
@@ -1455,6 +1587,81 @@ namespace PreventivazioneRapida
                                 + (Double.Parse(rigodainserire["Tempo uomo"].ToString()) * Double.Parse(rigodainserire["Costo uomo"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()));
                             rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
                             rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            m.FromTimeToDecimal();
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        else
+                        {
+                            IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == padre select row;
+                            DataRow datarowpadre = query.First();
+                            string rowindexpadre = datarowpadre["rowindex"].ToString();
+                            int numerodifigli = 0;
+                            foreach (DataRow r in m.ds.Tables["DistintaBase"].Rows)
+                            {
+                                if (r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
+                                {
+                                    try
+                                    {
+                                        string prova = r["rowindex"].ToString().Substring(rowindexpadre.Length + 1);
+                                        int rowindexfigli = Int32.Parse(r["rowindex"].ToString().Substring(rowindexpadre.Length + 1));
+                                        if (rowindexfigli > numerodifigli)
+                                        {
+                                            numerodifigli = rowindexfigli;
+                                        }
+                                    }
+                                    catch { }
+                                }
+                            }
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
+                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                            rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
+                            rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
+                            rigodainserire["Tempo mac"] = datarow["Tempo mac"].ToString();
+                            rigodainserire["Tempo uomo"] = datarow["Tempo uomo"].ToString();
+                            rigodainserire["Costo att mac"] = datarow["Costo setup mac"].ToString();
+                            rigodainserire["Costo att uomo"] = datarow["Costo setup uomo"].ToString();
+                            rigodainserire["Costo mac"] = datarow["Costo tempo mac"].ToString();
+                            rigodainserire["Costo uomo"] = datarow["Costo tempo uomo"].ToString();
+                            rigodainserire["Totale"] = (Double.Parse(rigodainserire["Setup mac"].ToString()) * Double.Parse(rigodainserire["Costo att mac"].ToString())) + (Double.Parse(rigodainserire["Setup uomo"].ToString()) * Double.Parse(rigodainserire["Costo att uomo"].ToString()))
+                                + (Double.Parse(rigodainserire["Tempo mac"].ToString()) * Double.Parse(rigodainserire["Costo mac"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()))
+                                + (Double.Parse(rigodainserire["Tempo uomo"].ToString()) * Double.Parse(rigodainserire["Costo uomo"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()));
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
+                            AggiornaParentela(rigodainserire);
+                            m.FromTimeToDecimal();
+                            m.FromDecimalToTime();
+                            ColoraDataGrid();
+                            CalcolaPrezzoQuantitaImpostata();
+                            CalcolaPrezzoTotaliPerQuantita();
+                        }
+                        break;
+                    }
+                case 6:
+                    {
+                        if (textBoxArticolo.Text == padre)
+                        {
+                            IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
+                            int risultato = query.Max();
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            rigodainserire["rowindex"] = (risultato + 1).ToString();
+                            rigodainserire["CODICE_PADRE"] = padre;
+                            rigodainserire["Codice Art"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
+                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
+                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
+                            rigodainserire["Costo Art"] = datarow["Costo"].ToString();
+                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
+                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
                             m.FromDecimalToTime();
                             ColoraDataGrid();
@@ -1486,19 +1693,14 @@ namespace PreventivazioneRapida
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
                             rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
                             rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
+                            rigodainserire["Codice Art"] = datarow["Descrizione"].ToString();
+                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
+                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
                             rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
-                            rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
-                            rigodainserire["Tempo mac"] = datarow["Tempo mac"].ToString();
-                            rigodainserire["Tempo uomo"] = datarow["Tempo uomo"].ToString();
-                            rigodainserire["Costo att mac"] = datarow["Costo setup mac"].ToString();
-                            rigodainserire["Costo att uomo"] = datarow["Costo setup uomo"].ToString();
-                            rigodainserire["Costo mac"] = datarow["Costo tempo mac"].ToString();
-                            rigodainserire["Costo uomo"] = datarow["Costo tempo uomo"].ToString();
+                            rigodainserire["Costo Art"] = datarow["Prezzo"].ToString();
                             rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
                             rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
                             AggiornaParentela(rigodainserire);
                             m.FromDecimalToTime();

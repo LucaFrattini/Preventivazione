@@ -55,13 +55,21 @@ namespace PreventivazioneRapida
                 this.queryDistintaBase = xmlDoc.SelectSingleNode("configuration/AllQuery/DistintaBase").InnerText;
                 this.queryLavorazioneEsterna = xmlDoc.SelectSingleNode("configuration/AllQuery/LavorazioneEsterna").InnerText;
                 this.queryCercaArticolo = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaArticolo").InnerText;
+                this.queryCercaLavorazione = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaLavorazione").InnerText;
+                this.queryCercaCentro = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaCentro").InnerText;
                 this.queryCercaPreventivo = xmlDoc.SelectSingleNode("configuration/AllQuery/CercaPreventivo").InnerText;
 
                 this.campiModificabili = xmlDoc.SelectSingleNode("configuration/CampiModificabili");
 
                 this.helpCliente = xmlDoc.SelectSingleNode("configuration/helpCliente").InnerText;
                 this.helpArticolo = xmlDoc.SelectSingleNode("configuration/helpArticolo").InnerText;
+                this.helpLavorazione = xmlDoc.SelectSingleNode("configuration/helpLavorazione").InnerText;
+                this.helpLavorazioneEsterna = xmlDoc.SelectSingleNode("configuration/helpLavorazioneEsterna").InnerText;
                 this.helpPreventivo = xmlDoc.SelectSingleNode("configuration/helpPreventivo").InnerText;
+                this.helpCentro = xmlDoc.SelectSingleNode("configuration/helpCentro").InnerText;
+                this.helpCentroEsterno = xmlDoc.SelectSingleNode("configuration/helpCentroEsterno").InnerText;
+
+
 
                 if (xmlDoc.SelectSingleNode("configuration/FL") != null)
                 {
@@ -143,6 +151,12 @@ namespace PreventivazioneRapida
         private string queryCercaArticolo;
         public string QueryCercaArticolo { get { return this.queryCercaArticolo; } }
 
+        private string queryCercaLavorazione;
+        public string QueryCercaLavorazione { get { return this.queryCercaLavorazione; } }
+
+        private string queryCercaCentro;
+        public string QueryCercaCentro { get { return this.queryCercaCentro; } }
+
         private string queryCercaPreventivo;
         public string QueryCercaPreventivo { get { return this.queryCercaPreventivo; } }
 
@@ -158,8 +172,20 @@ namespace PreventivazioneRapida
         private string helpArticolo;
         public string HelpArticolo { get { return this.helpArticolo; } }
 
+        private string helpLavorazione;
+        public string HelpLavorazione { get { return this.helpLavorazione; } }
+
+        private string helpLavorazioneEsterna;
+        public string HelpLavorazioneEsterna { get { return this.helpLavorazioneEsterna; } }
+
         private string helpPreventivo;
         public string HelpPreventivo { get { return this.helpPreventivo; } }
+
+        private string helpCentro;
+        public string HelpCentro { get { return this.helpCentro; } }
+
+        private string helpCentroEsterno;
+        public string HelpCentroEsterno { get { return this.helpCentroEsterno; } }
 
         private string fontlabel = "";
         public string FontLabel { get { return this.fontlabel; } }

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<help>
+  <intestazione>Help lavorazioni</intestazione>
+  <tipodatabase>SQLSERVER</tipodatabase>
+  <query>
+    select codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &lt; 500
+  </query>
+
+  <queryDescrizione>
+    select codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &lt; 500
+  </queryDescrizione>
+  <campoRitorno>tb_codlavo</campoRitorno>
+  <inserimento></inserimento>
+  <modifica></modifica>
+  <campi>
+    <campo>
+      <nomeSql>codditt</nomeSql>
+      <descrizione>Ditta</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>tb_codlavo</nomeSql>
+      <descrizione>Lavorazione</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>tb_deslavo</nomeSql>
+      <descrizione>Descrizione</descrizione>
+      <numerico>false</numerico>
+    </campo>
+  </campi>
+</help>

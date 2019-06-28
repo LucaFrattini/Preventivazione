@@ -97,12 +97,16 @@
     </LavorazioneEsterna>
     <CercaArticolo>
       select '' AS 'rowindex', '' AS CODICE_PADRE, ar_codart AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  cast(0 as float) AS 'Quantita`', '' AS 'Setup Mac',  '' AS 'Setup Uomo',
-      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var'
+      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var',
+      '' AS 'setup mac decimale', '' AS 'setup uomo decimale', '' AS 'tempo mac decimale', '' AS 'tempo uomo decimale'
       from artico left join artprox on ar_codart=apx_codart where ar_codart = '@CodArticolo'
     </CercaArticolo>
     <CercaLavorazione>
-      
+      select codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo = '@CodLavo'
     </CercaLavorazione>
+    <CercaCentro>
+      select codditt, tb_codcent, tb_descent, tb_pagaora, tb_cmacora, tb_pagaoratt, tb_cmacoratt from tabcent where tb_codcent = '@CodCent'
+    </CercaCentro>
     <CercaPreventivo>
       SELECT * FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, * FROM preventivi WHERE cliente = 'RGG') AS clientepreventivi WHERE rowindex = '@idpreventivo'
     </CercaPreventivo>
@@ -120,10 +124,15 @@
     <q3>100</q3>
   </Quantita>
   <!--XML per l'helper-->
-  <helpArticolo>Help_articoli.xml</helpArticolo>
-  <helpCliente>Help_clienti.xml</helpCliente>
-  <helpPreventivo>Help_preventivi.xml</helpPreventivo>
-  
+  <helpArticolo>Help_articoli_RGG.xml</helpArticolo>
+  <helpCliente>Help_clienti_RGG.xml</helpCliente>
+  <helpLavorazione>Help_lavorazioni_RGG.xml</helpLavorazione>
+  <helpLavorazioneEsterna>Help_lavorazioniesterne_RGG.xml</helpLavorazioneEsterna>
+  <helpPreventivo>Help_preventivi_RGG.xml</helpPreventivo>
+  <helpCentro>Help_centro_RGG.xml</helpCentro>
+  <helpCentroEsterno>Help_centroesterno_RGG.xml</helpCentroEsterno>
+
+
   <FO>Arial-12</FO>
   <FL>Arial-15</FL>
 

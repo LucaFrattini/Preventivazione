@@ -103,15 +103,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HelpXML_PreventivazioneRapida\Help_clienti.xml">
+    <Content Include="HelpXML_PreventivazioneRapida\Help_clienti_RGG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="HelpXML_PreventivazioneRapida\Help_articoli.xml">
+    <Content Include="HelpXML_PreventivazioneRapida\Help_articoli_RGG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="HelpXML_PreventivazioneRapida\Help_preventivi.xml" />
+    <Content Include="HelpXML_PreventivazioneRapida\Help_preventivi_RGG.xml" />
+    <Content Include="HelpXML_PreventivazioneRapida\Help_lavorazioni_RGG.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="HelpXML_PreventivazioneRapida\Help_centro_RGG.xml" />
+    <Content Include="HelpXML_PreventivazioneRapida\Help_lavorazioniesterne_RGG.xml" />
+    <Content Include="HelpXML_PreventivazioneRapida\Help_centroesterno_RGG.xml" />
     <Content Include="PreventivazioneRapidaConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

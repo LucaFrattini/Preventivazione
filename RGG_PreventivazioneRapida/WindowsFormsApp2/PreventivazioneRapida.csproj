@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{94465CA5-7055-4223-9B4A-AE01DF7A6970}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WindowsFormsApp2</RootNamespace>
-    <AssemblyName>WindowsFormsApp2</AssemblyName>
+    <RootNamespace>Preventivazione_RGG</RootNamespace>
+    <AssemblyName>Preventivazione_RGG</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,6 +36,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Users\utente4\Desktop\HelperLibrary - Dll - MT\HelperLibrary\bin\Release\HelperLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.WinForms.10.0.40219.1\lib\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +57,12 @@
     </Compile>
     <Compile Include="CaricaPreventivo.Designer.cs">
       <DependentUpon>CaricaPreventivo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfermaSalvataggio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfermaSalvataggio.Designer.cs">
+      <DependentUpon>ConfermaSalvataggio.cs</DependentUpon>
     </Compile>
     <Compile Include="InserisciRigo.cs">
       <SubType>Form</SubType>
@@ -77,6 +86,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConfermaSalvataggio.resx">
+      <DependentUpon>ConfermaSalvataggio.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InserisciRigo.resx">
       <DependentUpon>InserisciRigo.cs</DependentUpon>
     </EmbeddedResource>
@@ -88,7 +100,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -111,7 +125,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="HelpXML_PreventivazioneRapida\Help_preventivi_RGG.xml" />
+    <Content Include="HelpXML_PreventivazioneRapida\Help_preventivi_RGG.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="HelpXML_PreventivazioneRapida\Help_lavorazioni_RGG.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -3,11 +3,11 @@
   <intestazione>Help centri</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select codditt, tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
+    select '',codditt, tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
   </query>
 
   <queryDescrizione>
-    select codditt, tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
+    select '',codditt, tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
   </queryDescrizione>
   <campoRitorno>tb_codcent</campoRitorno>
   <inserimento></inserimento>

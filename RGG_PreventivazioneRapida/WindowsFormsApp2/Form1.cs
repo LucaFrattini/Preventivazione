@@ -1,10 +1,12 @@
 ﻿using HelperLibrary;
+using Preventivazione_RGG;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +33,7 @@ namespace PreventivazioneRapida
             //FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             ToolTip ToolTip1 = new ToolTip();
+            //Inserimento dei Tooltip per i bottoni del menù
             ToolTip1.SetToolTip(this.btnRefresh, "Aggiorna");
             ToolTip1.SetToolTip(this.buttonEspandi, "Ridimensiona griglia");
             ToolTip1.SetToolTip(btnNuovo, "Pulisci tutto");
@@ -40,6 +43,7 @@ namespace PreventivazioneRapida
             ToolTip1.SetToolTip(btnMeno, "Diminuisci zoom");
             ToolTip1.SetToolTip(btnPiu, "Ingrandisci zoom");
             ToolTip1.SetToolTip(btnReset, "Imposta zoom originale");
+            //Settaggio delle quantità fisse
             buttonQuantita1.Text = Setting.Istance.Q1;
             buttonQuantita2.Text = Setting.Istance.Q2;
             buttonQuantita3.Text = Setting.Istance.Q3;
@@ -60,13 +64,26 @@ namespace PreventivazioneRapida
        
         }
 
+        /// <summary>
+        /// Funzione utilizzata per settare l'altezza della DataGridView appena viene lanciato il programma
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
             altezzaDataGrid = dataGridView.Height;
         }
 
+        /// <summary>
+        /// Restituisce il valore del codice articolo inserito
+        /// </summary>
         public string Articolo { get { return this.textBoxArticolo.Text; } }
 
+        /// <summary>
+        /// Funzione utilizzata per salvarmi i valori delle textbox ogni volta che ci entro
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void textBox_Enter(object sender, EventArgs e)
         {
             cliente = textBoxCliente.Text;
@@ -76,6 +93,11 @@ namespace PreventivazioneRapida
             variazionelav = textBoxVariazioneLav.Text;
         }
 
+        /// <summary>
+        /// Funzione che permette di cancellare le righe nella DataGridView ed aggiornare conseguentemente il DataSet
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             DialogResult usersChoice =
@@ -94,6 +116,7 @@ namespace PreventivazioneRapida
                     {
                         DataRow datarow = m.ds.Tables["DistintaBase"].Rows[i];
                         
+                        //Controllo quanli figli hanno come padre la riga cancellata, di conseguenza elimino anche loro
                         if (datarow["Codice_Padre"].ToString() == codiceart)
                         {
                             m.ds.Tables["DistintaBase"].Rows.Remove(datarow);
@@ -103,19 +126,33 @@ namespace PreventivazioneRapida
                     }
                     catch { }                  
                 }
+                //Controllo se la tabella ha chiave primaria
                 DataColumn[] key = new DataColumn[1];
                 if (m.ds.Tables["DistintaBase"].PrimaryKey.Length < 1)
                 {
                     key[0] = m.ds.Tables["DistintaBase"].Columns["rowindex"];
                     m.ds.Tables["DistintaBase"].PrimaryKey = key;
                 }
+
+                //Quindi mi faccio una copia della riga che è stata selezionata per essere cancellata, perchè poi mi servirà per fare l'aggiornamento del dataset
+                //quando avrò cancellato la riga originale
                 DataRow datarowselezionata = m.ds.Tables["DistintaBase"].Rows.Find(row.Cells["rowindex"].Value.ToString());
+                DataRow copiadiriga = m.ds.Tables["DistintaBase"].NewRow();
+                for(int j = 0; j < m.ds.Tables["DistintaBase"].Columns.Count; j++)
+                {
+                    copiadiriga[j] = datarowselezionata[j].ToString();
+                }
                 m.ds.Tables["DistintaBase"].Rows.Remove(datarowselezionata);
-                CalcolaPrezzoQuantitaImpostata();
-                CalcolaPrezzoTotaliPerQuantita();
+                //Quindi aggiorno il DataSet e tutti i calcoli
+                AggiornaParentela(copiadiriga);
+                BindingGrid();
             }
         }
 
+        /// <summary>
+        /// Funzione per impostare il font della Form
+        /// </summary>
+        /// <param name="font"></param>
         public void SetFont(String font)
         {
 
@@ -152,34 +189,54 @@ namespace PreventivazioneRapida
 
         }
 
+        /// <summary>
+        /// Funzione che utilizzo per richiamare l'"helpxml" con i dati relativi ai clienti
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonHelpClienti_Click(object sender, EventArgs e)
         {
             Helper h = new Helper();
             String[] par = { };
-            //public string StartHelper(string path, string ip, string port, string database, string username, string password, string _campofocus, string _utenteWSAI, string _passwordWSAI, string[] parametri, string valoreFocus, string font, string fontLabel)
+            textBoxCliente.Focus();
             string temp =  h.StartHelper(Setting.Istance.HelpCliente, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
 
             if (!String.IsNullOrEmpty(temp))
             {
                 this.textBoxCliente.Text = temp;
             }
+            textBoxArticolo.Focus();
         }
 
+        /// <summary>
+        /// Funzione che utilizzo per richiamare l'"helpxml" con i dati relativi agli articoli
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonHelpArticoli_Click(object sender, EventArgs e)
         {
             Helper h = new Helper();
             String[] par = { };
+            textBoxArticolo.Focus();
             string temp =  h.StartHelper(Setting.Istance.HelpArticolo, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
 
             if (!String.IsNullOrEmpty(temp))
             {
                 this.textBoxArticolo.Text = temp;
             }
+            textBoxCliente.Focus();
+            textBoxQuantita.Focus();
         }
 
+        /// <summary>
+        /// Funzione per ripulire la screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonPulisci_Click(object sender, EventArgs e)
         {
             PulisciSchermata();
+            //Se siamo in modalità di "creazione articolo da nuovo" allora setto alcune textbox con certi valori
             if (creaArticolo)
             {
                 creaArticolo = true;
@@ -192,6 +249,12 @@ namespace PreventivazioneRapida
             }
         }
 
+        /// <summary>
+        /// Funzione che permette di verificare se l'ID del cliente sia corretto, quindi stampa la descrizione.
+        /// E' stata modificata durante lo sviluppo del software. Ora viene richiamata con l'evento Leave invece del TextChanged.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxCliente_TextChanged(object sender, EventArgs e)
         {
             if (!creaArticolo)
@@ -220,52 +283,71 @@ namespace PreventivazioneRapida
                               
         }
 
+        /// <summary>
+        /// Funzione ricorsiva che serve per esplodere la distinta base dell'articolo padre che viene passato come primo parametro.
+        /// Il secondo parametro (livello) è fondamentalmente inutilizzato, era stato previsto all'inizio dello sviluppo del software ma poi 
+        /// è stato lasciato perchè potrebbe risultare utile in futuro. Riguarda il livello della generazione dei figli. Più è alto maggiore è il livello di dinastia gerarchica.
+        /// </summary>
+        /// <param name="padre"></param>
+        /// <param name="livello"></param>
         void EsplodiDistintaBase(string padre, int livello)
         {
-            //NON DEVO CERCARE PER CODICE ARTICOLO, NEL CASO FOSSE UNA LAVORAZIONE COME LO CERCO!?!?!?!?!?!
+            //Faccio una query per ricavare la DataRow presente nel dataset partendo dalla codice padre.
             IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("rowindex") == padre select row;
             DataRow rowpadre = query.First();
+            //Verifico se è un semilavorato.In caso positivo salvo in "rows" il numero dei figli.
             int rows = m.VerificaSemilavorato(rowpadre);
             try
             {
                 if (Double.Parse(rowpadre["Codice Centro"].ToString()) > 499)
                 {
+                    //Verifico se è una lavorazione esterna, altrimenti la catch prende l'errore e si continua con il resto della funzione
                     m.GestisciLavorazioneEsterna(rowpadre, rowpadre["CODICE_PADRE"].ToString());
                 }
             }
             catch { }
             try
             {
+                m.FromDecimalToTime(rowpadre);
+                //Se "rows" è maggiore di zero significa che l'articolo ha una distinta base e quindi dei figli.
                 if (rows > 0)
                 {
-                    m.InizializzaColonneTempo();
-                    double totalePadre = 0;
+                    //Inizializzo le variabili per poter estrarre il costo totale del padre dalla somma dei costi dei figli.
+                    double totalePadre = 0, totalevarPadre = 0;
                     int countrowdt = m.ds.Tables["DistintaBase"].Rows.Count;
+                    int index = 1;
                     for(int i = 0; i < countrowdt; i++)
                     {
                         DataRow figlio = m.ds.Tables["DistintaBase"].Rows[i];
+                        //Ogni volta che trovo un figlio, quindi che il codice articolo "padre" corrisponde al codice padre delle DataRow che sto scorrendo nel Dataset,
+                        //faccio il richiamo di questa stessa funzione in modalità ricorsiva. Inoltre setto il rowindex che mi permette di capire la gerarchia e i livelli
+                        //dei vari figli e della distinta base, aggiorno il valore del costo del padre e quindi proseguo con la ricerca.
                         if (figlio["CODICE_PADRE"].ToString() == rowpadre["CODICE ART"].ToString())
                         {
-                            figlio["rowindex"] = rowpadre["rowindex"].ToString() + "," + rows;
+                            figlio["rowindex"] = rowpadre["rowindex"].ToString() + "," + index;
                             figlio["Quantita`"] = Math.Round(Double.Parse(figlio["Quantita`"].ToString()) * Double.Parse(rowpadre["Quantita`"].ToString()), 4);
                             EsplodiDistintaBase(figlio["rowindex"].ToString(), ++livello);
                             totalePadre += Double.Parse(figlio["Totale"].ToString());
-                            rows--;
+                            totalevarPadre += Double.Parse(figlio["Totale + %Var"].ToString());
+                            index++;
                         }
                     }
-                    
+                    //Una volta terminato il ciclo vado a calcolarmi i vari costi del rigo del padre.
                     rowpadre["Totale"] = Math.Round(totalePadre,2);
                     rowpadre["Costo Art"] = Math.Round(Double.Parse(rowpadre["Totale"].ToString()) / Double.Parse(rowpadre["Quantita`"].ToString()),2);
-                    rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(textBoxVariazione.Text) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()),2);
-
+                    rowpadre["Totale + %Var"] = Math.Round(totalevarPadre,2);
                 }
+                //Altrimenti significa che il rigo passato alla funzione non ha figli, e quindi posso procedere con il calcolo dei costi di questa stessa riga.
                 else
                 {
+                    //In base se il "padre" è un articolo o una lavorazione effettuo dei calcoli diversi per poter calcolare i costi totali del rigo.
                     if(rowpadre["CODICE ART"].ToString() != "")
                     {
                     
                         rowpadre["Totale"] = Math.Round(Double.Parse(rowpadre["Costo Art"].ToString()) * Double.Parse(rowpadre["Quantita`"].ToString()), 3);
                         rowpadre["Costo Art"] = Math.Round(Double.Parse(rowpadre["Totale"].ToString()) / Double.Parse(rowpadre["Quantita`"].ToString()), 2);
+                        //Controllo se il rigo sia una lavorazione, quindi dovrebbe essere trattata in maniera diverso da una materia prima.
+                        //In caso negativo la catch raccoglie l'errore e quindi viene trattato come una semplice materia prima.
                         try {
                             if (Double.Parse(rowpadre["Codice Centro"].ToString()) < 499)
                             {
@@ -300,6 +382,12 @@ namespace PreventivazioneRapida
 
 
         //Fare il test con questo codice --> SB02AL1505.0-1_02
+        /// <summary>
+        /// Funzione utilizzata per verificare che il codice dell'articolo sia corretto. Quindi si andrà a pescare l'intero albero genialogico con tutte le generazione dei figli
+        /// e sottofigli. Infine si calcoleranno i costi e si coloreranno le celle della griglia.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxArticolo_TextChanged(object sender, EventArgs e)
         {
             if (!creaArticolo)
@@ -307,6 +395,7 @@ namespace PreventivazioneRapida
                 textBoxArticolo.Text = textBoxArticolo.Text.ToUpper();
                 if (textBoxArticolo.Text != articolo)
                 {
+                    //Per prima cosa ripulisco il Dataset dalle due tabelle in cui viene salvato l'intera distinta base.
                     try
                     {
                         m.ds.Tables.Remove("DistintaBase");
@@ -316,25 +405,30 @@ namespace PreventivazioneRapida
                     catch { }
                     DataTable dtArt, dtDistBase;
                     dtArt = m.ds.Tables["Articoli"];
+                    //Cerco la riga relativa al codice inserito
                     DataRow dr = dtArt.Rows.Find(textBoxArticolo.Text);
                     if (dr != null)
                     {
                         textBoxArticolo.BackColor = Color.LightGreen;
                         labelArticolo.Text = dr[1].ToString();
-                        //PulisciSchermata();
+                        //Preparo la query per la ricerca della distinta base
                         string getDistBase = Setting.Istance.QueryCodDistBase.Replace("@articolo", textBoxArticolo.Text);
                         m.EstraiRisultatoQuery(getDistBase, "CodDistBase");
+                        //Se le righe della tabella sono maggiorji di 0 significa che ha una distinta base
                         if (m.ds.Tables["CodDistBase"].Rows.Count > 0)
                         {
                             string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", m.ds.Tables["CodDistBase"].Rows[0][0].ToString());
+                            //Aggiungo alla DataTable i primi figli del codice inserito
                             m.EstraiRisultatoQuery(distintaBase, "DistintaBase");
+                            //Collego la datagrid con i valori e i dati del dataset
                             BindingSource bindingSource1 = new BindingSource();
                             bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
                             dataGridView.DataSource = bindingSource1;
                             dtDistBase = m.ds.Tables["DistintaBase"];
                             int righeDataGrid = m.ds.Tables["DistintaBase"].Rows.Count;
-                            m.InizializzaColonneTempo();
+                            //Livello iniziale, che appartiene ai figli dell'articolo padre indicato dall'utente
                             int livello = 1;
+                            //Quindi comincio ad esplodere i figli per poter trovare via via tutte le generazioni, se sono presenti
                             for (int i = 0; i < righeDataGrid; i++)
                             {
                                 DataRow figlio = m.ds.Tables["DistintaBase"].Rows[i];
@@ -342,9 +436,10 @@ namespace PreventivazioneRapida
                                 string rowindex = figlio["rowindex"].ToString();
                                 EsplodiDistintaBase(rowindex, livello);
                             }
+                            //Conversione dei tempi, da decimali a sessantesimi
                             m.FromDecimalToTime();
 
-                            //dataGridView.Columns["rowindex"].Visible = false;
+                            //Ordino la cella e imposto alcune regole
                             dataGridView.Sort(dataGridView.Columns["rowindex"], ListSortDirection.Ascending);
                             foreach (DataGridViewColumn column in dataGridView.Columns)
                             {
@@ -352,6 +447,7 @@ namespace PreventivazioneRapida
                                 column.ReadOnly = true;
                             }
                             //Fare il test con questo codice --> SB02AL1505.0-1_02
+                            //Infine coloro la griglia e faccio i calcoli relativi ai costi
                             ColoraDataGrid();
                             CalcolaPrezzoQuantitaImpostata();
                             CalcolaPrezzoTotaliPerQuantita();
@@ -366,6 +462,7 @@ namespace PreventivazioneRapida
                         textBoxVariazioneLav.Enabled = true;
                         textBoxQuantita.Enabled = true;
                     }
+                    //Altrimenti pulisco la form
                     else
                     {
                         try
@@ -392,6 +489,9 @@ namespace PreventivazioneRapida
             }
         }
 
+        /// <summary>
+        /// Funzione utilizzata per cololare la datagrid in base al libello dei figli e alle celle che si possono modificare o no
+        /// </summary>
         private void ColoraDataGrid()
         {
             foreach (DataGridViewRow padre in dataGridView.Rows)
@@ -524,18 +624,12 @@ namespace PreventivazioneRapida
             
             }
         }
-        //Queste funzioni erano usate quando si utilizzava l'approccio ad oggetti
-        /*
-        private bool checkClienteID(Cliente c)
-        {
-            return c.Conto == textBoxCliente.Text;
-        }
 
-        private bool checkArticoloID(Articolo a)
-        {
-            return a.Codart == textBoxArticolo.Text;
-        }*/
-
+        /// <summary>
+        /// Funzione per aumentare lo zoom della form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void brnPiu_Click(object sender, EventArgs e)
         {
             if (this.zoom < 4)
@@ -545,27 +639,31 @@ namespace PreventivazioneRapida
             }
         }
 
+        /// <summary>
+        /// Funzione per diminuire lo zoom della form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnMeno_Click(object sender, EventArgs e)
         {
             if (this.zoom > -4)
             {
                 this.zoom--;
-                /*float currentSize = Font.Size;
-                currentSize += 1.0F;
-                Font = new Font(Font.Name, currentSize);
-                Size = new Size(1070, 605);*/
-
                 this.ridimensione(-1);
             }
         }
 
+        /// <summary>
+        /// Funzione per resettare lo zoom della form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnReset_Click(object sender, EventArgs e)
         {
             this.ridimensione(this.zoom * -1);
             this.zoom = 0;
         }
 
-        //prova provae
         /// funzione che presa in input un intero modifica la dimensione di tutti i controlli visivi presenti nella vista
         private void ridimensione(int size)
         {
@@ -591,21 +689,30 @@ namespace PreventivazioneRapida
             
         }
 
+        /// <summary>
+        /// Funzione utilizzata per chiudere il programma.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEsci_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        /// <summary>
+        /// Funzione utilizzata per pulire la form e il Dataset
+        /// </summary>
         private void PulisciSchermata()
         {
             try
             {
-                m.ds.Tables.Remove("DistintaBase");
-                m.ds.Tables.Remove("CodDistBase");
                 dataGridView.DataSource = null;
+                m.ds.Tables.Remove("DistintaBase");
+                m.ds.Tables.Remove("CodDistBase");                
             }
             catch { }
             textBoxCliente.Focus();
+            labelCliente.Text = "<Descrizione cliente>";
             labelArticolo.Text = "<Descrizione articolo>";
             textBoxVariazione.Enabled = false;
             textBoxVariazioneLav.Enabled = false;
@@ -643,6 +750,11 @@ namespace PreventivazioneRapida
             labelIDpreventivo.Text = "Nuovo preventivo";
         }
 
+        /// <summary>
+        /// Funzione per cambiare modalità, tra "creazione articolo nuovo" e "modifica distinta base esistente"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNuovo_Click(object sender, EventArgs e)
         {
             PulisciSchermata();
@@ -665,11 +777,21 @@ namespace PreventivazioneRapida
 
         }
 
+        /// <summary>
+        /// Funzione per eseguire di nuovo i calcoli e la colorazione
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             BindingGrid();
         }
 
+        /// <summary>
+        /// Effettivamento non so se sia utilizzata, ma serve per eseguire una pulizia dei campi quando vengono modificati.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxVariazione_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar != ',' && e.KeyChar != '.')
@@ -691,6 +813,12 @@ namespace PreventivazioneRapida
             }            
         }
 
+        /// <summary>
+        /// Anche questa funzione viene richiamata con l'evento Leave e non con TextChaged.
+        /// Va a modificare tutti i ricavi delle righe che hanno codice articolo valorizzato, quindi che si trattano di materie prime, semilavorati o lavorazioni esterne.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxVariazione_TextChanged(object sender, EventArgs e)
         {
             if(textBoxVariazione.Text != variazione)
@@ -699,6 +827,7 @@ namespace PreventivazioneRapida
                 {
                     double variazioneInserita = Double.Parse(textBoxVariazione.Text);
                     double Totale, variazione;
+                    //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo
                     for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
                     {
                         DataGridViewRow row = dataGridView.Rows[rowcount];
@@ -725,6 +854,8 @@ namespace PreventivazioneRapida
                         }
                         catch { }
                     }
+                    //Infine si aggiornano i valori nella form ricalcolando il tutto
+                    BindingGrid();
                 }
                 catch
                 {
@@ -733,6 +864,13 @@ namespace PreventivazioneRapida
             }          
         }
 
+
+        /// <summary>
+        /// Anche questa funzione viene richiamata con l'evento Leave e non con TextChaged.
+        /// Va a modificare tutti i ricavi delle righe che hanno codice articolo valorizzato, quindi che si trattano di lavorazioni interne.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxVariazioneLav_TextChanged(object sender, EventArgs e)
         {
             if(textBoxVariazioneLav.Text != variazionelav)
@@ -741,6 +879,7 @@ namespace PreventivazioneRapida
                 {
                     double variazioneInserita = Double.Parse(textBoxVariazioneLav.Text);
                     double Totale, variazione;
+                    //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo
                     for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
                     {
                         DataGridViewRow row = dataGridView.Rows[rowcount];
@@ -764,6 +903,8 @@ namespace PreventivazioneRapida
                         }
                         catch { }
                     }
+                    //Infine si aggiornano i valori nella form ricalcolando il tutto
+                    BindingGrid();
                 }
                 catch
                 {
@@ -772,12 +913,23 @@ namespace PreventivazioneRapida
             }           
         }
 
+        /// <summary>
+        /// Funzione utilizzata per richiamare un'alrtra form per l'inserimento di un rigo aggiuntivo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnModifica_Click(object sender, EventArgs e)
         {
             InserisciRigo inserisciRigo = new InserisciRigo(this, m);
             inserisciRigo.Show();
         }
 
+        /// <summary>
+        /// Funzione per modificare la quantità richiesta dall'utente, quindi vado a modificare ogni quantità delle lavorazioni, semilavorati e materie prime.
+        /// Eseguo di nuovo tutti i calcoli per calcolarmi i costi e i totali e aggiorno la form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxQuantita_TextChanged(object sender, EventArgs e)
         {
             if(textBoxQuantita.Text != quantita)
@@ -794,15 +946,17 @@ namespace PreventivazioneRapida
                         quantitaNuova = Double.Parse(textBoxQuantita.Text.Replace('.', ','));
                     }
                     double quantitaPrecedente = 1;
+                    //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo
                     for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
                     {
                         DataGridViewRow row = dataGridView.Rows[rowcount];
                         quantitaPrecedente = Double.Parse(row.Cells["Quantita`"].Value.ToString());
                         row.Cells["Quantita`"].Value = Math.Round(Double.Parse(row.Cells["Quantita`"].Value.ToString()) / precedenteQuantita * quantitaNuova, 4);
-                        //row.Cells["Quantita`"].Value = quantitaPrecedente * quantitaNuova;                            
                     }
+                    //Mi tengo salvato la quantità precedente in modo da eseguire i calcoli corretti.
                     precedenteQuantita = quantitaNuova;
                     groupBoxQI.Text = "Quantità impostata: " + quantitaNuova;
+                    BindingGrid();
                 }
                 catch
                 {
@@ -811,26 +965,50 @@ namespace PreventivazioneRapida
             }                           
         }
 
+        /// <summary>
+        /// Funzione che riporta il valore della quantità fisso nella textbox della quantità dell'articolo selezionato dal cliente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             textBoxQuantita.Text = buttonQuantita1.Text;
+            textBoxQuantita.Focus();
+            textBoxVariazione.Focus();
+            textBoxQuantita.Focus();
         }
 
+        /// <summary>
+        /// Funzione che riporta il valore della quantità fisso nella textbox della quantità dell'articolo selezionato dal cliente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             textBoxQuantita.Text = buttonQuantita2.Text;
+            textBoxQuantita.Focus();
+            textBoxVariazione.Focus();
+            textBoxQuantita.Focus();
         }
 
+        /// <summary>
+        /// Funzione che riporta il valore della quantità fisso nella textbox della quantità dell'articolo selezionato dal cliente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             textBoxQuantita.Text = buttonQuantita3.Text;
+            textBoxQuantita.Focus();
+            textBoxVariazione.Focus();
+            textBoxQuantita.Focus();
         }
 
-        /*private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            MessageBox.Show("Il valore inserito non è valido!");
-        }*/
-        //Fare il test con questo codice --> SB02AL1505.0-1_02
+        /// <summary>
+        /// Funzione utilizata per nascondere oppure mostrare i figli della riga che ho cliccato.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -852,7 +1030,14 @@ namespace PreventivazioneRapida
                     }
                     else if (valoreCella == dataGridView["CODICE_PADRE", i].Value.ToString() && dataGridView["CODICE_PADRE", i].Value.ToString() != "")
                     {
-                        dataGridView.Rows[i].Visible = false;
+                        if (dataGridView.Rows[i].Visible == false)
+                        {
+                            dataGridView.Rows[i].Visible = true;
+                        }
+                        else
+                        {
+                            dataGridView.Rows[i].Visible = false;
+                        }
                     }
                 }
             }
@@ -860,6 +1045,12 @@ namespace PreventivazioneRapida
             
         }
 
+        /// <summary>
+        /// Questa funzione viene richiamata ogni volta che il valore di una cella nella dataGrid viene modificata.
+        /// Nel caso venga modificato un tempo ci si occupa della conversione decimale/sessantesimi e di rieseguire i calcoli dei costi e dei totali.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try            
@@ -868,6 +1059,7 @@ namespace PreventivazioneRapida
                 int colindex = e.ColumnIndex;// dataGridView.CurrentCell.ColumnIndex;
 
                 int rowindex = e.RowIndex;//dataGridView.CurrentCell.RowIndex;
+                //Verifico che la tabella abbia una chiave primaria.
                 DataColumn[] key = new DataColumn[1];
                 if (m.ds.Tables["DistintaBase"].PrimaryKey.Length < 1)
                 {
@@ -878,56 +1070,55 @@ namespace PreventivazioneRapida
                 string indiceriga = dataGridView["rowindex", rowindex].Value.ToString();
                 DataRow r = m.ds.Tables["DistintaBase"].Rows.Find(indiceriga);
                 r[colindex] = r[colindex].ToString().Replace('.', ',');
-                int generazione = FindNumberOfChar(',', indiceriga);
-                int ultimaGenerazione = FindNumberOfChar(',', m.ds.Tables["DistintaBase"].Rows[m.ds.Tables["DistintaBase"].Rows.Count-1]["rowindex"].ToString());
                 string nomeColonna = m.ds.Tables["DistintaBase"].Columns[colindex].ColumnName;
+                //Nel caso fosse stato modificato un tempo eseguo la conversione, altrimenti proseguo.
                 if (nomeColonna == "Setup Mac" || nomeColonna == "Setup Uomo" || nomeColonna == "Tempo Mac" || nomeColonna == "Tempo Uomo")
                 {
-                    m.FromTimeToDecimal();
+                    m.FromTimeToDecimal(r);
                 }
-
-                if (generazione==ultimaGenerazione || r["CODICE ART"].ToString() == "")
+                //Se è un semilavorato il totale viene eseguito in una certa maniera altrimenti lo tratto come una lavorazione
+                if (r["Codice Art"].ToString() != "")
                 {
-                    if (r["Codice Art"].ToString() != "")
+                    r["Totale"] = Math.Round(Double.Parse(r["Costo Art"].ToString()) * Double.Parse(r["Quantita`"].ToString()), 2);
+                    try
                     {
-                        r["Totale"] = Math.Round(Double.Parse(r["Costo Art"].ToString()) * Double.Parse(r["Quantita`"].ToString()), 2);
-                        try
+                        if (Double.Parse(r["Codice Centro"].ToString()) > 499)
                         {
-                            if (Double.Parse(r["Codice Centro"].ToString()) > 499)
-                            {
-                                r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazioneLav.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
-                            }
-                            else
-                            {
-                                r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazione.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
-                            }
+                            r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazioneLav.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
                         }
-                        catch
+                        else
                         {
                             r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazione.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
                         }
                     }
+                    catch
+                    {
+                        r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazione.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
+                    }
+                }
+                else
+                {
+                    if (Double.Parse(r["Quantita`"].ToString()) == 0)
+                    {
+                        r["Totale"] = 0;
+                        r["Totale + %Var"] = 0;
+                    }
                     else
                     {
-                        if (Double.Parse(r["Quantita`"].ToString()) == 0)
-                        {
-                            r["Totale"] = 0;
-                            r["Totale + %Var"] = 0;
-                        }
-                        else
-                        {
-                            r["Totale"] = Math.Round((Double.Parse(r["Costo Att Mac"].ToString()) * Double.Parse(r["Setup Mac decimale"].ToString()))
-                            + (Double.Parse(r["Costo Att Uomo"].ToString()) * Double.Parse(r["Setup Uomo decimale"].ToString()))
-                            + (Double.Parse(r["Costo Mac"].ToString()) * Double.Parse(r["Tempo Mac decimale"].ToString()) * Double.Parse(r["Quantita`"].ToString()))
-                            + (Double.Parse(r["Costo Uomo"].ToString()) * Double.Parse(r["Tempo Uomo decimale"].ToString()) * Double.Parse(r["Quantita`"].ToString())), 2);
-                            r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazioneLav.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
-                        }
+                        r["Totale"] = Math.Round((Double.Parse(r["Costo Att Mac"].ToString()) * Double.Parse(r["Setup Mac decimale"].ToString()))
+                        + (Double.Parse(r["Costo Att Uomo"].ToString()) * Double.Parse(r["Setup Uomo decimale"].ToString()))
+                        + (Double.Parse(r["Costo Mac"].ToString()) * Double.Parse(r["Tempo Mac decimale"].ToString()) * Double.Parse(r["Quantita`"].ToString()))
+                        + (Double.Parse(r["Costo Uomo"].ToString()) * Double.Parse(r["Tempo Uomo decimale"].ToString()) * Double.Parse(r["Quantita`"].ToString())), 2);
+                        r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazioneLav.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
                     }
-                    AggiornaParentela(r);
                 }
-
-                BindingGrid();
-
+                //Quindi aggiorniamo tutta la distinta base partendo dalla riga modificata, se è possibile si cerca di saltare cicli e aggiornamenti in quanto richiedono tempo
+                //e rallentano il software.
+                AggiornaParentela(r);
+                if (nomeColonna != "Quantita`" && nomeColonna != "Totale + %Var")
+                {
+                    BindingGrid();
+                }             
             }
             catch
             {
@@ -937,12 +1128,19 @@ namespace PreventivazioneRapida
         }
 
         //Fare il test con questo codice --> SB02AL1505.0-1_02
+        /// <summary>
+        /// Accetta come parametro di ingresso una Datarow che dovrebbe rappresentare una riga figlio. La funzione ha il compito di individuare
+        /// i fratelli della DataRow di ingresso e quindi aggiornare i costi del padre. Succewssivamente viene chiamata ricorsivamente passando come parametro di ingresso
+        /// la riga padre per continuare il calcolo fino al primo livello in un sistema bottom-up.
+        /// </summary>
+        /// <param name="figlio"></param>
         private void AggiornaParentela(DataRow figlio)
         {
 
             double totalePadre = 0, totaleVarPadre = 0;
             if (figlio["CODICE_PADRE"].ToString() != textBoxArticolo.Text)
             {
+                //Classico ciclo per individuare i fratelli della dataRow passata in ingresso
                 foreach (DataRow fratelli in m.ds.Tables["DistintaBase"].Rows)
                 {
                     if (fratelli["CODICE_PADRE"].ToString() == figlio["CODICE_PADRE"].ToString())
@@ -951,8 +1149,10 @@ namespace PreventivazioneRapida
                         totaleVarPadre += Double.Parse(fratelli["Totale + %Var"].ToString());
                     }
                 }
+                //Ricerco la riga padre
                 IEnumerable<DataRow> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE ART") == figlio["CODICE_PADRE"].ToString() select row;
                 int count = query.Count();
+                //Quindi aggiorno e chiamo ricorsivamente la funzione 
                 if (count > 0)
                 {
                     DataRow rowpadre = query.First();
@@ -965,12 +1165,20 @@ namespace PreventivazioneRapida
             return;
         }
 
+        /// <summary>
+        /// Permette di calcolare i costi totali e parziali del preventivo generato in base alla quantità impostata dall'utente.
+        /// Questa funzione modifica i valori che sono in basso-destra nella form principale.
+        /// Il funzionamento è il classico: si scorre il dataset, si verifica se la riga abbia figli o no, in base a questo si va a calcolare
+        /// i totali considerando solo le righe che sonoo i figli principali dell'articolo inserito.
+        /// </summary>
         private void CalcolaPrezzoQuantitaImpostata()
         {
             double colCostoMac = 0, colCostoUomo = 0, colCostoMat = 0,  colTotale = 0, colTotaleVar = 0;
+            //Scorro il dataset
             foreach(DataRow row in m.ds.Tables["DistintaBase"].Rows)
             {
                 bool hafiglio = false;
+                //Controllo che la datarow presa in considerazione abbia figli
                 foreach (DataRow figlio in m.ds.Tables["DistintaBase"].Rows)
                 {
                     if (row["CODICE ART"].ToString() == figlio["CODICE_PADRE"].ToString())
@@ -979,6 +1187,7 @@ namespace PreventivazioneRapida
                         break;
                     }
                 }
+                //Se non ha figli è una materia prima, quindi ne tengo conto
                 if (!hafiglio)
                 {
                     if (row["CODICE ART"].ToString() != "")
@@ -986,7 +1195,9 @@ namespace PreventivazioneRapida
                         colCostoMat += (Double.Parse(row["Totale"].ToString()));
                     }
                 }
+                //Guardo la generazione del figlio ed il livello, se il rowindex contiene righe vuol dire che non è uno dei figli principale dell'articolo inserito
                 int generazione = FindNumberOfChar(',', row["rowindex"].ToString());
+                //Altrimenti si tratta di una lavorazione, quindi ne tengo conto riguardo ai costi delle lavorazioni
                 try
                 {
                     colCostoMac += (Double.Parse(row["Costo Att Mac"].ToString()) * Double.Parse(row["Setup Mac decimale"].ToString()));
@@ -995,6 +1206,7 @@ namespace PreventivazioneRapida
                     colCostoUomo += (Double.Parse(row["Costo Uomo"].ToString()) * Double.Parse(row["Tempo Uomo decimale"].ToString()) * Double.Parse(row["Quantita`"].ToString()));
                 }
                 catch { }
+                //Se la generazione è uguale a 0 allora ne tengo conto dei totali, i figli dei figli non li conto
                 if (generazione == 0)
                 {
                     
@@ -1002,6 +1214,7 @@ namespace PreventivazioneRapida
                     colTotaleVar += Double.Parse(row["Totale + %Var"].ToString());
                 }
             }
+            //Una volta finito il ciclo stampo nella form i relativi valori
             QIcostomac.Text = Math.Round(colCostoMac, 2).ToString();
             QIcostouomo.Text = Math.Round(colCostoUomo,2).ToString();
             QIarticoli.Text = Math.Round(colCostoMat, 2).ToString();
@@ -1011,6 +1224,11 @@ namespace PreventivazioneRapida
             QIRicavoSingolo.Text = Math.Round(Double.Parse(QItotalevar.Text) / Double.Parse(textBoxQuantita.Text),2).ToString();
         }
 
+        /// <summary>
+        /// Funzione simile alla precedente (CalcolaPrezzoQuantitaImpostata()), serve per aggiornare i valori che si trovano in basso a sinistra nella form principale.
+        /// Funzionamento sempre simile: scorro il dataset, per ogni riga controllo se abbia figli, e in caso non li abbia tengo in considerazione la riga per
+        /// sommare i suoi valori nei costi totali e poi stamparli nella form.
+        /// </summary>
         private void CalcolaPrezzoTotaliPerQuantita()
         {
             double quantita = 0;
@@ -1025,11 +1243,12 @@ namespace PreventivazioneRapida
             double colCostoMac1 = 0, colCostoUomo1 = 0, colArticoli1 = 0, colTotale1 = 0, colTotaleVar1 = 0;
             double colCostoMac2 = 0, colCostoUomo2 = 0, colArticoli2 = 0, colTotale2 = 0, colTotaleVar2 = 0;
             double colCostoMac3 = 0, colCostoUomo3 = 0, colArticoli3 = 0, colTotale3 = 0, colTotaleVar3 = 0;
-            int righedt = m.ds.Tables["DistintaBase"].Rows.Count;
-            int generazione = FindNumberOfChar(',', m.ds.Tables["DistintaBase"].Rows[righedt-1].ToString());
+            //Scorro il dataset
             foreach(DataRow padre in m.ds.Tables["DistintaBase"].Rows)
             {
                 bool hafiglio = false;
+                //Controllo se la riga ha figli, basta scorrere di nuovo il padre e vedere per ogni rigo quali di questo ha il valore nella cella "Codice_PADRE" il valore
+                //preso dalla datarow "padre"
                 foreach(DataRow figlio in m.ds.Tables["DistintaBase"].Rows)
                 {                      
                     if(padre["CODICE ART"].ToString() == figlio["CODICE_PADRE"].ToString())
@@ -1038,8 +1257,10 @@ namespace PreventivazioneRapida
                         break;
                     }
                 }
+                //Se non ha figli controllo se sia una lavorazione o un semilavorato
                 if (!hafiglio)
                 {
+                    //In base alla verifica procedo eseguendo i calcoli
                     if (padre["CODICE ART"].ToString() != "")
                     {
                         colArticoli1 += (Double.Parse(padre["Totale"].ToString()) / quantita) * Double.Parse(Setting.Istance.Q1);
@@ -1085,11 +1306,10 @@ namespace PreventivazioneRapida
                         colTotaleVar2 += (totaleriga2 * Double.Parse(textBoxVariazioneLav.Text) / 100) + totaleriga2;
                         colTotale3 += totaleriga3;
                         colTotaleVar3 += (totaleriga3 * Double.Parse(textBoxVariazioneLav.Text) / 100) + totaleriga3;
-                                            //SISTEMARE PREZZO PER QUANTITA NELLA PARTE DELLA VARIAZIONE PERCENTUALE....
-                    }
-                    
+                    }                   
                 }
             }
+            //Una volta completato il ciclo per tutte le righe del dataset, stampo nella form i risultati.
             CostoMac1.Text = Math.Round(colCostoMac1,2).ToString();
             CostoMac2.Text = Math.Round(colCostoMac2,2).ToString();
             CostoMac3.Text = Math.Round(colCostoMac3,2).ToString();
@@ -1102,15 +1322,19 @@ namespace PreventivazioneRapida
             Tot1.Text = Math.Round(colTotale1,2).ToString();
             Tot2.Text = Math.Round(colTotale2,2).ToString();
             Tot3.Text = Math.Round(colTotale3,2).ToString();
-            //colTotaleVar1 += Math.Round((colTotale1 * Convert.ToDouble(textBoxVariazione.Text) / 100) + colTotale1,2);
-            //colTotaleVar2 += Math.Round((colTotale2 * Convert.ToDouble(textBoxVariazione.Text) / 100) + colTotale2,2);
-            //colTotaleVar3 += Math.Round((colTotale3 * Convert.ToDouble(textBoxVariazione.Text) / 100) + colTotale3,2);
             TotVar1.Text = Math.Round(colTotaleVar1,2).ToString();
             TotVar2.Text = Math.Round(colTotaleVar2,2).ToString();
             TotVar3.Text = Math.Round(colTotaleVar3,2).ToString();
         }
         //Fare il test con questo codice --> SB02AL1505.0-1_02
 
+        /// <summary>
+        /// Funzione ausiliaria per poter contare il numero di caratteri passato come parametro nella stringa passata come parametro.
+        /// Ci permette di cercale le virgole all'interno del rowindex per capire di quale generazione fa parte la riga.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="searched"></param>
+        /// <returns></returns>
         private int FindNumberOfChar(Char target, String searched)
         {
             Console.Write(
@@ -1136,6 +1360,12 @@ namespace PreventivazioneRapida
 
         }
 
+        /// <summary>
+        /// Funzione che gestisce l'evento del button conferma.
+        /// Salva i valori di testata in un array e richiama la funzione di salvataggio nel database del dataset corrente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnConferma_Click(object sender, EventArgs e)
         {
             if (textBoxCliente.Text != "" && textBoxArticolo.Text != "" && textBoxNote.Text != "")
@@ -1149,7 +1379,9 @@ namespace PreventivazioneRapida
                 valoriTestata[5] = QItotale.Text;
                 valoriTestata[6] = QItotalevar.Text;
                 valoriTestata[7] = textBoxNote.Text;
-                m.InsertPreventivo(valoriTestata);
+                ConfermaSalvataggio Conferma = new ConfermaSalvataggio(m, valoriTestata);
+                Conferma.Show();
+                //m.InsertPreventivo(valoriTestata);
             }
             else
             {
@@ -1158,6 +1390,11 @@ namespace PreventivazioneRapida
             return;
         }
 
+        /// <summary>
+        /// Richiama la form per poter permettere il caricamento di un preventivo salvato precedentemente nel database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCarica_Click(object sender, EventArgs e)
         {
             CaricaPreventivo loadPreventivo = new CaricaPreventivo(this, m);
@@ -1165,6 +1402,10 @@ namespace PreventivazioneRapida
             return;
         }
 
+        /// <summary>
+        /// Inserisce nell'intestazione i valori che gli sono stati passati come parametro.
+        /// </summary>
+        /// <param name="testata"></param>
         public void InserisciTestata(List<string> testata)
         {
             textBoxCliente.Text = testata[0];
@@ -1179,35 +1420,47 @@ namespace PreventivazioneRapida
             labelIDpreventivo.Text = testata[7];
         }
 
+        /// <summary>
+        /// Funzione principale che riassume il processo di aggiornamento e di calcolo dei costi totali e dei ricavi.
+        /// Inoltre procede alla colorazione delle celle della datagrid.
+        /// </summary>
         public void BindingGrid()
         {
-            dataGridView.Visible = false;
-            progressBar1.Visible = true;
-            progressBar1.Minimum = 1;
-            progressBar1.Maximum = 7;
-            progressBar1.Value = 1;
-            progressBar1.Step = 1;
-            dataGridView.DataSource = null;
-            progressBar1.PerformStep();
-            BindingSource bindingSource1 = new BindingSource();
-            bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
-            dataGridView.DataSource = bindingSource1.DataSource;
-            dataGridView.Sort(dataGridView.Columns["rowindex"], ListSortDirection.Ascending);
-            progressBar1.PerformStep();
-            foreach (DataGridViewColumn column in dataGridView.Columns)
+            try
             {
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-                column.ReadOnly = true;
+                dataGridView.Visible = false;
+                progressBar1.Visible = true;
+                progressBar1.Minimum = 1;
+                progressBar1.Maximum = 5;
+                progressBar1.Value = 1;
+                progressBar1.Step = 1;
+                dataGridView.DataSource = null;
+                progressBar1.PerformStep();
+                BindingSource bindingSource1 = new BindingSource();
+                bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
+                dataGridView.DataSource = bindingSource1.DataSource;
+                dataGridView.Sort(dataGridView.Columns["rowindex"], ListSortDirection.Ascending);
+                progressBar1.PerformStep();
+                foreach (DataGridViewColumn column in dataGridView.Columns)
+                {
+                    column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    column.ReadOnly = true;
+                }
+                progressBar1.PerformStep();
+                progressBar1.PerformStep();
+
+                CalcolaPrezzoQuantitaImpostata();
+                progressBar1.PerformStep();
+                CalcolaPrezzoTotaliPerQuantita();
+                progressBar1.PerformStep();
+                ColoraDataGrid();
+                progressBar1.PerformStep();
+
+                progressBar1.PerformStep();
+                progressBar1.Visible = false;
+                dataGridView.Visible = true;
             }
-            progressBar1.PerformStep();
-            CalcolaPrezzoQuantitaImpostata();
-            progressBar1.PerformStep();
-            CalcolaPrezzoTotaliPerQuantita();
-            progressBar1.PerformStep();
-            ColoraDataGrid();
-            progressBar1.PerformStep();
-            progressBar1.Visible = false;
-            dataGridView.Visible = true;
+            catch(Exception e) { Console.Write(e); }           
         }
 
         private void buttonEspandi_Click(object sender, EventArgs e)
@@ -1225,8 +1478,17 @@ namespace PreventivazioneRapida
             }
         }
 
+        /// <summary>
+        /// Funzione richiamata dalla form secondaria "InserisciRigo".
+        /// In base alla tipologia di inserimento del rigo (passata come primo parametro", l'algoritmo si comporta in maniera differente per poter permettere di inserire il rigo
+        /// nella posizione corretta e quindi rieseguire tutte le operazioni di aggiornamento per il totale dei costi e deti ricavi del preventivo.
+        /// </summary>
+        /// <param name="tipologiaInserimento"></param>
+        /// <param name="padre"></param>
+        /// <param name="datarow"></param>
         public void InserisciRigo(int tipologiaInserimento, string padre, DataRow datarow)
         {
+            //Se la datatable principale non esiste allora procedo a crearne una nuova e a collegarla con la datagrid
             if (m.ds.Tables.IndexOf("DistintaBase") < 1)
             {
                 DataTable distintaBase = new DataTable();
@@ -1237,8 +1499,11 @@ namespace PreventivazioneRapida
                 bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
                 dataGridView.DataSource = bindingSource1;
             }
+            //All'interno di ogni case viene eseguito un primo controllo che verifica se la riga padre scelta nella form "InserisciRigo" coincide con il padre principale selezionato
+            //dall'utente, quindi quello inserito nella testata.
             switch (tipologiaInserimento)
             {
+                //1--> inserimento di una materia prima o semilavorato preso dal database delle distinte base di agilis
                 case 1:
                     {
                         if(textBoxArticolo.Text == padre)
@@ -1255,12 +1520,6 @@ namespace PreventivazioneRapida
                             datarow["CODICE_PADRE"] = padre;
                             m.ds.Tables["DistintaBase"].ImportRow(datarow);
                             EsplodiDistintaBase(datarow["rowindex"].ToString(), 1);
-                            m.FromDecimalToTime();
-                            BindingGrid();
-                            /*
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();*/
                         }
                         else
                         {
@@ -1268,6 +1527,7 @@ namespace PreventivazioneRapida
                             DataRow datarowpadre = query.First();
                             string rowindexpadre = datarowpadre["rowindex"].ToString();
                             int numerodifigli = 0;
+                            //Controllo se il rigo da inserire abbia a sua volta dei figli, quindi inserisco anche quelli
                             foreach(DataRow r in m.ds.Tables["DistintaBase"].Rows)
                             {
                                 if(r["CODICE_PADRE"].ToString() == datarowpadre["Codice Art"].ToString())
@@ -1289,57 +1549,27 @@ namespace PreventivazioneRapida
                             m.ds.Tables["DistintaBase"].ImportRow(datarow);
                             int livello = FindNumberOfChar(',', datarow["rowindex"].ToString()) + 1;
                             EsplodiDistintaBase(datarow["rowindex"].ToString(), livello);
-
+                            //Eseguo i calcoli di aggiornamento
                             AggiornaParentela(datarow);
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         break;
                     }
+                //Inserimento di una lavorazione presa dal database di agilis
                 case 2:
                     {
                         if (textBoxArticolo.Text == padre)
                         {
                             IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
-                            int risultato = query.Max();
-                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = (risultato + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Totale"] = "0";
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["LavDesc"].ToString() + " - " + datarow["CenDesc"].ToString();
-                            rigodainserire["Totale + %Var"] = "0";
-                            if (Int32.Parse(datarow["Lavorazione"].ToString()) <= 500)
+                            int risultato = 0;
+                            List<int> qqqq = query.ToList();
+                            if (qqqq.Count > 0)
                             {
-                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
-                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                                rigodainserire["Setup mac"] = "0";
-                                rigodainserire["Setup uomo"] = "0";
-                                rigodainserire["Tempo mac"] = "0";
-                                rigodainserire["Tempo uomo"] = "0";
-                                rigodainserire["Costo att mac"] = datarow["CostoAttMac"].ToString();
-                                rigodainserire["Costo att uomo"] = datarow["CostoAttUomo"].ToString();
-                                rigodainserire["Costo mac"] = datarow["CostoMac"].ToString();
-                                rigodainserire["Costo uomo"] = datarow["CostoUomo"].ToString();
+                                risultato = query.Max();
                             }
-                            else
-                            {
-                                rigodainserire["Codice Art"] = rigodainserire["Descrizione art / Centro di Lavoro"].ToString();
-                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
-                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                                rigodainserire["Costo Art"] = "0";
-
-                            }
-
-                                                        m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
-                            EsplodiDistintaBase(rigodainserire["rowindex"].ToString(), 1);
-                            m.FromTimeToDecimal();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
+                            datarow["rowindex"] = (risultato + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            m.ds.Tables["DistintaBase"].ImportRow(datarow);
+                            EsplodiDistintaBase(datarow["rowindex"].ToString(), 1);
                         }
                         else
                         {
@@ -1363,55 +1593,29 @@ namespace PreventivazioneRapida
                                     catch { }
                                 }
                             }
-                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            if (Int32.Parse(datarow["Lavorazione"].ToString()) <= 500)
-                            {
-                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
-                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                                rigodainserire["Setup mac"] = "0";
-                                rigodainserire["Setup uomo"] = "0";
-                                rigodainserire["Tempo mac"] = "0";
-                                rigodainserire["Tempo uomo"] = "0";
-                                rigodainserire["Costo att mac"] = datarow["CostoAttMac"].ToString();
-                                rigodainserire["Costo att uomo"] = datarow["CostoAttUomo"].ToString();
-                                rigodainserire["Costo mac"] = datarow["CostoMac"].ToString();
-                                rigodainserire["Costo uomo"] = datarow["CostoUomo"].ToString();
-                            }
-                            else
-                            {
-                                rigodainserire["Codice Art"] = datarow["LavDesc"].ToString();
-                                rigodainserire["Codice Lav"] = datarow["Lavorazione"].ToString();
-                                rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                                rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                                rigodainserire["Costo Art"] = "0";
-
-                            }
-
-                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["LavDesc"].ToString() + " - " + datarow["CenDesc"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
-
+                            datarow["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
                             m.ds.Tables["DistintaBase"].ImportRow(datarow);
+
                             int livello = FindNumberOfChar(',', datarow["rowindex"].ToString()) + 1;
                             EsplodiDistintaBase(datarow["rowindex"].ToString(), livello);
 
                             AggiornaParentela(datarow);
-                            m.FromTimeToDecimal();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         break;
                     }
+                //3--> Inserimento di un preventivo creato in precedenza tramite questo software, lo inserisco come rigo del preventivo attualmente in elaborazione
                 case 3:
                     {
                         if (textBoxArticolo.Text == padre)
                         {
                             IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
-                            int risultato = query.Max();
+                            int risultato = 0;
+                            List<int> qqqq = query.ToList();
+                            if (qqqq.Count > 0)
+                            {
+                                risultato = query.Max();
+                            }
                             DataTable datatable = new DataTable();
                             SqlDataAdapter da;
                             SqlConnection sqlserverConn = new SqlConnection(Setting.Istance.ConnStr);
@@ -1420,28 +1624,54 @@ namespace PreventivazioneRapida
                                 "quantita AS 'Quantita`', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
                                 "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
                                 "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var', setupmacdec AS 'setup mac decimale', setupuomodec AS 'setup uomo decimale'," +
-                                " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = (SELECT id FROM(SELECT (ROW_NUMBER() OVER(ORDER BY id)) as rowindex, id FROM preventivi" +
-                                " WHERE cliente = 'RGG') AS clientepreventivi WHERE rowindex = " + Int32.Parse(datarow["rowindex"].ToString()) + ")";
+                                " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = "+ Int32.Parse(datarow["id"].ToString());
                             da = new SqlDataAdapter(selectrighipreventivo, sqlserverConn);
                             da.Fill(datatable);
-                            DataRow rigotestata = m.ds.Tables["DistintaBase"].NewRow();
+                            DataRow rigotestata = datatable.NewRow();
+                            if(m.ds.Tables["DistintaBase"].Columns.Count < 20)
+                            {
+                                m.ds.Tables.Remove("DistintaBase");
+                                DataTable distintaBase = new DataTable();
+                                distintaBase = rigotestata.Table.Clone();
+                                distintaBase.TableName = "DistintaBase";
+                                m.ds.Tables.Add(distintaBase);
+                                BindingSource bindingSource1 = new BindingSource();
+                                bindingSource1.DataSource = m.ds.Tables["DistintaBase"];
+                                dataGridView.DataSource = bindingSource1;
+                            }
                             rigotestata["rowindex"] = (risultato + 1).ToString();
                             rigotestata["CODICE_PADRE"] = padre;
+                            rigotestata["Codice lav"] = "";
+                            rigotestata["Codice centro"] = "";
                             rigotestata["Quantita`"] = datarow["quantita"];
+                            rigotestata["Setup Mac"] = "";
+                            rigotestata["Setup Uomo"] = "";
+                            rigotestata["Tempo Mac"] = "";
+                            rigotestata["Tempo Uomo"] = "";
+                            rigotestata["Costo Art"] = Double.Parse(datarow["totale"].ToString()) / Double.Parse(datarow["quantita"].ToString());
+                            rigotestata["Costo Att Mac"] = "";
+                            rigotestata["Costo Att Uomo"] = "";
+                            rigotestata["Costo Mac"] = "";
+                            rigotestata["Costo Uomo"] = "";
                             rigotestata["Totale"] = datarow["totale"];
                             rigotestata["Codice Art"] = datarow["articolo"];
                             rigotestata["Descrizione art / Centro di Lavoro"] = datarow["note"];
                             rigotestata["Totale + %Var"] = Double.Parse(rigotestata["Totale"].ToString()) + (Double.Parse(rigotestata["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
-                            m.ds.Tables["DistintaBase"].Rows.Add(rigotestata);
+                            rigotestata["setup mac decimale"] = "";
+                            rigotestata["setup uomo decimale"] = "";
+                            rigotestata["tempo mac decimale"] = "";
+                            rigotestata["tempo uomo decimale"] = "";
+                            DataRow r = m.ds.Tables["DistintaBase"].NewRow();
+                            for(int i = 0; i < m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                r[i] = rigotestata[i];
+                            }
+                            m.ds.Tables["DistintaBase"].Rows.Add(r);
                             foreach(DataRow dr in datatable.Rows)
                             {
                                 dr["rowindex"] = rigotestata["rowindex"].ToString() + "," + dr["rowindex"].ToString();
                                 m.ds.Tables["DistintaBase"].ImportRow(dr);
                             }
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         else
                         {
@@ -1493,33 +1723,32 @@ namespace PreventivazioneRapida
                             }
 
                             AggiornaParentela(rigotestata);
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         break;
                     }
+                //4--> Inserimento
                 case 4:
                     {
                         if (textBoxArticolo.Text == padre)
                         {
                             IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
-                            int risultato = query.Max();
+                            int risultato = 0;
+                            List<int> qqqq = query.ToList();
+                            if (qqqq.Count > 0)
+                            {
+                                risultato = query.Max();
+                            }
+                            datarow["rowindex"] = (risultato + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            datarow["Totale"] = Double.Parse(datarow["Costo Art"].ToString()) * Double.Parse(datarow["Quantita`"].ToString());
+                            datarow["Totale + %Var"] = Double.Parse(datarow["Totale"].ToString()) + (Double.Parse(datarow["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = (risultato + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
-                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Costo Art"] = datarow["Prezzo"].ToString();
-                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
-                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
+
+                            for(int i =0; i <m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                rigodainserire[i] = datarow[i];
+                            }
+                            m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);                           
                         }
                         else
                         {
@@ -1543,21 +1772,17 @@ namespace PreventivazioneRapida
                                     catch { }
                                 }
                             }
+                            datarow["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            datarow["Totale"] = Double.Parse(datarow["Costo Art"].ToString()) * Double.Parse(datarow["Quantita`"].ToString());
+                            datarow["Totale + %Var"] = Double.Parse(datarow["Totale"].ToString()) + (Double.Parse(datarow["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Art"] = datarow["Nome"].ToString();
-                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Costo Art"] = datarow["Prezzo"].ToString();
-                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            for (int i = 0; i < m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                rigodainserire[i] = datarow[i];
+                            }
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
                             AggiornaParentela(rigodainserire);
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         break;
                     }
@@ -1566,33 +1791,26 @@ namespace PreventivazioneRapida
                         if (textBoxArticolo.Text == padre)
                         {
                             IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
-                            int risultato = query.Max();
-                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = (risultato + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
-                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
-                            rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
-                            rigodainserire["Tempo mac"] = datarow["Tempo mac"].ToString();
-                            rigodainserire["Tempo uomo"] = datarow["Tempo uomo"].ToString();
-                            rigodainserire["Costo att mac"] = datarow["Costo setup mac"].ToString();
-                            rigodainserire["Costo att uomo"] = datarow["Costo setup uomo"].ToString();
-                            rigodainserire["Costo mac"] = datarow["Costo tempo mac"].ToString();
-                            rigodainserire["Costo uomo"] = datarow["Costo tempo uomo"].ToString();
+                            int risultato = 0;
+                            List<int> qqqq = query.ToList();
+                            if (qqqq.Count > 0)
+                            {
+                                risultato = query.Max();
+                            }
+                            datarow["rowindex"] = (risultato + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
 
-                            rigodainserire["Totale"] = (Double.Parse(rigodainserire["Setup mac"].ToString()) * Double.Parse(rigodainserire["Costo att mac"].ToString())) + (Double.Parse(rigodainserire["Setup uomo"].ToString()) * Double.Parse(rigodainserire["Costo att uomo"].ToString()))
-                                + (Double.Parse(rigodainserire["Tempo mac"].ToString()) * Double.Parse(rigodainserire["Costo mac"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()))
-                                + (Double.Parse(rigodainserire["Tempo uomo"].ToString()) * Double.Parse(rigodainserire["Costo uomo"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()));
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            datarow["Totale"] = (Double.Parse(datarow["Setup Mac"].ToString()) * Double.Parse(datarow["Costo Att Mac"].ToString())) + (Double.Parse(datarow["Setup Uomo"].ToString()) * Double.Parse(datarow["Costo Att Uomo"].ToString()))
+                                + (Double.Parse(datarow["Tempo Mac"].ToString()) * Double.Parse(datarow["Costo Mac"].ToString()) * Double.Parse(datarow["Quantita`"].ToString()))
+                                + (Double.Parse(datarow["Tempo Uomo"].ToString()) * Double.Parse(datarow["Costo Uomo"].ToString()) * Double.Parse(datarow["Quantita`"].ToString()));
+                            datarow["Totale + %Var"] = Double.Parse(datarow["Totale"].ToString()) + (Double.Parse(datarow["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
+                            for (int i = 0; i < m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                rigodainserire[i] = datarow[i];
+                            }
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
-                            m.FromTimeToDecimal();
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
+                            m.FromTimeToDecimal(rigodainserire);
                         }
                         else
                         {
@@ -1616,32 +1834,20 @@ namespace PreventivazioneRapida
                                     catch { }
                                 }
                             }
+                            datarow["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            datarow["Totale"] = (Double.Parse(datarow["Setup mac"].ToString()) * Double.Parse(datarow["Costo att mac"].ToString())) + (Double.Parse(datarow["Setup uomo"].ToString()) * Double.Parse(datarow["Costo att uomo"].ToString()))
+                                + (Double.Parse(datarow["Tempo mac"].ToString()) * Double.Parse(datarow["Costo mac"].ToString()) * Double.Parse(datarow["Quantita`"].ToString()))
+                                + (Double.Parse(datarow["Tempo uomo"].ToString()) * Double.Parse(datarow["Costo uomo"].ToString()) * Double.Parse(datarow["Quantita`"].ToString()));
+                            datarow["Totale + %Var"] = Double.Parse(datarow["Totale"].ToString()) + (Double.Parse(datarow["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
-                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Setup mac"] = datarow["Setup mac"].ToString();
-                            rigodainserire["Setup uomo"] = datarow["Setup uomo"].ToString();
-                            rigodainserire["Tempo mac"] = datarow["Tempo mac"].ToString();
-                            rigodainserire["Tempo uomo"] = datarow["Tempo uomo"].ToString();
-                            rigodainserire["Costo att mac"] = datarow["Costo setup mac"].ToString();
-                            rigodainserire["Costo att uomo"] = datarow["Costo setup uomo"].ToString();
-                            rigodainserire["Costo mac"] = datarow["Costo tempo mac"].ToString();
-                            rigodainserire["Costo uomo"] = datarow["Costo tempo uomo"].ToString();
-                            rigodainserire["Totale"] = (Double.Parse(rigodainserire["Setup mac"].ToString()) * Double.Parse(rigodainserire["Costo att mac"].ToString())) + (Double.Parse(rigodainserire["Setup uomo"].ToString()) * Double.Parse(rigodainserire["Costo att uomo"].ToString()))
-                                + (Double.Parse(rigodainserire["Tempo mac"].ToString()) * Double.Parse(rigodainserire["Costo mac"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()))
-                                + (Double.Parse(rigodainserire["Tempo uomo"].ToString()) * Double.Parse(rigodainserire["Costo uomo"].ToString()) * Double.Parse(rigodainserire["Quantita`"].ToString()));
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazione.Text) / 100);
+                            for (int i = 0; i < m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                rigodainserire[i] = datarow[i];
+                            }
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
                             AggiornaParentela(rigodainserire);
-                            m.FromTimeToDecimal();
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
+                            m.FromTimeToDecimal(rigodainserire);
                         }
                         break;
                     }
@@ -1650,23 +1856,22 @@ namespace PreventivazioneRapida
                         if (textBoxArticolo.Text == padre)
                         {
                             IEnumerable<int> query = from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row.Field<String>("CODICE_PADRE") == textBoxArticolo.Text select Int32.Parse(row["rowindex"].ToString());
-                            int risultato = query.Max();
+                            int risultato = 0;
+                            List<int> qqqq = query.ToList();
+                            if (qqqq.Count > 0)
+                            {
+                                risultato = query.Max();
+                            }
+                            datarow["rowindex"] = (risultato + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            datarow["Totale"] = Double.Parse(datarow["Costo Art"].ToString()) * Double.Parse(datarow["Quantita`"].ToString());
+                            datarow["Totale + %Var"] = Double.Parse(datarow["Totale"].ToString()) + (Double.Parse(datarow["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = (risultato + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Art"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
-                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Costo Art"] = datarow["Costo"].ToString();
-                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
+                            for (int i = 0; i < m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                rigodainserire[i] = datarow[i];
+                            }
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         else
                         {
@@ -1690,23 +1895,17 @@ namespace PreventivazioneRapida
                                     catch { }
                                 }
                             }
+                            datarow["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
+                            datarow["CODICE_PADRE"] = padre;
+                            datarow["Totale"] = Double.Parse(datarow["Costo Art"].ToString()) * Double.Parse(datarow["Quantita`"].ToString());
+                            datarow["Totale + %Var"] = Double.Parse(datarow["Totale"].ToString()) + (Double.Parse(datarow["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
                             DataRow rigodainserire = m.ds.Tables["DistintaBase"].NewRow();
-                            rigodainserire["rowindex"] = rowindexpadre + "," + (numerodifigli + 1).ToString();
-                            rigodainserire["CODICE_PADRE"] = padre;
-                            rigodainserire["Codice Art"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Codice Lav"] = datarow["Nome"].ToString();
-                            rigodainserire["Codice Centro"] = datarow["Centro"].ToString();
-                            rigodainserire["Quantita`"] = datarow["Quantita"].ToString();
-                            rigodainserire["Costo Art"] = datarow["Prezzo"].ToString();
-                            rigodainserire["Totale"] = Double.Parse(datarow["Prezzo"].ToString()) * Double.Parse(datarow["Quantita"].ToString());
-                            rigodainserire["Descrizione art / Centro di Lavoro"] = datarow["Descrizione"].ToString();
-                            rigodainserire["Totale + %Var"] = Double.Parse(rigodainserire["Totale"].ToString()) + (Double.Parse(rigodainserire["Totale"].ToString()) * Double.Parse(textBoxVariazioneLav.Text) / 100);
+                            for (int i = 0; i < m.ds.Tables["DistintaBase"].Columns.Count; i++)
+                            {
+                                rigodainserire[i] = datarow[i];
+                            }
                             m.ds.Tables["DistintaBase"].Rows.Add(rigodainserire);
                             AggiornaParentela(rigodainserire);
-                            m.FromDecimalToTime();
-                            ColoraDataGrid();
-                            CalcolaPrezzoQuantitaImpostata();
-                            CalcolaPrezzoTotaliPerQuantita();
                         }
                         break;
                     }
@@ -1714,8 +1913,52 @@ namespace PreventivazioneRapida
                     break;
                     
             }
-               
+            //Aggiornamento della datagrid
+            BindingGrid();
+            dataGridView.Sort(dataGridView.Columns["rowindex"], ListSortDirection.Ascending);
+        }
 
+
+        private void buttonStampa_Click(object sender, EventArgs e)
+        {
+            if (textBoxCliente.Text != "" && textBoxArticolo.Text != "" && textBoxNote.Text != "")
+            {
+                try
+                {
+                    string fileSTAMPA = "StampaPreventivoRGG.xml";
+
+                    File.Create(fileSTAMPA).Close();
+                    string[] valoriTestata = new string[15];
+                    valoriTestata[0] = textBoxCliente.Text;
+                    valoriTestata[1] = textBoxArticolo.Text;
+                    valoriTestata[2] = textBoxQuantita.Text;
+                    valoriTestata[3] = textBoxVariazione.Text;
+                    valoriTestata[4] = textBoxVariazioneLav.Text;
+                    valoriTestata[5] = QItotale.Text;
+                    valoriTestata[6] = QItotalevar.Text;
+                    valoriTestata[7] = textBoxNote.Text;
+
+                    valoriTestata[8] = QIarticoli.Text;
+                    valoriTestata[9] = QIcostomac.Text;
+                    valoriTestata[10] = QIcostouomo.Text;
+                    valoriTestata[11] = QICostoSingolo.Text;
+                    valoriTestata[12] = QIRicavoSingolo.Text;
+
+                    valoriTestata[13] = labelCliente.Text;
+                    valoriTestata[14] = labelArticolo.Text;
+
+                    m.ScriviXMLperStampa(fileSTAMPA, valoriTestata);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("I campi \"Cliente\", \"Articolo\" e \"Note\" devono essere compilati per poter stampare il preventivo!");
+            }
+            return;           
         }
     }
 }

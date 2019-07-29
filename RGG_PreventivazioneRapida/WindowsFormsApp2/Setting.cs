@@ -192,5 +192,23 @@ namespace PreventivazioneRapida
 
         private string font = "";
         public string Font { get { return this.font; } }
+
+        /*public void CambiaValoreCliente(string cliente)
+        {
+            try
+            {
+                XmlDocument xmlDoc;
+                xmlDoc = new XmlDocument();
+                xmlDoc.Load("C:\\usr3\\wsai\\help_xml\\help_preventivi_RGG.xml");
+                XmlNode valore = xmlDoc.SelectSingleNode("help/campi/campo/valore");
+                valore.InnerText = cliente;
+                xmlDoc.Save("C:\\usr3\\wsai\\help_xml\\help_preventivi_RGG.xml");
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Errore caricamento file help_preventivi_RGG.\n" + e);
+            }
+            
+        }*/
     }
 }

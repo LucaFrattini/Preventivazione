@@ -3,11 +3,11 @@
   <intestazione>Help lavorazioni esterne</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
+    select '', codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
   </query>
 
   <queryDescrizione>
-    select codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
+    select '', codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
   </queryDescrizione>
   <campoRitorno>tb_codlavo</campoRitorno>
   <inserimento></inserimento>

@@ -18,6 +18,7 @@ namespace WindowsFormsApp2
         Form1 f;
         Model m;
 
+        //Funzione costruttore
         public InserisciRigo(Form1 form1, Model model)
         {
             f = form1;
@@ -28,6 +29,11 @@ namespace WindowsFormsApp2
             this.textBoxCentro.Leave += new System.EventHandler(this.textBoxCentro_Leave);
         }
 
+        /// <summary>
+        /// Funzione per popolare la combobox con tutti i padri.
+        /// Nel caso si vada a modificare una distinta base già presente in agilis i padri potranno essere solo i semilavorati e il padre principale.
+        /// Se invece si sta facendo un preventivo da zero nei padri sono compresi tutti gli articoli
+        /// </summary>
         private void PopolaComboBox()
         {
             try
@@ -46,7 +52,7 @@ namespace WindowsFormsApp2
                 {
                     try
                     {
-                        query = (from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row["Codice Art"].ToString() != "" && row["Codice centro"].ToString() == "" select row["CODICE_PADRE"].ToString()).Distinct().ToList();
+                        query = (from row in m.ds.Tables["DistintaBase"].AsEnumerable() /*where row["Codice Art"].ToString() != "" && row["Codice centro"].ToString() == ""*/ select row["CODICE_PADRE"].ToString()).Distinct().ToList();
                     }
                     catch { }
                 }
@@ -62,6 +68,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Funzione che serve solo per la convalida degli input nelle textbox e trasforma il '.' in ','
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ControllaValiditaTextBox(object sender, EventArgs e)
         {
             try
@@ -79,10 +90,20 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Evento checkchanged. Ad ogni selezione diversa la form farà visualizzare dettagli specifici.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             textBoxArticolo.Text = "";
+            textBoxCentro.Text = "";
             textBoxArticolo.BackColor = Color.White;
+            textBoxCentro.BackColor = Color.White;
+            textBoxNome.Text = "";
+            textBoxDescrizione.Text = "";
+            textBoxCostoArticolo.Text = "";
             textBoxCostoArticolo.Enabled = true;
             textBoxSetupMac.Text = "";
             textBoxSetupUomo.Text = "";
@@ -97,6 +118,7 @@ namespace WindowsFormsApp2
             labelCentro.Visible = false;
             textBoxCentro.Visible = false;
             buttonHelpCentri.Visible = false;
+            buttonConferma.Enabled = false;
             if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
             {
                 this.Height = 530;
@@ -150,6 +172,7 @@ namespace WindowsFormsApp2
                 textBoxCostoTempoMac.Enabled = false;
                 textBoxCostoTempoUomo.Enabled = false;
                 labelPrezzo.Text = "Prezzo:";
+                buttonConferma.Enabled = true;
             }
             else if(radioButtonNuovo.Checked == true && radioButtonLavorazione.Checked == true)
             {
@@ -167,6 +190,7 @@ namespace WindowsFormsApp2
                 textBoxCostoTempoMac.Enabled = true;
                 textBoxCostoTempoUomo.Enabled = true;
                 labelPrezzo.Text = "Centro:";
+                buttonConferma.Enabled = true;
             }
             else if (radioButtonNuovo.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
             {
@@ -186,9 +210,16 @@ namespace WindowsFormsApp2
                 textBoxCostoLavEst.Visible = true;
                 labelCostoLavEst.Visible = true;
                 labelPrezzo.Text = "Centro:";
+                buttonConferma.Enabled = true;
             }
         }
 
+        /// <summary>
+        /// Evento Leave sulla textbox dell'articolo.
+        /// In base al radiobutton selezionato il comportamento dell'evento sarà differente.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxArticolo_Leave(object sender, EventArgs e)
         {
             if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
@@ -204,8 +235,11 @@ namespace WindowsFormsApp2
                 else
                 {
                     textBoxArticolo.BackColor = Color.White;
-                    labelImportaDescrizione.Text = "<Descrizione Articolo>";
-                    MessageBox.Show("Inserire un codice articolo corretto.");
+                    labelImportaDescrizione.Text = "<Descrizione articolo>";
+                    if(textBoxArticolo.Text != "") {
+                        MessageBox.Show("Inserire un codice articolo corretto.");
+                        textBoxArticolo.BackColor = Color.OrangeRed;
+                    }                  
                     buttonConferma.Enabled = false;
                 }
             }
@@ -219,27 +253,35 @@ namespace WindowsFormsApp2
                     }
                     else
                     {
-                        m.EstraiRisultatoQuery(Setting.Istance.QueryLavorazione.Replace("&lt;", "&gt;="), "Lavorazioni");
+                        m.EstraiRisultatoQuery(Setting.Istance.QueryLavorazione.Replace("<", ">="), "Lavorazioni");
                     }
                     DataRow dr = m.ds.Tables["Lavorazioni"].Rows.Find(Int32.Parse(textBoxArticolo.Text));
                     if (dr != null)
                     {
                         textBoxArticolo.BackColor = Color.LightGreen;
                         labelImportaDescrizione.Text = dr[1].ToString();
-                        buttonConferma.Enabled = true;
+                        if(textBoxCentro.BackColor == Color.LightGreen)
+                        {
+                            buttonConferma.Enabled = true;
+                        }
                     }
                     else
                     {
                         textBoxArticolo.BackColor = Color.White;
                         labelImportaDescrizione.Text = "<Descrizione Lavorazione>";
-                        MessageBox.Show("Inserire un codice di lavorazione corretto.");
+                        if (textBoxArticolo.Text != "")
+                        { MessageBox.Show("Inserire un codice di lavorazione corretto."); }
                         buttonConferma.Enabled = false;
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("Inserire un codice di lavorazione corretto.");
-                    textBoxArticolo.BackColor = Color.OrangeRed;
+                    textBoxArticolo.BackColor = Color.White;
+                    if (textBoxArticolo.Text != "")
+                    {
+                        MessageBox.Show("Inserire un codice di lavorazione corretto.");
+                        textBoxArticolo.BackColor = Color.OrangeRed;
+                    }                    
                     buttonConferma.Enabled = false;
                 }
 
@@ -263,8 +305,12 @@ namespace WindowsFormsApp2
                         }
                         else
                         {
-                            MessageBox.Show("Inserire un id preventivo corretto.");
-                            textBoxArticolo.BackColor = Color.OrangeRed;
+                            textBoxArticolo.BackColor = Color.White;
+                            if (textBoxArticolo.Text != "")
+                            {
+                                MessageBox.Show("Inserire un id preventivo corretto.");
+                                textBoxArticolo.BackColor = Color.OrangeRed;
+                            }
                             buttonConferma.Enabled = false;
                         }
                     }
@@ -277,9 +323,15 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Evento leave della textbox del centro di lavorazione.
+        /// Controlla che sia una lavorazione interna o esterna.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBoxCentro_Leave(object sender, EventArgs e)
         {
-            string query = Setting.Istance.QueryCercaCentro.Replace("@CodCent", textBoxArticolo.Text);
+            string query = Setting.Istance.QueryCercaCentro.Replace("@CodCent", textBoxCentro.Text);
 
             if (radioButtonLavorazione.Checked == true)
             {
@@ -302,19 +354,33 @@ namespace WindowsFormsApp2
                     dr.Read();
                     textBoxCentro.BackColor = Color.LightGreen;
                     labelCentro.Text = dr["tb_descent"].ToString();
-                    buttonConferma.Enabled = true;
+                    if(textBoxArticolo.BackColor == Color.LightGreen)
+                    {
+                        buttonConferma.Enabled = true;
+                    }
                 }
                 else
                 {
-                    textBoxArticolo.BackColor = Color.White;
-                    labelCentro.Text = "<Descrizione Centro>";
-                    MessageBox.Show("Inserire un codice articolo corretto.");
+                    labelCentro.Text = "<Descrizione centro>";
+                    textBoxCentro.BackColor = Color.White;
+                    if (textBoxCentro.Text != "")
+                    {
+                        textBoxCentro.BackColor = Color.OrangeRed;
+                        MessageBox.Show("Inserire un codice centro corretto.");
+                    }
                     buttonConferma.Enabled = false;
                 }
             }
             connection.Close();
         }
 
+        /// <summary>
+        /// Evento Click del button di conferma. In base al radiobutton selezionato si comporta in maniera diversa.
+        /// Così richiama la funzione "inseriscirigo" della form principale e aggiunge i corretti paramentri da passare alla funzione
+        /// in base al rigo da gestire (lavorazione o articolo)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonConferma_Click(object sender, EventArgs e)
         {
             try
@@ -345,45 +411,48 @@ namespace WindowsFormsApp2
                     else if (radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
                     {
                         tipologiaInserimento = 2;
-                        datatable.Columns.Add("Lavorazione");
-                        datatable.Columns.Add("Quantita");
-                        datatable.Columns.Add("LavDesc");
-                        datatable.Columns.Add("Centro");
-                        datatable.Columns.Add("CenDesc");
-                        datatable.Columns.Add("CostoAttMac");
-                        datatable.Columns.Add("CostoAttUomo");
-                        datatable.Columns.Add("CostoMac");
-                        datatable.Columns.Add("CostoUomo");
-                        datarow = datatable.NewRow();
-                        datarow["Lavorazione"] = textBoxArticolo.Text;
-                        datarow["Quantita"] = textBoxQuantita.Text;
-                        datarow["Centro"] = textBoxCentro.Text;
-                        query = Setting.Istance.QueryCercaPreventivo.Replace("@CodLav", textBoxArticolo.Text);
+                        query = Setting.Istance.QueryCercaLavorazione.Replace("@CodLav", textBoxArticolo.Text);
+                        if (radioButtonLavorazioneEsterna.Checked == true)
+                        {
+                            query = query + " and tb_codlavo >= 500";
+                        }
+                        SqlDataAdapter da = new SqlDataAdapter(query, connection);
+                        da.Fill(datatable);
+                        datarow = datatable.Rows[0];
+                        datarow["Quantita`"] = textBoxQuantita.Text;
                         connection = new SqlConnection(Setting.Istance.ConnStr);
                         connection.Open();
-                        using (SqlCommand cmd = new SqlCommand(query, connection))
-                        {
-                            SqlDataReader dr = cmd.ExecuteReader();
-                            if (dr.HasRows)
-                            {
-                                dr.Read();
-                                datarow["LavDesc"] = dr["tb_deslavo"] ;
-
-                            }
-                            dr.Close();
-                        }
                         query = Setting.Istance.QueryCercaCentro.Replace("@CodCent", textBoxCentro.Text);
+                        if (radioButtonLavorazioneEsterna.Checked == true)
+                        {
+                            query = query + " and tb_codcent >= 500";
+                        }
                         using (SqlCommand cmd = new SqlCommand(query, connection))
                         {
                             SqlDataReader dr = cmd.ExecuteReader();
                             if (dr.HasRows)
                             {
                                 dr.Read();
-                                datarow["CenDesc"] = dr["tb_descent"];
-                                datarow["CostoAttMac"] = dr["tb_cmacoratt"];
-                                datarow["CostoAttUomo"] = dr["tb_pagaoratt"];
-                                datarow["CostoMac"] = dr["tb_cmacora"];
-                                datarow["CostoUomo"] = dr["tb_pagaora"];
+
+                                datarow["Codice Centro"] = dr["tb_codcent"].ToString();
+                                datarow["Descrizione art / Centro di Lavoro"] = datarow["Descrizione art / Centro di Lavoro"].ToString() + dr["tb_descent"].ToString();
+                                datarow["Costo Att Mac"] = dr["tb_cmacoratt"].ToString();
+                                datarow["Costo Att Uomo"] = dr["tb_pagaoratt"].ToString();
+                                datarow["Costo Mac"] = dr["tb_cmacora"].ToString();
+                                datarow["Costo Uomo"] = dr["tb_pagaora"].ToString();
+                                if (radioButtonLavorazioneEsterna.Checked == true)
+                                {
+                                    datarow["Codice Art"] = datarow["Descrizione art / Centro di Lavoro"].ToString() + dr["tb_descent"].ToString();
+                                    datarow["Costo Att Mac"] = "";
+                                    datarow["Costo Att Uomo"] = "";
+                                    datarow["Costo Mac"] = "";
+                                    datarow["Costo Uomo"] = "";
+                                    datarow["Setup Mac"] = "";
+                                    datarow["Setup Uomo"] = "";
+                                    datarow["Tempo Mac"] = "";
+                                    datarow["Tempo Uomo"] = "";
+                                    datarow["Costo art"] = "0";
+                                }
                             }
                             dr.Close();
                         }
@@ -405,48 +474,105 @@ namespace WindowsFormsApp2
                     else if (radioButtonNuovo.Checked == true && radioButtonArticolo.Checked == true)
                     {
                         tipologiaInserimento = 4;
-                        datatable.Columns.Add("Nome");
-                        datatable.Columns.Add("Descrizione");
-                        datatable.Columns.Add("Prezzo");
-                        datatable.Columns.Add("Quantita");
+                        datatable.Columns.Add("rowindex");
+                        datatable.Columns.Add("CODICE_PADRE");
+                        datatable.Columns.Add("Codice Art");
+                        datatable.Columns.Add("Codice Centro");
+                        datatable.Columns.Add("Codice Lav");
+                        datatable.Columns.Add("Descrizione art / Centro di Lavoro");
+                        datatable.Columns.Add("Quantita`");
+                        datatable.Columns.Add("Setup Mac");
+                        datatable.Columns.Add("Setup Uomo");
+                        datatable.Columns.Add("Tempo Mac");
+                        datatable.Columns.Add("Tempo Uomo");
+                        datatable.Columns.Add("Costo Art");
+                        datatable.Columns.Add("Costo Att Mac");
+                        datatable.Columns.Add("Costo Att Uomo");
+                        datatable.Columns.Add("Costo Mac");
+                        datatable.Columns.Add("Costo Uomo");
+                        datatable.Columns.Add("Totale");
+                        datatable.Columns.Add("Totale + %Var");
+                        datatable.Columns.Add("setup mac decimale");
+                        datatable.Columns.Add("setup uomo decimale");
+                        datatable.Columns.Add("tempo mac decimale");
+                        datatable.Columns.Add("tempo uomo decimale");
+
                         datarow = datatable.NewRow();
-                        datarow["Nome"] = textBoxNome.Text;
-                        datarow["Descrizione"] = textBoxDescrizione.Text;
-                        datarow["Prezzo"] = textBoxCostoArticolo.Text;
-                        datarow["Quantita"] = textBoxQuantitaNuovo.Text;
+                        datarow["rowindex"] = "";
+                        datarow["CODICE_PADRE"] = "";
+                        datarow["Codice Art"] = textBoxNome.Text;
+                        datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
+                        datarow["Costo Art"] = textBoxCostoArticolo.Text;
+                        datarow["Quantita`"] = textBoxQuantitaNuovo.Text;
+                        datarow["Codice Centro"] = "";
+                        datarow["Codice Lav"] = "";
+                        datarow["Setup Mac"] = "";
+                        datarow["Setup Uomo"] = "";
+                        datarow["Tempo Mac"] = "";
+                        datarow["Tempo Uomo"] = "";
+                        datarow["Costo Att mac"] = "";
+                        datarow["Costo Att Uomo"] = "";
+                        datarow["Costo Mac"] = "";
+                        datarow["Costo Uomo"] = "";
+                        datarow["Totale"] = "";
+                        datarow["Totale + %Var"] = "";
+                        datarow["setup mac decimale"] = "";
+                        datarow["Setup Uomo decimale"] = "";
+                        datarow["Tempo mac decimale"] = "";
+                        datarow["Tempo Uomo decimale"] = "";
+
                         f.InserisciRigo(tipologiaInserimento, comboBox.Text, datarow);
                         datatable.Reset();
                     }
                     else if (radioButtonNuovo.Checked == true && radioButtonLavorazione.Checked == true)
                     {
                         tipologiaInserimento = 5;
-                        datatable.Columns.Add("Nome");
-                        datatable.Columns.Add("Centro");
-                        datatable.Columns.Add("Descrizione");
-                        datatable.Columns.Add("Prezzo");
-                        datatable.Columns.Add("Quantita");
-                        datatable.Columns.Add("Setup mac");
-                        datatable.Columns.Add("Setup uomo");
-                        datatable.Columns.Add("Tempo mac");
-                        datatable.Columns.Add("Tempo uomo");
-                        datatable.Columns.Add("Costo setup mac");
-                        datatable.Columns.Add("Costo setup uomo");
-                        datatable.Columns.Add("Costo tempo mac");
-                        datatable.Columns.Add("Costo tempo uomo");
+                        datatable.Columns.Add("rowindex");
+                        datatable.Columns.Add("CODICE_PADRE");
+                        datatable.Columns.Add("Codice Art");
+                        datatable.Columns.Add("Codice Centro");
+                        datatable.Columns.Add("Codice Lav");
+                        datatable.Columns.Add("Descrizione art / Centro di Lavoro");
+                        datatable.Columns.Add("Quantita`");                       
+                        datatable.Columns.Add("Setup Mac");
+                        datatable.Columns.Add("Setup Uomo");
+                        datatable.Columns.Add("Tempo Mac");
+                        datatable.Columns.Add("Tempo Uomo");
+                        datatable.Columns.Add("Costo Art");
+                        datatable.Columns.Add("Costo Att Mac");
+                        datatable.Columns.Add("Costo Att Uomo");
+                        datatable.Columns.Add("Costo Mac");
+                        datatable.Columns.Add("Costo Uomo"); 
+                        datatable.Columns.Add("Totale");
+                        datatable.Columns.Add("Totale + %Var");
+                        datatable.Columns.Add("setup mac decimale");
+                        datatable.Columns.Add("setup uomo decimale");
+                        datatable.Columns.Add("tempo mac decimale");
+                        datatable.Columns.Add("tempo uomo decimale");
+
                         datarow = datatable.NewRow();
-                        datarow["Nome"] = textBoxNome.Text;
-                        datarow["Centro"] = textBoxCostoArticolo.Text;
-                        datarow["Descrizione"] = textBoxDescrizione.Text;
-                        datarow["Prezzo"] = textBoxCostoArticolo.Text;
-                        datarow["Quantita"] = textBoxQuantitaNuovo.Text;
-                        datarow["Setup mac"] = textBoxSetupMac.Text;
-                        datarow["Setup uomo"] = textBoxSetupUomo.Text;
-                        datarow["Tempo mac"] = textBoxTempoMac.Text;
-                        datarow["Tempo uomo"] = textBoxTempoUomo.Text;
-                        datarow["Costo setup mac"] = textBoxCostoSetupMac.Text;
-                        datarow["Costo setup uomo"] = textBoxCostoSetupUomo.Text;
-                        datarow["Costo tempo mac"] = textBoxCostoTempoMac.Text;
-                        datarow["Costo tempo uomo"] = textBoxCostoTempoUomo.Text;
+                        datarow["rowindex"] = "";
+                        datarow["CODICE_PADRE"] = "";
+                        datarow["Codice Art"] = "";
+                        datarow["Codice Lav"] = textBoxNome.Text;
+                        datarow["Codice Centro"] = textBoxCostoArticolo.Text;
+                        datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
+                        datarow["Costo Art"] = "";
+                        datarow["Quantita`"] = textBoxQuantitaNuovo.Text;
+                        datarow["Setup Mac"] = textBoxSetupMac.Text;
+                        datarow["Setup Uomo"] = textBoxSetupUomo.Text;
+                        datarow["Tempo Mac"] = textBoxTempoMac.Text;
+                        datarow["Tempo Uomo"] = textBoxTempoUomo.Text;
+                        datarow["Costo Att Mac"] = textBoxCostoSetupMac.Text;
+                        datarow["Costo Att Uomo"] = textBoxCostoSetupUomo.Text;
+                        datarow["Costo Mac"] = textBoxCostoTempoMac.Text;
+                        datarow["Costo Uomo"] = textBoxCostoTempoUomo.Text;
+                        datarow["Totale"] = "";
+                        datarow["Totale + %Var"] = "";
+                        datarow["setup mac decimale"] = "";
+                        datarow["Setup Uomo decimale"] = "";
+                        datarow["Tempo mac decimale"] = "";
+                        datarow["Tempo Uomo decimale"] = "";
 
 
                         f.InserisciRigo(tipologiaInserimento, comboBox.Text, datarow);
@@ -455,21 +581,57 @@ namespace WindowsFormsApp2
                     else if(radioButtonNuovo.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
                     {
                         tipologiaInserimento = 6;
-                        datatable.Columns.Add("Nome");
-                        datatable.Columns.Add("Descrizione");
-                        datatable.Columns.Add("Centro");
-                        datatable.Columns.Add("Quantita");
-                        datatable.Columns.Add("Costo");
+                        datatable.Columns.Add("rowindex");
+                        datatable.Columns.Add("CODICE_PADRE");
+                        datatable.Columns.Add("Codice Art");
+                        datatable.Columns.Add("Codice Centro");
+                        datatable.Columns.Add("Codice Lav");
+                        datatable.Columns.Add("Descrizione art / Centro di Lavoro");
+                        datatable.Columns.Add("Quantita`");                       
+                        datatable.Columns.Add("Setup Mac");
+                        datatable.Columns.Add("Setup Uomo");
+                        datatable.Columns.Add("Tempo Mac");
+                        datatable.Columns.Add("Tempo Uomo");
+                        datatable.Columns.Add("Costo Art");
+                        datatable.Columns.Add("Costo Att Mac");
+                        datatable.Columns.Add("Costo Att Uomo");
+                        datatable.Columns.Add("Costo Mac");
+                        datatable.Columns.Add("Costo Uomo");
+                        datatable.Columns.Add("Totale");
+                        datatable.Columns.Add("Totale + %Var");
+                        datatable.Columns.Add("setup mac decimale");
+                        datatable.Columns.Add("setup uomo decimale");
+                        datatable.Columns.Add("tempo mac decimale");
+                        datatable.Columns.Add("tempo uomo decimale");
+
                         datarow = datatable.NewRow();
-                        datarow["Nome"] = textBoxNome.Text;
-                        datarow["Descrizione"] = textBoxDescrizione.Text;
-                        datarow["Centro"] = textBoxCostoArticolo.Text;
-                        datarow["Quantita"] = textBoxQuantitaNuovo.Text;
-                        datarow["Costo"] = textBoxCostoLavEst.Text;
-                        f.InserisciRigo(tipologiaInserimento, comboBox.Text, datarow);
+                        datarow["rowindex"] = "";
+                        datarow["CODICE_PADRE"] = "";
+                        datarow["Codice Lav"] = textBoxNome.Text;
+                        datarow["Codice Art"] = textBoxDescrizione.Text;
+                        datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
+                        datarow["Codice Centro"] = textBoxCostoArticolo.Text;
+                        datarow["Quantita`"] = textBoxQuantitaNuovo.Text;
+                        datarow["Costo Art"] = textBoxCostoLavEst.Text;
+                        datarow["Setup Mac"] = textBoxSetupMac.Text;
+                        datarow["Setup Uomo"] = textBoxSetupUomo.Text;
+                        datarow["Tempo Mac"] = textBoxTempoMac.Text;
+                        datarow["Tempo Uomo"] = textBoxTempoUomo.Text;
+                        datarow["Costo Att Mac"] = textBoxCostoSetupMac.Text;
+                        datarow["Costo Att Uomo"] = textBoxCostoSetupUomo.Text;
+                        datarow["Costo Mac"] = textBoxCostoTempoMac.Text;
+                        datarow["Costo Uomo"] = textBoxCostoTempoUomo.Text;
+                        datarow["Totale"] = "";
+                        datarow["Totale + %Var"] = "";
+                        datarow["setup mac decimale"] = "";
+                        datarow["Setup Uomo decimale"] = "";
+                        datarow["Tempo mac decimale"] = "";
+                        datarow["Tempo Uomo decimale"] = "";
+                        f.InserisciRigo(tipologiaInserimento, comboBox.Text, datarow);                  
                         datatable.Reset();
                     }
-                }               
+                    this.Close();
+                }              
             }
             catch(Exception ex)
             {
@@ -477,6 +639,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// Evento click del button degli help. Richiama l'helpxml.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonHelp_Click(object sender, EventArgs e)
         {
             Helper h = new Helper();
@@ -496,6 +663,7 @@ namespace WindowsFormsApp2
             }
             else if (radioButtonPreventivi.Checked == true)
             {
+                //Setting.Istance.CambiaValoreCliente("RGG");
                 temp = h.StartHelper(Setting.Istance.HelpPreventivo, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
             }
 
@@ -503,6 +671,7 @@ namespace WindowsFormsApp2
             {
                 this.textBoxArticolo.Text = temp;
                 textBoxArticolo.Focus();
+                textBoxQuantita.Focus();
             }
         }
 
@@ -523,7 +692,9 @@ namespace WindowsFormsApp2
             {
                 this.textBoxCentro.Text = temp;
                 textBoxCentro.Focus();
+                textBoxQuantita.Focus();
             }
         }
+
     }
 }

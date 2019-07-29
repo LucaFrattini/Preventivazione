@@ -39,7 +39,10 @@
             this.buttonConferma = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButtonLavorazioneEsterna = new System.Windows.Forms.RadioButton();
             this.groupBoxNuovo = new System.Windows.Forms.GroupBox();
+            this.textBoxCostoLavEst = new System.Windows.Forms.TextBox();
+            this.labelCostoLavEst = new System.Windows.Forms.Label();
             this.textBoxCostoTempoUomo = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.textBoxCostoTempoMac = new System.Windows.Forms.TextBox();
@@ -73,9 +76,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.labelImportaDescrizione = new System.Windows.Forms.Label();
             this.textBoxArticolo = new System.Windows.Forms.TextBox();
-            this.radioButtonLavorazioneEsterna = new System.Windows.Forms.RadioButton();
-            this.textBoxCostoLavEst = new System.Windows.Forms.TextBox();
-            this.labelCostoLavEst = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxNuovo.SuspendLayout();
@@ -223,6 +223,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Dichiarare se caricare un articolo o una lavorazione";
             // 
+            // radioButtonLavorazioneEsterna
+            // 
+            this.radioButtonLavorazioneEsterna.AutoSize = true;
+            this.radioButtonLavorazioneEsterna.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.radioButtonLavorazioneEsterna.Location = new System.Drawing.Point(249, 30);
+            this.radioButtonLavorazioneEsterna.Name = "radioButtonLavorazioneEsterna";
+            this.radioButtonLavorazioneEsterna.Size = new System.Drawing.Size(177, 28);
+            this.radioButtonLavorazioneEsterna.TabIndex = 20;
+            this.radioButtonLavorazioneEsterna.Text = "Lavorazione Esterna";
+            this.radioButtonLavorazioneEsterna.UseVisualStyleBackColor = true;
+            // 
             // groupBoxNuovo
             // 
             this.groupBoxNuovo.Controls.Add(this.textBoxCostoLavEst);
@@ -259,6 +270,28 @@
             this.groupBoxNuovo.TabStop = false;
             this.groupBoxNuovo.Text = "Inserisci un nuovo articolo:";
             this.groupBoxNuovo.Visible = false;
+            // 
+            // textBoxCostoLavEst
+            // 
+            this.textBoxCostoLavEst.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.textBoxCostoLavEst.Location = new System.Drawing.Point(461, 116);
+            this.textBoxCostoLavEst.MaxLength = 18;
+            this.textBoxCostoLavEst.Name = "textBoxCostoLavEst";
+            this.textBoxCostoLavEst.Size = new System.Drawing.Size(77, 30);
+            this.textBoxCostoLavEst.TabIndex = 48;
+            this.textBoxCostoLavEst.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
+            // 
+            // labelCostoLavEst
+            // 
+            this.labelCostoLavEst.AutoSize = true;
+            this.labelCostoLavEst.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.labelCostoLavEst.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelCostoLavEst.Location = new System.Drawing.Point(398, 122);
+            this.labelCostoLavEst.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCostoLavEst.Name = "labelCostoLavEst";
+            this.labelCostoLavEst.Size = new System.Drawing.Size(58, 24);
+            this.labelCostoLavEst.TabIndex = 49;
+            this.labelCostoLavEst.Text = "Costo:";
             // 
             // textBoxCostoTempoUomo
             // 
@@ -635,39 +668,6 @@
             this.textBoxArticolo.Name = "textBoxArticolo";
             this.textBoxArticolo.Size = new System.Drawing.Size(221, 30);
             this.textBoxArticolo.TabIndex = 23;
-            // 
-            // radioButtonLavorazioneEsterna
-            // 
-            this.radioButtonLavorazioneEsterna.AutoSize = true;
-            this.radioButtonLavorazioneEsterna.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.radioButtonLavorazioneEsterna.Location = new System.Drawing.Point(249, 30);
-            this.radioButtonLavorazioneEsterna.Name = "radioButtonLavorazioneEsterna";
-            this.radioButtonLavorazioneEsterna.Size = new System.Drawing.Size(177, 28);
-            this.radioButtonLavorazioneEsterna.TabIndex = 20;
-            this.radioButtonLavorazioneEsterna.Text = "Lavorazione Esterna";
-            this.radioButtonLavorazioneEsterna.UseVisualStyleBackColor = true;
-            // 
-            // textBoxCostoLavEst
-            // 
-            this.textBoxCostoLavEst.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoLavEst.Location = new System.Drawing.Point(461, 116);
-            this.textBoxCostoLavEst.MaxLength = 18;
-            this.textBoxCostoLavEst.Name = "textBoxCostoLavEst";
-            this.textBoxCostoLavEst.Size = new System.Drawing.Size(77, 30);
-            this.textBoxCostoLavEst.TabIndex = 48;
-            this.textBoxCostoLavEst.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
-            // 
-            // labelCostoLavEst
-            // 
-            this.labelCostoLavEst.AutoSize = true;
-            this.labelCostoLavEst.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.labelCostoLavEst.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelCostoLavEst.Location = new System.Drawing.Point(398, 122);
-            this.labelCostoLavEst.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelCostoLavEst.Name = "labelCostoLavEst";
-            this.labelCostoLavEst.Size = new System.Drawing.Size(58, 24);
-            this.labelCostoLavEst.TabIndex = 49;
-            this.labelCostoLavEst.Text = "Costo:";
             // 
             // InserisciRigo
             // 

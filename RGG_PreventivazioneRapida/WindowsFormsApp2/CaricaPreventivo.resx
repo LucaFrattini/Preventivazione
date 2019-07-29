@@ -118,152 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="textBoxCliente.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 15pt</value>
-  </data>
-  <data name="textBoxCliente.Location" type="System.Drawing.Point, System.Drawing">
-    <value>76, 29</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="textBoxCliente.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 3, 2, 3</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="textBoxCliente.MaxLength" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="textBoxCliente.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 30</value>
-  </data>
-  <data name="textBoxCliente.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;textBoxCliente.Name" xml:space="preserve">
-    <value>textBoxCliente</value>
-  </data>
-  <data name="&gt;&gt;textBoxCliente.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBoxCliente.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;textBoxCliente.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="buttonHelpClienti.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="buttonHelpClienti.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
-    <value>GrowAndShrink</value>
-  </data>
-  <data name="buttonHelpClienti.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="buttonHelpClienti.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 15pt</value>
-  </data>
-  <data name="buttonHelpClienti.Location" type="System.Drawing.Point, System.Drawing">
-    <value>253, 26</value>
-  </data>
-  <data name="buttonHelpClienti.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 3, 2, 3</value>
-  </data>
-  <data name="buttonHelpClienti.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 36</value>
-  </data>
-  <data name="buttonHelpClienti.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="buttonHelpClienti.Text" xml:space="preserve">
-    <value>Help Clienti</value>
-  </data>
-  <data name="&gt;&gt;buttonHelpClienti.Name" xml:space="preserve">
-    <value>buttonHelpClienti</value>
-  </data>
-  <data name="&gt;&gt;buttonHelpClienti.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;buttonHelpClienti.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;buttonHelpClienti.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="labelCliente.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 15pt</value>
-  </data>
-  <data name="labelCliente.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 71</value>
-  </data>
-  <data name="labelCliente.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
-  </data>
-  <data name="labelCliente.Size" type="System.Drawing.Size, System.Drawing">
-    <value>346, 63</value>
-  </data>
-  <data name="labelCliente.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="labelCliente.Text" xml:space="preserve">
-    <value>&lt;Descrizione cliente&gt;</value>
-  </data>
-  <data name="&gt;&gt;labelCliente.Name" xml:space="preserve">
-    <value>labelCliente</value>
-  </data>
-  <data name="&gt;&gt;labelCliente.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labelCliente.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;labelCliente.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 15pt</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 32</value>
-  </data>
-  <data name="label2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 0, 2, 0</value>
-  </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>65, 24</value>
-  </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Cliente:</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="textBoxID.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="textBoxID.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arial Narrow, 15pt</value>
   </data>
   <data name="textBoxID.Location" type="System.Drawing.Point, System.Drawing">
-    <value>186, 137</value>
+    <value>179, 15</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textBoxID.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 3, 2, 3</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textBoxID.MaxLength" type="System.Int32, mscorlib">
     <value>18</value>
   </data>
@@ -292,7 +157,7 @@
     <value>Arial Narrow, 15pt</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 140</value>
+    <value>5, 18</value>
   </data>
   <data name="label1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -321,14 +186,17 @@
   <data name="labelNote.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arial Narrow, 15pt</value>
   </data>
+  <data name="labelNote.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="labelNote.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 184</value>
+    <value>6, 62</value>
   </data>
   <data name="labelNote.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
   </data>
   <data name="labelNote.Size" type="System.Drawing.Size, System.Drawing">
-    <value>344, 160</value>
+    <value>344, 282</value>
   </data>
   <data name="labelNote.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -350,6 +218,9 @@
   </data>
   <data name="buttonConferma.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
+  </data>
+  <data name="buttonConferma.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="buttonConferma.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -390,9 +261,6 @@
   <data name="buttonHelpID.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
   </data>
-  <data name="buttonHelpID.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="buttonHelpID.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
@@ -403,7 +271,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonHelpID.Location" type="System.Drawing.Point, System.Drawing">
-    <value>253, 134</value>
+    <value>246, 12</value>
   </data>
   <data name="buttonHelpID.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 3, 2, 3</value>

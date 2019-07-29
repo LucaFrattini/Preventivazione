@@ -3,16 +3,39 @@
   <intestazione>Help preventivi</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = 'RGG'
+    select '' as ciccio, id, ROW_NUMBER() OVER (partition by cliente order by cliente) as idpreventivocliente, cliente, an_descr1, articolo, totale, totalevar, datacreazione, note from preventivi
+    left join anagra on cast(cliente as varchar) = cast(an_conto as varchar) order by id desc
   </query>
 
   <queryDescrizione>
-    select ROW_NUMBER() OVER (order by id) as idpreventivocliente, articolo, totale, totalevar, datacreazione, note from preventivi where cliente = 'RGG'
+    select '' as ciccio, id, ROW_NUMBER() OVER (partition by cliente order by cliente) as idpreventivocliente, cliente, an_descr1, articolo, totale, totalevar, datacreazione, note from preventivi
+    left join anagra on cast(cliente as varchar) = cast(an_conto as varchar) order by id desc
   </queryDescrizione>
-  <campoRitorno>idpreventivocliente</campoRitorno>
+  <campoRitorno>id</campoRitorno>
   <inserimento></inserimento>
   <modifica></modifica>
   <campi>
+    <campo>
+      <nomeSql>idpreventivocliente</nomeSql>
+      <descrizione>ID preventivo/cliente</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>id</nomeSql>
+      <descrizione>ID complessivo preventivo</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>cliente</nomeSql>
+      <descrizione>Cliente</descrizione>
+      <numerico>false</numerico>
+    </campo>
+    <campo>
+      <nomeSql>an_descr1</nomeSql>
+      <descrizione>Descrizione cliente</descrizione>
+      <numerico>false</numerico>
+      <valore></valore>
+    </campo>
     <campo>
       <nomeSql>articolo</nomeSql>
       <descrizione>Articolo</descrizione>

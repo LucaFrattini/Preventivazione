@@ -3,7 +3,7 @@
   <intestazione>Help articolo</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    SELECT ar_codart,
+    SELECT '', ar_codart,
     ar_descr,
     ar_desint,
     ar_unmis AS 'Unità Misura'
@@ -11,7 +11,7 @@
   </query>
 
   <queryDescrizione>
-    SELECT ar_codart,
+    SELECT '',ar_codart,
     ar_descr,
     ar_desint,
     ar_unmis AS 'Unità Misura'

@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -108,6 +108,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.textBoxVariazioneLav = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.buttonStampa = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -281,7 +282,7 @@
             // btnRefresh
             // 
             this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
-            this.btnRefresh.Location = new System.Drawing.Point(396, 21);
+            this.btnRefresh.Location = new System.Drawing.Point(458, 21);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(56, 53);
             this.btnRefresh.TabIndex = 7;
@@ -290,6 +291,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonStampa);
             this.groupBox1.Controls.Add(this.buttonPulisci);
             this.groupBox1.Controls.Add(this.buttonEspandi);
             this.groupBox1.Controls.Add(this.btnCarica);
@@ -321,7 +323,7 @@
             // buttonEspandi
             // 
             this.buttonEspandi.Image = ((System.Drawing.Image)(resources.GetObject("buttonEspandi.Image")));
-            this.buttonEspandi.Location = new System.Drawing.Point(334, 21);
+            this.buttonEspandi.Location = new System.Drawing.Point(396, 21);
             this.buttonEspandi.Name = "buttonEspandi";
             this.buttonEspandi.Size = new System.Drawing.Size(56, 53);
             this.buttonEspandi.TabIndex = 26;
@@ -351,7 +353,7 @@
             // btnReset
             // 
             this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
-            this.btnReset.Location = new System.Drawing.Point(582, 21);
+            this.btnReset.Location = new System.Drawing.Point(644, 21);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(56, 53);
             this.btnReset.TabIndex = 23;
@@ -371,7 +373,7 @@
             // btnMeno
             // 
             this.btnMeno.Image = ((System.Drawing.Image)(resources.GetObject("btnMeno.Image")));
-            this.btnMeno.Location = new System.Drawing.Point(520, 21);
+            this.btnMeno.Location = new System.Drawing.Point(582, 21);
             this.btnMeno.Name = "btnMeno";
             this.btnMeno.Size = new System.Drawing.Size(56, 53);
             this.btnMeno.TabIndex = 22;
@@ -393,7 +395,7 @@
             this.btnPiu.AccessibleName = "";
             this.btnPiu.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnPiu.Image = ((System.Drawing.Image)(resources.GetObject("btnPiu.Image")));
-            this.btnPiu.Location = new System.Drawing.Point(458, 21);
+            this.btnPiu.Location = new System.Drawing.Point(520, 21);
             this.btnPiu.Name = "btnPiu";
             this.btnPiu.Size = new System.Drawing.Size(56, 53);
             this.btnPiu.TabIndex = 21;
@@ -403,7 +405,7 @@
             // btnEsci
             // 
             this.btnEsci.Image = ((System.Drawing.Image)(resources.GetObject("btnEsci.Image")));
-            this.btnEsci.Location = new System.Drawing.Point(644, 21);
+            this.btnEsci.Location = new System.Drawing.Point(706, 21);
             this.btnEsci.Name = "btnEsci";
             this.btnEsci.Size = new System.Drawing.Size(56, 53);
             this.btnEsci.TabIndex = 20;
@@ -860,7 +862,7 @@
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(220, 25);
             this.label17.TabIndex = 42;
-            this.label17.Text = "ID Preventivo Cliente";
+            this.label17.Text = "ID Preventivo";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // QIRicavoSingolo
@@ -941,37 +943,37 @@
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Honeydew;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Honeydew;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gold;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gold;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView.EnableHeadersVisualStyles = false;
             this.dataGridView.GridColor = System.Drawing.Color.Black;
             this.dataGridView.Location = new System.Drawing.Point(13, 246);
             this.dataGridView.Name = "dataGridView";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.Lime;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.White;
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Lime;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
             this.dataGridView.Size = new System.Drawing.Size(1208, 320);
             this.dataGridView.TabIndex = 24;
@@ -1005,6 +1007,16 @@
             this.label9.Size = new System.Drawing.Size(186, 24);
             this.label9.TabIndex = 27;
             this.label9.Text = "Variazione lavorazioni %";
+            // 
+            // buttonStampa
+            // 
+            this.buttonStampa.Image = ((System.Drawing.Image)(resources.GetObject("buttonStampa.Image")));
+            this.buttonStampa.Location = new System.Drawing.Point(334, 21);
+            this.buttonStampa.Name = "buttonStampa";
+            this.buttonStampa.Size = new System.Drawing.Size(56, 53);
+            this.buttonStampa.TabIndex = 28;
+            this.buttonStampa.UseVisualStyleBackColor = true;
+            this.buttonStampa.Click += new System.EventHandler(this.buttonStampa_Click);
             // 
             // Form1
             // 
@@ -1128,6 +1140,7 @@
         private System.Windows.Forms.Button buttonPulisci;
         private System.Windows.Forms.Label labelIDpreventivo;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button buttonStampa;
     }
 }
 

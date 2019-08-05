@@ -15,14 +15,14 @@
   <inserimento></inserimento>
   <modifica></modifica>
   <campi>
-    <campo>
-      <nomeSql>idpreventivocliente</nomeSql>
-      <descrizione>ID preventivo/cliente</descrizione>
+      <campo>
+      <nomeSql>id</nomeSql>
+      <descrizione>ID complessivo preventivo</descrizione>
       <numerico>false</numerico>
     </campo>
     <campo>
-      <nomeSql>id</nomeSql>
-      <descrizione>ID complessivo preventivo</descrizione>
+      <nomeSql>idpreventivocliente</nomeSql>
+      <descrizione>ID preventivo/cliente</descrizione>
       <numerico>false</numerico>
     </campo>
     <campo>

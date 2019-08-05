@@ -6,19 +6,37 @@
   <user>sa</user>
   <password>X$agilis</password>
 
+  <!-- NOTE DI INSTALLAZIONE
+  Per prima cosa entrare nel database e creare le due tabelle con le query sottostanta (preventivi e preventivirighi).
+  Settare i parametri di connessione qui sopra
+  Settare il configuration dell'helper
+  Cose fondamentali nella cartella del programma: 
+  -Foxit Reader.exe 
+  -HelperLibrary.dll e HelperConfiguration.xml
+  -Npgsql.dll
+  -PreventivazioneRapidaConfig.xml
+  -StampaPreventivazioneRapida.rdl
+  Cartella HelpXML_PreventivazioneRapida con all'interno: Help_articoli_RGG - Help_centro_RGG - Help_centroesterno_RGG - Help_clienti_RGG - Help_lavorazioni_RGG - Help_lavorazioniesterne_RGG - Help_preventivi_RGG-->
   <AllQuery>
     <CreateTablePreventivi>
       CREATE TABLE preventivi(
       id int identity(1,1) PRIMARY KEY,
       cliente varchar(255),
+      desccliente varchar(255),
       articolo varchar(255),
+      descarticolo varchar(255),
       quantita float,
       variazione float,
       variazionelav float,
       totale float,
       totalevar float,
       datacreazione datetime,
-      note text
+      note text,
+      QImateriaprima float,
+      QIcostomac float,
+      QIcostouomo float,
+      QIcostosingolo float,
+      QIricavosingolo float
       )
     </CreateTablePreventivi>
     <CreateTablePreventiviRighi>

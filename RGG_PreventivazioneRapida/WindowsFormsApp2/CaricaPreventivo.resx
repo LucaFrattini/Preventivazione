@@ -202,7 +202,7 @@
     <value>15</value>
   </data>
   <data name="labelNote.Text" xml:space="preserve">
-    <value>&lt;Note Preventivo&gt;</value>
+    <value>&lt;Note preventivo&gt;</value>
   </data>
   <data name="&gt;&gt;labelNote.Name" xml:space="preserve">
     <value>labelNote</value>

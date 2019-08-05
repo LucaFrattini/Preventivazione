@@ -17,7 +17,6 @@ namespace WindowsFormsApp2
     {
         private Model m;
         Form1 f;
-        Dictionary<int, int> id;
         public CaricaPreventivo(Form1 f, Model pippo)
         {
             InitializeComponent();
@@ -70,7 +69,7 @@ namespace WindowsFormsApp2
                 {
                     string idpreventivo = textBoxID.Text;
                     List<string> testata = m.OttieniTestata(idpreventivo);
-                    labelNote.Text = "\n\nDATA: " + testata[6].ToString() + "\n\nCLIENTE: " + testata[0].ToString() + "\n\nCODICE ARTICOLO: " + testata[1].ToString() + "\n\nDESCRIZIONE: " + testata[3].ToString();
+                    labelNote.Text = "\n\nDATA: " + testata[6].ToString() + "\n\nCLIENTE: " + testata[0].ToString() + " - " + testata[7].ToString() + "\n\nCODICE ARTICOLO: " + testata[1].ToString() + " - " +testata[8].ToString()+ "\n\nDESCRIZIONE: " + testata[3].ToString();
                     buttonConferma.Enabled = true;
                 }
                 catch

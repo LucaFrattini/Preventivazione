@@ -20,14 +20,18 @@ namespace PreventivazioneRapida
     {
         //modello dei dati
         Model m;
+        Login formLogin;
         public bool creaArticolo = false;
         private int zoom = 0, altezzaDataGrid = 0;
         private double precedenteQuantita = 1;
         public TextBox TbCLiente { get; set; }
         public TextBox TbArticolo { get; set; }
         public string cliente, articolo, quantita, variazione, variazionelav;
-        public Form1()
+
+
+        public Form1(Login login)
         {
+            formLogin = login;
             //inizializzo la screen
             InitializeComponent();
             //FormBorderStyle = FormBorderStyle.None;
@@ -699,6 +703,11 @@ namespace PreventivazioneRapida
             Close();
         }
 
+        private void TerminaProgramma(object sender, EventArgs e)
+        {
+            formLogin.Close();
+        }
+
         /// <summary>
         /// Funzione utilizzata per pulire la form e il Dataset
         /// </summary>
@@ -720,6 +729,7 @@ namespace PreventivazioneRapida
             textBoxCliente.Text = "";
             textBoxArticolo.Text = "";
             textBoxArticolo.BackColor = (textBoxArticolo.Text == "" ? Color.White : Color.OrangeRed);
+            textBoxCliente.BackColor = (textBoxCliente.Text == "" ? Color.White : Color.OrangeRed);
             textBoxQuantita.Text = "1";
             textBoxVariazione.Text = "0";
             textBoxVariazioneLav.Text = "0";
@@ -1370,7 +1380,7 @@ namespace PreventivazioneRapida
         {
             if (textBoxCliente.Text != "" && textBoxArticolo.Text != "" && textBoxNote.Text != "")
             {
-                string[] valoriTestata = new string[8];
+                string[] valoriTestata = new string[15];
                 valoriTestata[0] = textBoxCliente.Text;
                 valoriTestata[1] = textBoxArticolo.Text;
                 valoriTestata[2] = textBoxQuantita.Text;
@@ -1379,7 +1389,17 @@ namespace PreventivazioneRapida
                 valoriTestata[5] = QItotale.Text;
                 valoriTestata[6] = QItotalevar.Text;
                 valoriTestata[7] = textBoxNote.Text;
-                ConfermaSalvataggio Conferma = new ConfermaSalvataggio(m, valoriTestata);
+
+                valoriTestata[8] = QIarticoli.Text;
+                valoriTestata[9] = QIcostomac.Text;
+                valoriTestata[10] = QIcostouomo.Text;
+                valoriTestata[11] = QICostoSingolo.Text;
+                valoriTestata[12] = QIRicavoSingolo.Text;
+
+                valoriTestata[13] = labelCliente.Text;
+                valoriTestata[14] = labelArticolo.Text;
+
+                ConfermaSalvataggio Conferma = new ConfermaSalvataggio(m, valoriTestata, false);
                 Conferma.Show();
                 //m.InsertPreventivo(valoriTestata);
             }
@@ -1397,8 +1417,36 @@ namespace PreventivazioneRapida
         /// <param name="e"></param>
         private void btnCarica_Click(object sender, EventArgs e)
         {
+            /*
             CaricaPreventivo loadPreventivo = new CaricaPreventivo(this, m);
             loadPreventivo.Show();
+            */
+            Helper h = new Helper();
+            String[] par = { };
+            //Setting.Istance.CambiaValoreCliente(cliente);
+            //public string StartHelper(string path, string ip, string port, string database, string username, string password, string _campofocus, string _utenteWSAI, string _passwordWSAI, string[] parametri, string valoreFocus, string font, string fontLabel)
+            string idpreventivo = h.StartHelper(Setting.Istance.HelpPreventivo, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
+
+            if (!String.IsNullOrEmpty(idpreventivo))
+            {
+                try
+                {
+                    List<string> testata = m.OttieniTestata(idpreventivo);
+                    testata.Add(idpreventivo);
+                    labelCliente.Text = testata[0];
+                    //ci vorrebbe anche qualcosa per distinguere l'articolo caricato dal preventivo da quello con la distinta base, per 
+                    //far sì che la form principale visualizzi i dati corretti 
+                    InserisciTestata(testata);
+                    m.CaricaPreventivoRighi(idpreventivo, testata[0]);
+                    BindingGrid();
+                }
+                catch
+                {
+                    MessageBox.Show("Errore! Verificare di aver inserito un ID di preventivo corretto per il cliente selezionato.");
+                }
+            }
+
+
             return;
         }
 
@@ -1417,7 +1465,9 @@ namespace PreventivazioneRapida
             textBoxVariazione.Enabled = true;
             textBoxVariazioneLav.Text = testata[5];
             textBoxVariazioneLav.Enabled = true;
-            labelIDpreventivo.Text = testata[7];
+            labelCliente.Text = testata[7];
+            labelArticolo.Text = testata[8];
+            labelIDpreventivo.Text = testata[9];
         }
 
         /// <summary>
@@ -1946,8 +1996,23 @@ namespace PreventivazioneRapida
 
                     valoriTestata[13] = labelCliente.Text;
                     valoriTestata[14] = labelArticolo.Text;
-
-                    m.ScriviXMLperStampa(fileSTAMPA, valoriTestata);
+                    string message = "\"Sì\" per salvare e stampare.\n\"No\" per stampare senza salvare.";
+                    string caption = "Salvare il preventivo?";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    DialogResult result;
+                    result = MessageBox.Show(this, message, caption, buttons,
+                        MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    if (result == DialogResult.Yes)
+                    {
+                        ConfermaSalvataggio salva = new ConfermaSalvataggio(m, valoriTestata, true);
+                        salva.Show();
+                    }
+                    else
+                    {
+                        m.ScriviXMLperStampa(fileSTAMPA, valoriTestata);
+                    }
+                    
+                    //m.ScriviXMLperStampa(fileSTAMPA, valoriTestata);
                 }
                 catch(Exception ex)
                 {

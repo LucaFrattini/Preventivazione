@@ -1,4 +1,5 @@
-﻿using PreventivazioneRapida;
+﻿using Preventivazione_RGG;
+using PreventivazioneRapida;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace WindowsFormsApp2
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Login());
         }
     }
 }

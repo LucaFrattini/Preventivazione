@@ -19,6 +19,7 @@ namespace PreventivazioneRapida
         
         private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
         private IList<FileStream> m_streams;
+        private DateTime ULTIMOACCESSO;
         public DataSet ds;
         //private DataTable Articoli, Clienti;
         private static SqlConnection sqlserverConn;
@@ -41,6 +42,9 @@ namespace PreventivazioneRapida
             {
                 string query = Setting.Istance.QueryArticolo;
                 EstraiRisultatoQuery(query, "Articoli");
+                DateTime thisDay = DateTime.Now;
+                ULTIMOACCESSO = thisDay;
+                MessageBox.Show(ULTIMOACCESSO.ToString());
             }
             catch
             {
@@ -189,9 +193,10 @@ namespace PreventivazioneRapida
                 sqlserverConn.Open();
                 int idpreventivo = 0, idpreventivoass = 0;
                 //Prima query utilizzata per il salvataggio dei dati della testata del preventivo.
-                string queryTestata = "INSERT INTO preventivi (cliente, articolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note) VALUES ('" 
-                    + valoriTestata[0] + "', '" + valoriTestata[1] + "', " + valoriTestata[2].Replace(',','.') + ", " + valoriTestata[3].Replace(',', '.') + ", " + valoriTestata[4].Replace(',', '.') + ", " 
-                    + valoriTestata[5].Replace(',', '.') + ", " + valoriTestata[6].Replace(',', '.') + ", CURRENT_TIMESTAMP, '" + valoriTestata[7] + "')";
+                string queryTestata = "INSERT INTO preventivi (cliente, desccliente, articolo, descarticolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note, QImateriaprima,QIcostomac, QIcostouomo, QIcostosingolo, QIricavosingolo ) VALUES ('" 
+                    + valoriTestata[0] + "', '" + valoriTestata[13] + "', '" + valoriTestata[1] + "', '" + valoriTestata[14] + "', " + valoriTestata[2].Replace(',','.') + ", " + valoriTestata[3].Replace(',', '.') + ", " + valoriTestata[4].Replace(',', '.') + ", " 
+                    + valoriTestata[5].Replace(',', '.') + ", " + valoriTestata[6].Replace(',', '.') + ", CURRENT_TIMESTAMP, '" + valoriTestata[7] + "', " + valoriTestata[8].Replace(',', '.') + "," + valoriTestata[9].Replace(',', '.') + ", " + valoriTestata[10].Replace(',', '.') + ", " 
+                    + valoriTestata[11].Replace(',', '.') + ", " + valoriTestata[12].Replace(',', '.') + ")";
                 SqlCommand command = new SqlCommand(queryTestata, sqlserverConn);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Close();
@@ -281,7 +286,7 @@ namespace PreventivazioneRapida
         public List<string> OttieniTestata(string idpreventivo)
         {
             List<string> testata = new List<string>();
-            string query = "select cliente, articolo, quantita, note, variazione, variazionelav, datacreazione from preventivi where id = '" + idpreventivo + "'";
+            string query = "select cliente, articolo, quantita, note, variazione, variazionelav, datacreazione, desccliente, descarticolo from preventivi where id = '" + idpreventivo + "'";
             sqlserverConn.Open();
             using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))
             {
@@ -296,7 +301,10 @@ namespace PreventivazioneRapida
                     testata.Add(dr[4].ToString());
                     testata.Add(dr[5].ToString());
                     testata.Add(dr[6].ToString());
-                }             
+                    testata.Add(dr[7].ToString());
+                    testata.Add(dr[8].ToString());
+
+                }
                 dr.Close();
             }
             sqlserverConn.Close();
@@ -640,13 +648,13 @@ namespace PreventivazioneRapida
                     outputFile.WriteLine("  <Row>");
                     outputFile.WriteLine("      <Data>" + DateTime.Now.ToString() + "</Data>");
                     outputFile.WriteLine("      <Cliente>"+valoriTestata[0]+"</Cliente>");
-                    outputFile.WriteLine("      <DescrizioneCliente>" + (valoriTestata[13].ToString() == "<Descrizione cliente>" ? "" : valoriTestata[13].ToString()) + "</DescrizioneCliente>");
+                    outputFile.WriteLine("      <DescrizioneCliente>" + (valoriTestata[13].ToString() == "<Descrizione cliente>" ? "" : valoriTestata[13].ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;")) + "</DescrizioneCliente>");
                     outputFile.WriteLine("      <DistintaBase>" + valoriTestata[1] + "</DistintaBase>");
-                    outputFile.WriteLine("      <DescrizioneDistintaBase>" + valoriTestata[14] + "</DescrizioneDistintaBase>");
+                    outputFile.WriteLine("      <DescrizioneDistintaBase>" + (valoriTestata[14].ToString() == "<Descrizione articolo>" ? "" : valoriTestata[14].ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;")) + "</DescrizioneDistintaBase>");
                     outputFile.WriteLine("      <Quantita>" + valoriTestata[2] + "</Quantita>");
                     outputFile.WriteLine("      <PercentualeMateriaPrima>" + valoriTestata[3] + "</PercentualeMateriaPrima>");
                     outputFile.WriteLine("      <PercentualeLavorazioni>" + valoriTestata[4] + "</PercentualeLavorazioni>");
-                    outputFile.WriteLine("      <Note>" + valoriTestata[7] + "</Note>");
+                    outputFile.WriteLine("      <Note>" + valoriTestata[7].ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;") + "</Note>");
                     outputFile.WriteLine("      <CostoMateriaPrima>" + valoriTestata[8] + "</CostoMateriaPrima>");
                     outputFile.WriteLine("      <CostoMacchina>" + valoriTestata[9] + "</CostoMacchina>");
                     outputFile.WriteLine("      <CostoUomo>" + valoriTestata[10] + "</CostoUomo>");
@@ -659,7 +667,7 @@ namespace PreventivazioneRapida
                     outputFile.WriteLine("      <Articolo>" + row["Codice Art"].ToString() + "</Articolo>");
                     outputFile.WriteLine("      <Centro>" + row["Codice Centro"].ToString() + "</Centro>");
                     outputFile.WriteLine("      <Lavorazione>" + row["Codice Lav"].ToString() + "</Lavorazione>");
-                    outputFile.WriteLine("      <Descrizione>" + row["Descrizione art / Centro di Lavoro"].ToString() + "</Descrizione>");
+                    outputFile.WriteLine("      <Descrizione>" + row["Descrizione art / Centro di Lavoro"].ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;") + "</Descrizione>");
                     outputFile.WriteLine("      <QuantitaRigo>" + row["Quantita`"].ToString() + "</QuantitaRigo>");
                     int indiceVirgola = row["Setup Mac"].ToString().IndexOf(',');
                     if(indiceVirgola >= 0)

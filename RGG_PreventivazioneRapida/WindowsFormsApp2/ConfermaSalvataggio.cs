@@ -16,12 +16,14 @@ namespace Preventivazione_RGG
         string codArticoloOriginale;
         string[] valoriTestata;
         Model m;
+        bool stampa;
 
-        public ConfermaSalvataggio(Model m, String[] valoriTestata)
+        public ConfermaSalvataggio(Model m, String[] valoriTestata, bool stampa)
         {
             InitializeComponent();
             textBoxArticolo.Text = valoriTestata[1];
             codArticoloOriginale = valoriTestata[1];
+            this.stampa = stampa;
             this.valoriTestata = valoriTestata;
             this.m = m;
         }
@@ -42,8 +44,14 @@ namespace Preventivazione_RGG
                 catch { }
                 
                 valoriTestata[1] = textBoxArticolo.Text;
-                m.InsertPreventivo(valoriTestata);
                 this.Close();
+                m.InsertPreventivo(valoriTestata);
+                if (stampa)
+                {
+                    string fileSTAMPA = "StampaPreventivoRGG.xml";
+                    m.ScriviXMLperStampa(fileSTAMPA, valoriTestata);
+                }
+                
             }
             else
             {

@@ -19,7 +19,6 @@ namespace PreventivazioneRapida
         
         private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
         private IList<FileStream> m_streams;
-        private DateTime ULTIMOACCESSO;
         public DataSet ds;
         //private DataTable Articoli, Clienti;
         private static SqlConnection sqlserverConn;
@@ -42,9 +41,6 @@ namespace PreventivazioneRapida
             {
                 string query = Setting.Istance.QueryArticolo;
                 EstraiRisultatoQuery(query, "Articoli");
-                DateTime thisDay = DateTime.Now;
-                ULTIMOACCESSO = thisDay;
-                MessageBox.Show(ULTIMOACCESSO.ToString());
             }
             catch
             {
@@ -169,16 +165,26 @@ namespace PreventivazioneRapida
         {
             SqlDataAdapter da;
             sqlserverConn.Open();
-            string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", row["CODICE ART"].ToString());
-            da = new SqlDataAdapter(distintaBase, sqlserverConn);
-            if (ds.Tables["DistintaBase"].PrimaryKey.Length > 0)
+            try
             {
-                ds.Tables["DistintaBase"].PrimaryKey = null;
+                string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", row["CODICE ART"].ToString());
+                da = new SqlDataAdapter(distintaBase, sqlserverConn);
+                if (ds.Tables["DistintaBase"].PrimaryKey.Length > 0)
+                {
+                    ds.Tables["DistintaBase"].PrimaryKey = null;
+                }
+                int count = da.Fill(ds.Tables["DistintaBase"]);
+                sqlserverConn.Close();
+                return count;
             }
-            int count = da.Fill(ds.Tables["DistintaBase"]);
-            sqlserverConn.Close();
+            catch(Exception e)
+            {
+                sqlserverConn.Close();
+                MessageBox.Show("Errore Verifica Semilavorato!\n" + e.Message);
+                return 0;
+            }
             
-            return count;
+                      
         }
 
         /// <summary>
@@ -193,10 +199,14 @@ namespace PreventivazioneRapida
                 sqlserverConn.Open();
                 int idpreventivo = 0, idpreventivoass = 0;
                 //Prima query utilizzata per il salvataggio dei dati della testata del preventivo.
-                string queryTestata = "INSERT INTO preventivi (cliente, desccliente, articolo, descarticolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note, QImateriaprima,QIcostomac, QIcostouomo, QIcostosingolo, QIricavosingolo ) VALUES ('" 
-                    + valoriTestata[0] + "', '" + valoriTestata[13] + "', '" + valoriTestata[1] + "', '" + valoriTestata[14] + "', " + valoriTestata[2].Replace(',','.') + ", " + valoriTestata[3].Replace(',', '.') + ", " + valoriTestata[4].Replace(',', '.') + ", " 
+                string queryTestata = "INSERT INTO preventivi (utente, cliente, desccliente, articolo, descarticolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note, QImateriaprima,QIcostomac, QIcostouomo, QIcostosingolo, QIricavosingolo, quantita1, costoMacchina1, costoUomo1, costoMateriali1, costoSingolo1, ricavoSingolo1, costoTotale1, ricavoTotale1, quantita2, costoMacchina2, costoUomo2, costoMateriali2, costoSingolo2, ricavoSingolo2, costoTotale2, ricavoTotale2, quantita3, costoMacchina3, costoUomo3, costoMateriali3, costoSingolo3, ricavoSingolo3, costoTotale3, ricavoTotale3) VALUES ('"
+                    + valoriTestata[15] + "', '" + valoriTestata[0] + "', '" + valoriTestata[13] + "', '" + valoriTestata[1] + "', '" + valoriTestata[14] + "', " + valoriTestata[2].Replace(',','.') + ", " + valoriTestata[3].Replace(',', '.') + ", " + valoriTestata[4].Replace(',', '.') + ", " 
                     + valoriTestata[5].Replace(',', '.') + ", " + valoriTestata[6].Replace(',', '.') + ", CURRENT_TIMESTAMP, '" + valoriTestata[7] + "', " + valoriTestata[8].Replace(',', '.') + "," + valoriTestata[9].Replace(',', '.') + ", " + valoriTestata[10].Replace(',', '.') + ", " 
-                    + valoriTestata[11].Replace(',', '.') + ", " + valoriTestata[12].Replace(',', '.') + ")";
+                    + valoriTestata[11].Replace(',', '.') + ", " + valoriTestata[12].Replace(',', '.') + ", "
+                    + valoriTestata[16].Replace(',', '.') + ", " + valoriTestata[17].Replace(',', '.') + ", " + valoriTestata[18].Replace(',', '.') + ", " + valoriTestata[19].Replace(',', '.') + ", " + valoriTestata[20].Replace(',', '.') + ", " + valoriTestata[21].Replace(',', '.') + ", " + valoriTestata[22].Replace(',', '.') + ", " + valoriTestata[23].Replace(',', '.') + ", "
+                    + valoriTestata[24].Replace(',', '.') + ", " + valoriTestata[25].Replace(',', '.') + ", " + valoriTestata[26].Replace(',', '.') + ", " + valoriTestata[27].Replace(',', '.') + ", " + valoriTestata[28].Replace(',', '.') + ", " + valoriTestata[29].Replace(',', '.') + ", " + valoriTestata[30].Replace(',', '.') + ", " + valoriTestata[31].Replace(',', '.') + ", "
+                    + valoriTestata[32].Replace(',', '.') + ", " + valoriTestata[33].Replace(',', '.') + ", " + valoriTestata[34].Replace(',', '.') + ", " + valoriTestata[35].Replace(',', '.') + ", " + valoriTestata[36].Replace(',', '.') + ", " + valoriTestata[37].Replace(',', '.') + ", " + valoriTestata[38].Replace(',', '.') + ", " + valoriTestata[39].Replace(',', '.') 
+                    + ")";
                 SqlCommand command = new SqlCommand(queryTestata, sqlserverConn);
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Close();
@@ -213,9 +223,10 @@ namespace PreventivazioneRapida
                 //Quindi scorro il dataset e salvo nel database (tabella dei righi) tutte le righe che sono visualizzate nella datagrid della form, e quindi presenti nel dataset.
                 foreach (DataRow row in ds.Tables["DistintaBase"].Rows)
                 {
-                    string queryRighi = "INSERT INTO preventivirighi (idpreventivo, rowindex, codicepadre, codiceart, codicecentro, codicelav, descrizione, quantita, setupmac, setupuomo, tempomac, tempouomo, costoart" +
-                    ", costoattmac, costoattuomo, costomac, costouomo, totale, totalevar, setupmacdec, setupuomodec, tempomacdec, tempouomodec) VALUES (" + idpreventivo + ", '" + row["rowindex"].ToString() + "', '" + row["CODICE_PADRE"].ToString() + "', '" +
-                    row["CODICE ART"].ToString() + "', '" +row["Codice centro"].ToString() + "', '" + row["Codice lav"].ToString() + "', '" + row["Descrizione art / Centro di Lavoro"].ToString() + "', '" + row["Quantita`"].ToString() +
+                    string queryRighi = "INSERT INTO preventivirighi (idpreventivo, rowindex, codicepadre, codiceart, codicecentro, codicelav, descrizione, um1, quantita1, um2, quantita2, um3, quantita3, setupmac, setupuomo, tempomac, tempouomo, costoart" +
+                    ", costoattmac, costoattuomo, costomac, costouomo, totale, totalevar, setupmacdec, setupuomodec, tempomacdec, tempouomodec) VALUES (" + idpreventivo + ", '" + row["Rigo"].ToString() + "', '" + row["Codice Padre"].ToString() + "', '" +
+                    row["CODICE ART"].ToString() + "', '" +row["Codice centro"].ToString() + "', '" + row["Codice lav"].ToString() + "', '" + row["Descrizione art / Centro di Lavoro"].ToString() + 
+                    "', '" + row["UM 1"].ToString() +"', '" + row["Quantita` 1"].ToString() + "', '" + row["UM 2"].ToString() + "', '" + row["Qta 2"].ToString() + "', '" + row["UM 3"].ToString() + "', '" + row["Qta 3"].ToString() +
                     "', '" + row["Setup Mac"].ToString() + "', '" + row["Setup Uomo"].ToString() + "', '" + row["Tempo Mac"].ToString() + "', '" + row["Tempo Uomo"].ToString() +
                     "', '" + row["Costo Art"].ToString() + "', '" + row["Costo Att Mac"].ToString() + "', '" + row["Costo Att Uomo"].ToString() + "', '" + row["Costo Mac"].ToString() +
                     "', '" + row["Costo Uomo"].ToString() + "', '" + row["Totale"].ToString() + "', '" + row["Totale + %Var"].ToString() +
@@ -234,9 +245,9 @@ namespace PreventivazioneRapida
                 MessageBox.Show("Il preventivo è stato salvato!\nID preventivo assoluto: " + idpreventivo + ".\nID preventivo del cliente " + valoriTestata[0] + ": " + idpreventivoass);
                 sqlserverConn.Close();
             }
-            catch
+            catch(Exception e)
             {
-                MessageBox.Show("Errore durante il salvataggio del preventivo. Controllare la connessione con il server.");
+                MessageBox.Show("Errore durante il salvataggio del preventivo. Controllare la connessione con il server.\n"+e.Message);
                 sqlserverConn.Close();
             }
             return;
@@ -322,8 +333,8 @@ namespace PreventivazioneRapida
             {
                 SqlDataAdapter da;
                 sqlserverConn.Open();
-                string query = "SELECT rowindex,codicepadre as CODICE_PADRE,codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
-                    "quantita AS 'Quantita`', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
+                string query = "SELECT rowindex as 'Rigo',codicepadre as 'Codice Padre',codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
+                    "um1 AS 'UM 1', quantita1 AS 'Quantita` 1', um2 AS 'UM 2', quantita2 AS 'Qta 2', um3 AS 'UM 3', quantita3 AS 'Qta 3', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
                     "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
                     "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var', setupmacdec AS 'setup mac decimale', setupuomodec AS 'setup uomo decimale'," +
                     " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = "+Int32.Parse(idpreventivo);
@@ -662,22 +673,45 @@ namespace PreventivazioneRapida
                     outputFile.WriteLine("      <RicavoSingolo>" + valoriTestata[12] + "</RicavoSingolo>");
                     outputFile.WriteLine("      <CostoTotale>" + valoriTestata[5] + "</CostoTotale>");
                     outputFile.WriteLine("      <RicavoTotale>" + valoriTestata[6] + "</RicavoTotale>");
-                    outputFile.WriteLine("      <Livello>" + row["rowindex"].ToString() + "</Livello>");
-                    outputFile.WriteLine("      <Padre>" + row["CODICE_PADRE"].ToString() + "</Padre>");
+                    outputFile.WriteLine("      <Livello>" + row["Rigo"].ToString() + "</Livello>");
+                    outputFile.WriteLine("      <Padre>" + row["Codice Padre"].ToString() + "</Padre>");
                     outputFile.WriteLine("      <Articolo>" + row["Codice Art"].ToString() + "</Articolo>");
                     outputFile.WriteLine("      <Centro>" + row["Codice Centro"].ToString() + "</Centro>");
                     outputFile.WriteLine("      <Lavorazione>" + row["Codice Lav"].ToString() + "</Lavorazione>");
                     outputFile.WriteLine("      <Descrizione>" + row["Descrizione art / Centro di Lavoro"].ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;") + "</Descrizione>");
-                    outputFile.WriteLine("      <QuantitaRigo>" + row["Quantita`"].ToString() + "</QuantitaRigo>");
-                    int indiceVirgola = row["Setup Mac"].ToString().IndexOf(',');
-                    if(indiceVirgola >= 0)
+                    outputFile.WriteLine("      <UM1>" + row["UM 1"].ToString() + "</UM1>");
+                    outputFile.WriteLine("      <QuantitaRigo1>" + row["Quantita` 1"].ToString() + "</QuantitaRigo1>");
+                    outputFile.WriteLine("      <UM2>" + row["UM 2"].ToString() + "</UM2>");
+                    outputFile.WriteLine("      <QuantitaRigo2>" + row["Qta 2"].ToString() + "</QuantitaRigo2>");
+                    outputFile.WriteLine("      <UM3>" + row["UM 3"].ToString() + "</UM3>");
+                    outputFile.WriteLine("      <QuantitaRigo3>" + row["Qta 3"].ToString() + "</QuantitaRigo3>");
+                    int lavorazioneOmateriale = row["Setup Mac"].ToString().Length;
+                    
+                    if(lavorazioneOmateriale > 0)
                     {
+                        int indiceVirgola = row["Setup Mac"].ToString().IndexOf(',');
+                        if(indiceVirgola < 0)
+                        {
+                            indiceVirgola = 0;
+                        }
                         outputFile.WriteLine("      <SetupMacchina>" + row["Setup Mac"].ToString().Substring(0, indiceVirgola) + ":" + row["Setup Mac"].ToString().Substring(indiceVirgola + 1, 2) + ":" + row["Setup Mac"].ToString().Substring(indiceVirgola + 3, 2) + "</SetupMacchina>");
                         indiceVirgola = row["Setup Uomo"].ToString().IndexOf(',');
+                        if (indiceVirgola < 0)
+                        {
+                            indiceVirgola = 0;
+                        }
                         outputFile.WriteLine("      <SetupUomo>" + row["Setup Uomo"].ToString().Substring(0, indiceVirgola) + ":" + row["Setup Uomo"].ToString().Substring(indiceVirgola + 1, 2) + ":" + row["Setup Uomo"].ToString().Substring(indiceVirgola + 3, 2) + "</SetupUomo>");
                         indiceVirgola = row["Tempo Mac"].ToString().IndexOf(',');
+                        if (indiceVirgola < 0)
+                        {
+                            indiceVirgola = 0;
+                        }
                         outputFile.WriteLine("      <TempoMacchina>" + row["Tempo Mac"].ToString().Substring(0, indiceVirgola) + ":" + row["Tempo Mac"].ToString().Substring(indiceVirgola + 1, 2) + ":" + row["Tempo Mac"].ToString().Substring(indiceVirgola + 3, 2) + "</TempoMacchina>");
                         indiceVirgola = row["Tempo Mac"].ToString().IndexOf(',');
+                        if (indiceVirgola < 0)
+                        {
+                            indiceVirgola = 0;
+                        }
                         outputFile.WriteLine("      <TempoUomo>" + row["Tempo Uomo"].ToString().Substring(0, indiceVirgola) + ":" + row["Tempo Uomo"].ToString().Substring(indiceVirgola + 1, 2) + ":" + row["Tempo Uomo"].ToString().Substring(indiceVirgola + 3, 2) + "</TempoUomo>");
                     }
                     else
@@ -726,7 +760,30 @@ namespace PreventivazioneRapida
 
         private Stream CreateStream(string name, string fileNameExtension, Encoding encoding, string mimeType, bool willSeek)
         {
-            String filePdf = "StampaPreventivazioneRapida.pdf";
+            String filePdf = "";
+            int i = 1;
+            do
+            {
+                if (File.Exists("StampaPreventivazioneRapida" + i + ".pdf"))
+                {
+                    i++;
+                    try
+                    {
+                        FileStream fs = File.Open("StampaPreventivazioneRapida" + (i - 1) + ".pdf", FileMode.Open, FileAccess.Read, FileShare.None);
+                        fs.Close();
+                        File.Delete("StampaPreventivazioneRapida" + (i - 1) + ".pdf");
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                else
+                {
+                    filePdf = "StampaPreventivazioneRapida"+i+".pdf";
+                    i = 0;
+                }
+            } while (i != 0);
 
             FileStream stream = new FileStream(filePdf, FileMode.Create);
 
@@ -770,7 +827,15 @@ namespace PreventivazioneRapida
                 startInfo.Arguments = sArgs;
                 startInfo.CreateNoWindow = true;
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                System.Diagnostics.Process proc = Process.Start(startInfo);
+                System.Diagnostics.Process proc;
+                if (Setting.Istance.FoxitReader == "TRUE")
+                {
+                    proc = Process.Start(startInfo);
+                }
+                else
+                {
+                    proc = Process.Start(nomePdf);
+                }
 
                 //p.WaitForExit();
 
@@ -809,9 +874,9 @@ namespace PreventivazioneRapida
                 proc.Dispose();
             }
 
-            catch
+            catch(Exception e)
             {
-                MessageBox.Show("Errore durante l'apertura del pdf. " + Environment.NewLine + "Verificare che il file Foxit Reader.exe si trovi nella stessa cartella di xmlDocReport.exe");
+                MessageBox.Show(e.Message);
                 Environment.Exit(1);
             }
 

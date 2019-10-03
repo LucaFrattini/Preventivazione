@@ -44,6 +44,8 @@ namespace PreventivazioneRapida
                 this.q1 = xmlDoc.SelectSingleNode("configuration/Quantita/q1").InnerText;
                 this.q2 = xmlDoc.SelectSingleNode("configuration/Quantita/q2").InnerText;
                 this.q3 = xmlDoc.SelectSingleNode("configuration/Quantita/q3").InnerText;
+                this.p1 = xmlDoc.SelectSingleNode("configuration/Percentuale/p1").InnerText;
+                this.p2 = xmlDoc.SelectSingleNode("configuration/Percentuale/p2").InnerText;
 
                 this.queryArticolo = xmlDoc.SelectSingleNode("configuration/AllQuery/Articolo/Query").InnerText;
                 this.pkArticolo = xmlDoc.SelectSingleNode("configuration/AllQuery/Articolo/PK").InnerText;
@@ -69,7 +71,7 @@ namespace PreventivazioneRapida
                 this.helpCentro = xmlDoc.SelectSingleNode("configuration/helpCentro").InnerText;
                 this.helpCentroEsterno = xmlDoc.SelectSingleNode("configuration/helpCentroEsterno").InnerText;
 
-
+                this.foxitReader = xmlDoc.SelectSingleNode("configuration/FoxitReader").InnerText;
 
                 if (xmlDoc.SelectSingleNode("configuration/FL") != null)
                 {
@@ -116,13 +118,19 @@ namespace PreventivazioneRapida
         public string Password { get { return this.password; } }
 
         private string q1;
-        public string Q1 { get { return this.q1; } }
+        public string Q1 { get { return this.q1; } set { this.q1 = value; } }
 
         private string q2;
-        public string Q2 { get { return this.q2; } }
+        public string Q2 { get { return this.q2; } set { this.q2 = value; } }
 
         private string q3;
-        public string Q3 { get { return this.q3; } }
+        public string Q3 { get { return this.q3; } set { this.q3 = value; } }
+
+        private string p1;
+        public string P1 { get { return this.p1; } set { this.p1 = value; } }
+
+        private string p2;
+        public string P2 { get { return this.p2; } set { this.p2 = value; } }
 
         private string queryArticolo;
         public string QueryArticolo { get { return this.queryArticolo; } }
@@ -187,28 +195,13 @@ namespace PreventivazioneRapida
         private string helpCentroEsterno;
         public string HelpCentroEsterno { get { return this.helpCentroEsterno; } }
 
+        private string foxitReader;
+        public string FoxitReader { get { return this.foxitReader; } }
+
         private string fontlabel = "";
         public string FontLabel { get { return this.fontlabel; } }
 
         private string font = "";
         public string Font { get { return this.font; } }
-
-        /*public void CambiaValoreCliente(string cliente)
-        {
-            try
-            {
-                XmlDocument xmlDoc;
-                xmlDoc = new XmlDocument();
-                xmlDoc.Load("C:\\usr3\\wsai\\help_xml\\help_preventivi_RGG.xml");
-                XmlNode valore = xmlDoc.SelectSingleNode("help/campi/campo/valore");
-                valore.InnerText = cliente;
-                xmlDoc.Save("C:\\usr3\\wsai\\help_xml\\help_preventivi_RGG.xml");
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show("Errore caricamento file help_preventivi_RGG.\n" + e);
-            }
-            
-        }*/
     }
 }

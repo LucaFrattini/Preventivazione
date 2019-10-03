@@ -17,6 +17,7 @@ namespace WindowsFormsApp2
     {
         Form1 f;
         Model m;
+        DataRow drAgilis;
 
         //Funzione costruttore
         public InserisciRigo(Form1 form1, Model model)
@@ -27,6 +28,7 @@ namespace WindowsFormsApp2
             PopolaComboBox();
             this.textBoxArticolo.Leave += new System.EventHandler(this.textBoxArticolo_Leave);
             this.textBoxCentro.Leave += new System.EventHandler(this.textBoxCentro_Leave);
+            SetFont(Setting.Istance.Font);
         }
 
         /// <summary>
@@ -42,6 +44,7 @@ namespace WindowsFormsApp2
                 if (f.creaArticolo)
                 {
                     comboBox.Items.Add(f.Articolo);
+                    comboBox.Text = f.Articolo;
                     try
                     {
                         query = (from row in m.ds.Tables["DistintaBase"].AsEnumerable() where row["Codice Art"].ToString() != "" && row["Codice centro"].ToString() == "" select row["Codice Art"].ToString()).Distinct().ToList();
@@ -52,20 +55,76 @@ namespace WindowsFormsApp2
                 {
                     try
                     {
-                        query = (from row in m.ds.Tables["DistintaBase"].AsEnumerable() /*where row["Codice Art"].ToString() != "" && row["Codice centro"].ToString() == ""*/ select row["CODICE_PADRE"].ToString()).Distinct().ToList();
+                        query = (from row in m.ds.Tables["DistintaBase"].AsEnumerable() /*where row["Codice Art"].ToString() != "" && row["Codice centro"].ToString() == ""*/ select row["Codice Padre"].ToString()).Distinct().ToList();
                     }
-                    catch { }
+                    catch { }                   
                 }
                 int count = query.Count();
                 foreach (String padre in query)
                 {
                     comboBox.Items.Add(padre);
                 }
+                if (count > 0)
+                {
+                    comboBox.Text = comboBox.Items[0].ToString();
+                }
             }
             catch
             {
                 MessageBox.Show("Errore nel popolamento della combobox.");
             }
+        }
+
+        private void SetFont(String font)
+        {
+
+            font = font.Replace('#', ' ');
+
+            String fontFamil = font.Split('-')[0];
+            float fontSize;
+            float.TryParse(font.Split('-')[1], out fontSize);
+
+            Font f = new Font(fontFamil, fontSize);
+            // this.Font = f;
+            //MessageBox.Show( this.groupBox1.Controls.ToString());
+            if (f != null)
+            {
+                foreach (Control c in this.Controls)
+                {
+                    /*if (c is Label )//&& Setting.Istance.Font == "FO")//se si tratta di una label e nel fil di configurazione il la label hanno font normale
+                    {        
+                        c.Font = f;
+                    }
+                    if (c is TextBox )//&& Setting.Istance.Font == "FO")//se si tratta di una label e nel fil di configurazione il la label hanno font normale
+                    {
+                        c.Font = f;
+                    }
+                    if (c is Button)
+                    {
+                        c.Font = f;
+                    }*/
+                    c.Font = f;
+                }
+                foreach (Control c in groupBox1.Controls)
+                {
+                    c.Font = f;
+                }
+                foreach (Control c in groupBox2.Controls)
+                {
+                    c.Font = f;
+                }
+                foreach (Control c in groupBoxImporta.Controls)
+                {
+                    c.Font = f;
+                }
+                foreach (Control c in groupBoxNuovo.Controls)
+                {
+                    c.Font = f;
+                }
+                //this.dataGridView.Font = f;
+            }
+
+
         }
 
         /// <summary>
@@ -81,12 +140,117 @@ namespace WindowsFormsApp2
                 {
                     TextBox t = (TextBox)sender;
                     t.Text = t.Text.Replace('.', ',');
-                    Double prova = double.Parse(t.Text);
+                    if(t.Text != "")
+                    {
+                        if(t.Name == "textBoxQuantita")
+                        {
+                            if(drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
+                            {
+                                textBoxQuantita2.Text = (Double.Parse(t.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                            }
+                            if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
+                            {
+                                textBoxQuantita3.Text = (Double.Parse(t.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                            }
+                        }
+                        else if(t.Name == "textBoxQuantita2")
+                        {
+                            if (drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
+                            {
+                                textBoxQuantita.Text = (Double.Parse(t.Text) / Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                            }
+                            if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
+                            {
+                                textBoxQuantita3.Text = (Double.Parse(textBoxQuantita.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                            }
+                        }
+                        else if(t.Name == "textBoxQuantita3")
+                        {
+                            if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
+                            {
+                                textBoxQuantita.Text = (Double.Parse(t.Text) * Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                            }
+                            if (drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
+                            {
+                                textBoxQuantita2.Text = (Double.Parse(textBoxQuantita.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                            }
+                        }
+                        Double prova = double.Parse(t.Text);
+                    }
+                    if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
+                    {                       
+                        if(textBoxQuantita.Text != "" && textBoxUM.Text != "" && textBoxArticolo.BackColor == Color.LightGreen)
+                        {
+                            buttonConferma.Enabled = true;
+                        }
+                        else
+                        {
+                            buttonConferma.Enabled = false;
+                        }
+                    }
+                    else if (radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
+                    {                      
+                        if (textBoxQuantita.Text != "" && textBoxUM.Text != "" && textBoxArticolo.BackColor == Color.LightGreen && textBoxCentro.BackColor == Color.LightGreen)
+                        {
+                            buttonConferma.Enabled = true;
+                        }
+                        else
+                        {
+                            buttonConferma.Enabled = false;
+                        }
+                    }
+                    else if (radioButtonPreventivi.Checked == true)
+                    {
+                        if(textBoxArticolo.BackColor == Color.LightGreen)
+                        {
+                            buttonConferma.Enabled = true;
+                        }
+                        else
+                        {
+                            buttonConferma.Enabled = false;
+                        }
+                    }
+                    else if (radioButtonNuovo.Checked == true && radioButtonArticolo.Checked == true)
+                    {
+                        if(textBoxNome.Text != "" && textBoxQuantitaNuovo.Text != "" && textBoxCostoArticolo.Text != "")
+                        {
+                            buttonConferma.Enabled = true;
+                        }
+                        else
+                        {
+                            buttonConferma.Enabled = false;
+                        }
+                    }
+                    else if (radioButtonNuovo.Checked == true && radioButtonLavorazione.Checked == true)
+                    {
+                        if(textBoxNome.Text != "" && textBoxQuantitaNuovo.Text != "" && textBoxSetupMac.Text != "" && textBoxSetupUomo.Text != "" && textBoxTempoMac.Text !=""
+                            && textBoxTempoUomo.Text != "" && textBoxCostoSetupMac.Text != "" && textBoxCostoSetupUomo.Text != "" && textBoxCostoTempoMac.Text != "" &&
+                            textBoxCostoTempoUomo.Text != "" && textBoxCostoArticolo.Text != "")
+                        {
+                            buttonConferma.Enabled = true;
+                        }
+                        else
+                        {
+                            buttonConferma.Enabled = false;
+                        }
+                    }
+                    else if (radioButtonNuovo.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
+                    {
+                        if(textBoxNome.Text != "" && textBoxQuantita.Text != "" && textBoxCostoLavEst.Text != "" && textBoxCostoArticolo.Text != "")
+                        {
+                            buttonConferma.Enabled = true;
+                        }
+                        else
+                        {
+                            buttonConferma.Enabled = false;
+                        }
+                    }
                 }
             }
             catch
             {
                 MessageBox.Show("Errore nella compilazione del campo. Inserire solo valori numerici.");
+                buttonConferma.Enabled = false;
             }
         }
 
@@ -97,6 +261,16 @@ namespace WindowsFormsApp2
         /// <param name="e"></param>
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
+            textBoxQuantita.Text = "1";
+            textBoxQuantita2.Text = "";
+            textBoxQuantita3.Text = "";
+            textBoxUM.Text = "";
+            textBoxUM2.Text = "";
+            textBoxUM3.Text = "";
+            textBoxQuantita2Nuovo.Text = "";
+            textBoxQuantita3Nuovo.Text = "";
+            textBoxUM2Nuovo.Text = "";
+            textBoxUM3Nuovo.Text = "";
             textBoxArticolo.Text = "";
             textBoxCentro.Text = "";
             textBoxArticolo.BackColor = Color.White;
@@ -113,6 +287,16 @@ namespace WindowsFormsApp2
             textBoxCostoSetupUomo.Text = "";
             textBoxCostoTempoMac.Text = "";
             textBoxCostoTempoUomo.Text = "";
+            labelUM2.Visible = false;
+            labelUM3.Visible = false;
+            labelQuantita2.Visible = false;
+            labelQuantita3.Visible = false;
+            textBoxQuantita.Visible = true;
+            textBoxQuantita2.Visible = false;
+            textBoxQuantita3.Visible = false;
+            textBoxUM.Visible = true;
+            textBoxUM2.Visible = false;
+            textBoxUM3.Visible = false;
             labelCostoLavEst.Visible = false;
             textBoxCostoLavEst.Visible = false;
             labelCentro.Visible = false;
@@ -128,7 +312,16 @@ namespace WindowsFormsApp2
                 groupBoxImporta.Text = "Dichiara articolo da importare";
                 labelImportaDescrizione.Text = "<Descrizione articolo>";
                 buttonHelp.Text = "Help articoli";
+                labelUM2.Visible = true;
+                labelUM3.Visible = true;
+                labelQuantita2.Visible = true;
+                labelQuantita3.Visible = true;
                 textBoxQuantita.Enabled = true;
+                textBoxQuantita2.Visible = true;
+                textBoxQuantita3.Visible = true;
+                textBoxUM2.Visible = true;
+                textBoxUM3.Visible = true;
+                textBoxUM.Enabled = true;
             }
             else if(radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
             {
@@ -138,8 +331,7 @@ namespace WindowsFormsApp2
                 groupBoxNuovo.Visible = false;
                 groupBoxImporta.Text = "Dichiara lavorazione da importare";
                 labelImportaDescrizione.Text = "<Descrizione lavorazione>";
-                buttonHelp.Text = "Help lavorazione";
-                textBoxQuantita.Enabled = true;
+                buttonHelp.Text = "Help lavorazione";            
                 labelCentro.Visible = true;
                 textBoxCentro.Visible = true;
                 buttonHelpCentri.Visible = true;
@@ -155,10 +347,11 @@ namespace WindowsFormsApp2
                 buttonHelp.Text = "Help preventivi";
                 textBoxQuantita.Text = "1";
                 textBoxQuantita.Enabled = false;
+                textBoxUM.Enabled = false;
             }
             else if(radioButtonNuovo.Checked == true && radioButtonArticolo.Checked == true)
             {
-                this.Height = 680;
+                this.Height = this.groupBoxNuovo.Location.Y + this.groupBoxNuovo.Size.Height + 100;
                 groupBox2.Enabled = true;
                 groupBoxImporta.Visible = false;
                 groupBoxNuovo.Visible = true;
@@ -171,12 +364,15 @@ namespace WindowsFormsApp2
                 textBoxCostoSetupUomo.Enabled = false;
                 textBoxCostoTempoMac.Enabled = false;
                 textBoxCostoTempoUomo.Enabled = false;
+                textBoxQuantita2Nuovo.Enabled = true;
+                textBoxQuantita3Nuovo.Enabled = true;
+                textBoxUM2Nuovo.Enabled = true;
+                textBoxUM3Nuovo.Enabled = true;
                 labelPrezzo.Text = "Prezzo:";
-                buttonConferma.Enabled = true;
             }
             else if(radioButtonNuovo.Checked == true && radioButtonLavorazione.Checked == true)
             {
-                this.Height = 680;
+                this.Height = this.groupBoxNuovo.Location.Y + this.groupBoxNuovo.Size.Height + 100; 
                 groupBox2.Enabled = true;
                 groupBoxImporta.Visible = false;
                 groupBoxNuovo.Visible = true;
@@ -189,12 +385,15 @@ namespace WindowsFormsApp2
                 textBoxCostoSetupUomo.Enabled = true;
                 textBoxCostoTempoMac.Enabled = true;
                 textBoxCostoTempoUomo.Enabled = true;
+                textBoxQuantita2Nuovo.Enabled = false;
+                textBoxQuantita3Nuovo.Enabled = false;
+                textBoxUM2Nuovo.Enabled = false;
+                textBoxUM3Nuovo.Enabled = false;
                 labelPrezzo.Text = "Centro:";
-                buttonConferma.Enabled = true;
             }
             else if (radioButtonNuovo.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
             {
-                this.Height = 680;
+                this.Height = this.groupBoxNuovo.Location.Y + this.groupBoxNuovo.Size.Height + 100; 
                 groupBox2.Enabled = true;
                 groupBoxImporta.Visible = false;
                 groupBoxNuovo.Visible = true;
@@ -208,9 +407,12 @@ namespace WindowsFormsApp2
                 textBoxCostoTempoMac.Enabled = false;
                 textBoxCostoTempoUomo.Enabled = false;
                 textBoxCostoLavEst.Visible = true;
+                textBoxQuantita2Nuovo.Enabled = false;
+                textBoxQuantita3Nuovo.Enabled = false;
+                textBoxUM2Nuovo.Enabled = false;
+                textBoxUM3Nuovo.Enabled = false;
                 labelCostoLavEst.Visible = true;
                 labelPrezzo.Text = "Centro:";
-                buttonConferma.Enabled = true;
             }
         }
 
@@ -225,12 +427,39 @@ namespace WindowsFormsApp2
             if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
             {
                 //string query = Setting.Istance.QueryCercaArticolo.Replace("@CodArticolo", textBoxArticolo.Text);
-                DataRow dr = m.ds.Tables["Articoli"].Rows.Find(textBoxArticolo.Text);
-                if (dr != null)
+                drAgilis = m.ds.Tables["Articoli"].Rows.Find(textBoxArticolo.Text);
+                if (drAgilis != null)
                 {
                     textBoxArticolo.BackColor = Color.LightGreen;
-                    labelImportaDescrizione.Text = dr[1].ToString();
+                    labelImportaDescrizione.Text = drAgilis[1].ToString();
                     buttonConferma.Enabled = true;
+                    textBoxUM.Text = drAgilis["ar_unmis"].ToString();                    
+                    if (drAgilis["ar_conver"].ToString() == "" || drAgilis["ar_conver"].ToString() == "0" || drAgilis["ar_unmis2"].ToString() == "")
+                    {
+                        drAgilis["ar_conver"] = 0;
+                        textBoxUM2.Enabled = false;
+                        textBoxQuantita2.Enabled = false;
+                    }
+                    else
+                    {
+                        textBoxUM2.Text = drAgilis["ar_unmis2"].ToString();
+                        textBoxQuantita2.Text = (Double.Parse(textBoxQuantita.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                        textBoxUM2.Enabled = true;
+                        textBoxQuantita2.Enabled = true;
+                    }
+                    if (drAgilis["ar_qtacon2"].ToString() == "" || drAgilis["ar_qtacon2"].ToString() == "0" || drAgilis["ar_confez2"].ToString() == "")
+                    {
+                        drAgilis["ar_qtacon2"] = 0;
+                        textBoxUM3.Enabled = false;
+                        textBoxQuantita3.Enabled = false;
+                    }
+                    else
+                    {
+                        textBoxUM3.Text = drAgilis["ar_confez2"].ToString();
+                        textBoxQuantita3.Text = (Double.Parse(textBoxQuantita.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                        textBoxUM3.Enabled = true;
+                        textBoxQuantita3.Enabled = true;
+                    }
                 }
                 else
                 {
@@ -403,7 +632,12 @@ namespace WindowsFormsApp2
                         SqlDataAdapter da = new SqlDataAdapter(query, connection);
                         da.Fill(datatable);
                         datarow = datatable.Rows[0];
-                        datarow["Quantita`"] = Double.Parse(textBoxQuantita.Text);
+                        datarow["UM 1"] = textBoxUM.Text;
+                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantita.Text);
+                        datarow["UM 2"] = textBoxUM2.Text;
+                        datarow["Qta 2"] = textBoxQuantita2.Text;
+                        datarow["UM 3"] = textBoxUM3.Text;
+                        datarow["Qta 3"] = (textBoxQuantita3.Text == "" ? "" : textBoxQuantita3.Text);
                         f.InserisciRigo(tipologiaInserimento, comboBox.Text, datarow);
                         datatable.Reset();
                         //InserisciRiga(tipologiaInserimento, textBoxArticolo.Text, textBoxQuantita.Text);
@@ -419,7 +653,8 @@ namespace WindowsFormsApp2
                         SqlDataAdapter da = new SqlDataAdapter(query, connection);
                         da.Fill(datatable);
                         datarow = datatable.Rows[0];
-                        datarow["Quantita`"] = textBoxQuantita.Text;
+                        datarow["UM 1"] = textBoxUM.Text;
+                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantita.Text); 
                         connection = new SqlConnection(Setting.Istance.ConnStr);
                         connection.Open();
                         query = Setting.Istance.QueryCercaCentro.Replace("@CodCent", textBoxCentro.Text);
@@ -474,13 +709,18 @@ namespace WindowsFormsApp2
                     else if (radioButtonNuovo.Checked == true && radioButtonArticolo.Checked == true)
                     {
                         tipologiaInserimento = 4;
-                        datatable.Columns.Add("rowindex");
-                        datatable.Columns.Add("CODICE_PADRE");
+                        datatable.Columns.Add("Rigo");
+                        datatable.Columns.Add("Codice Padre");
                         datatable.Columns.Add("Codice Art");
                         datatable.Columns.Add("Codice Centro");
                         datatable.Columns.Add("Codice Lav");
                         datatable.Columns.Add("Descrizione art / Centro di Lavoro");
-                        datatable.Columns.Add("Quantita`");
+                        datatable.Columns.Add("UM 1");
+                        datatable.Columns.Add("Quantita` 1");
+                        datatable.Columns.Add("UM 2");
+                        datatable.Columns.Add("Qta 2");
+                        datatable.Columns.Add("UM 3");
+                        datatable.Columns.Add("Qta 3");
                         datatable.Columns.Add("Setup Mac");
                         datatable.Columns.Add("Setup Uomo");
                         datatable.Columns.Add("Tempo Mac");
@@ -498,12 +738,17 @@ namespace WindowsFormsApp2
                         datatable.Columns.Add("tempo uomo decimale");
 
                         datarow = datatable.NewRow();
-                        datarow["rowindex"] = "";
-                        datarow["CODICE_PADRE"] = "";
+                        datarow["Rigo"] = "";
+                        datarow["Codice Padre"] = "";
                         datarow["Codice Art"] = textBoxNome.Text;
                         datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
-                        datarow["Costo Art"] = textBoxCostoArticolo.Text;
-                        datarow["Quantita`"] = textBoxQuantitaNuovo.Text;
+                        datarow["Costo Art"] = Double.Parse(textBoxCostoArticolo.Text);
+                        datarow["UM 1"] = textBoxUMNuovo.Text;
+                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantitaNuovo.Text);
+                        datarow["UM 2"] = textBoxUM2Nuovo.Text;
+                        datarow["Qta 2"] = textBoxQuantita2Nuovo.Text;
+                        datarow["UM 3"] = textBoxUM3Nuovo.Text;
+                        datarow["Qta 3"] = textBoxQuantita3Nuovo.Text;
                         datarow["Codice Centro"] = "";
                         datarow["Codice Lav"] = "";
                         datarow["Setup Mac"] = "";
@@ -527,13 +772,18 @@ namespace WindowsFormsApp2
                     else if (radioButtonNuovo.Checked == true && radioButtonLavorazione.Checked == true)
                     {
                         tipologiaInserimento = 5;
-                        datatable.Columns.Add("rowindex");
-                        datatable.Columns.Add("CODICE_PADRE");
+                        datatable.Columns.Add("Rigo");
+                        datatable.Columns.Add("Codice Padre");
                         datatable.Columns.Add("Codice Art");
                         datatable.Columns.Add("Codice Centro");
                         datatable.Columns.Add("Codice Lav");
                         datatable.Columns.Add("Descrizione art / Centro di Lavoro");
-                        datatable.Columns.Add("Quantita`");                       
+                        datatable.Columns.Add("UM 1");
+                        datatable.Columns.Add("Quantita` 1");
+                        datatable.Columns.Add("UM 2");
+                        datatable.Columns.Add("Qta 2");
+                        datatable.Columns.Add("UM 3");
+                        datatable.Columns.Add("Qta 3");
                         datatable.Columns.Add("Setup Mac");
                         datatable.Columns.Add("Setup Uomo");
                         datatable.Columns.Add("Tempo Mac");
@@ -551,22 +801,27 @@ namespace WindowsFormsApp2
                         datatable.Columns.Add("tempo uomo decimale");
 
                         datarow = datatable.NewRow();
-                        datarow["rowindex"] = "";
-                        datarow["CODICE_PADRE"] = "";
+                        datarow["Rigo"] = "";
+                        datarow["Codice Padre"] = "";
                         datarow["Codice Art"] = "";
                         datarow["Codice Lav"] = textBoxNome.Text;
-                        datarow["Codice Centro"] = textBoxCostoArticolo.Text;
+                        datarow["Codice Centro"] = Double.Parse(textBoxCostoArticolo.Text);
                         datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
                         datarow["Costo Art"] = "";
-                        datarow["Quantita`"] = textBoxQuantitaNuovo.Text;
-                        datarow["Setup Mac"] = textBoxSetupMac.Text;
-                        datarow["Setup Uomo"] = textBoxSetupUomo.Text;
-                        datarow["Tempo Mac"] = textBoxTempoMac.Text;
-                        datarow["Tempo Uomo"] = textBoxTempoUomo.Text;
-                        datarow["Costo Att Mac"] = textBoxCostoSetupMac.Text;
-                        datarow["Costo Att Uomo"] = textBoxCostoSetupUomo.Text;
-                        datarow["Costo Mac"] = textBoxCostoTempoMac.Text;
-                        datarow["Costo Uomo"] = textBoxCostoTempoUomo.Text;
+                        datarow["UM 1"] = textBoxUMNuovo.Text;
+                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantitaNuovo.Text);
+                        datarow["UM 2"] = "";
+                        datarow["Qta 2"] = "";
+                        datarow["UM 3"] = "";
+                        datarow["Qta 3"] = "";
+                        datarow["Setup Mac"] = Double.Parse(textBoxSetupMac.Text);
+                        datarow["Setup Uomo"] = Double.Parse(textBoxSetupUomo.Text);
+                        datarow["Tempo Mac"] = Double.Parse(textBoxTempoMac.Text);
+                        datarow["Tempo Uomo"] = Double.Parse(textBoxTempoUomo.Text);
+                        datarow["Costo Att Mac"] = Double.Parse(textBoxCostoSetupMac.Text);
+                        datarow["Costo Att Uomo"] = Double.Parse(textBoxCostoSetupUomo.Text);
+                        datarow["Costo Mac"] = Double.Parse(textBoxCostoTempoMac.Text);
+                        datarow["Costo Uomo"] = Double.Parse(textBoxCostoTempoUomo.Text);
                         datarow["Totale"] = "";
                         datarow["Totale + %Var"] = "";
                         datarow["setup mac decimale"] = "";
@@ -581,13 +836,18 @@ namespace WindowsFormsApp2
                     else if(radioButtonNuovo.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
                     {
                         tipologiaInserimento = 6;
-                        datatable.Columns.Add("rowindex");
-                        datatable.Columns.Add("CODICE_PADRE");
+                        datatable.Columns.Add("Rigo");
+                        datatable.Columns.Add("Codice Padre");
                         datatable.Columns.Add("Codice Art");
                         datatable.Columns.Add("Codice Centro");
                         datatable.Columns.Add("Codice Lav");
                         datatable.Columns.Add("Descrizione art / Centro di Lavoro");
-                        datatable.Columns.Add("Quantita`");                       
+                        datatable.Columns.Add("UM 1");
+                        datatable.Columns.Add("Quantita` 1");
+                        datatable.Columns.Add("UM 2");
+                        datatable.Columns.Add("Qta 2");
+                        datatable.Columns.Add("UM 3");
+                        datatable.Columns.Add("Qta 3");
                         datatable.Columns.Add("Setup Mac");
                         datatable.Columns.Add("Setup Uomo");
                         datatable.Columns.Add("Tempo Mac");
@@ -605,14 +865,19 @@ namespace WindowsFormsApp2
                         datatable.Columns.Add("tempo uomo decimale");
 
                         datarow = datatable.NewRow();
-                        datarow["rowindex"] = "";
-                        datarow["CODICE_PADRE"] = "";
+                        datarow["Rigo"] = "";
+                        datarow["Codice Padre"] = "";
                         datarow["Codice Lav"] = textBoxNome.Text;
                         datarow["Codice Art"] = textBoxDescrizione.Text;
                         datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
                         datarow["Codice Centro"] = textBoxCostoArticolo.Text;
-                        datarow["Quantita`"] = textBoxQuantitaNuovo.Text;
-                        datarow["Costo Art"] = textBoxCostoLavEst.Text;
+                        datarow["UM 1"] = textBoxUMNuovo.Text;
+                        datarow["Quantita` 1"] = textBoxQuantitaNuovo.Text;
+                        datarow["UM 2"] = "";
+                        datarow["Qta 2"] = "";
+                        datarow["UM 3"] = "";
+                        datarow["Qta 3"] = "";
+                        datarow["Costo Art"] = Double.Parse(textBoxCostoLavEst.Text);
                         datarow["Setup Mac"] = textBoxSetupMac.Text;
                         datarow["Setup Uomo"] = textBoxSetupUomo.Text;
                         datarow["Tempo Mac"] = textBoxTempoMac.Text;
@@ -635,7 +900,7 @@ namespace WindowsFormsApp2
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Errore durante l'inserimento del rigo.\n" + ex);
+                MessageBox.Show("Errore durante l'inserimento del rigo.\nControllare di aver inserito correttamente i campi richiesti!\n\n\n" + ex);
             }
         }
 

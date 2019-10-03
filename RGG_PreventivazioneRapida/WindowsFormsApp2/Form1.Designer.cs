@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -50,6 +50,7 @@
             this.textBoxCliente = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonModificaQuantita = new System.Windows.Forms.Button();
             this.buttonStampa = new System.Windows.Forms.Button();
             this.buttonPulisci = new System.Windows.Forms.Button();
             this.buttonEspandi = new System.Windows.Forms.Button();
@@ -64,6 +65,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.RicavoSing1 = new System.Windows.Forms.Label();
+            this.CostoSing1 = new System.Windows.Forms.Label();
             this.Articoli1 = new System.Windows.Forms.Label();
             this.buttonQuantita1 = new System.Windows.Forms.Button();
             this.TotVar1 = new System.Windows.Forms.Label();
@@ -73,6 +76,8 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.RicavoSing2 = new System.Windows.Forms.Label();
+            this.CostoSing2 = new System.Windows.Forms.Label();
             this.Articoli2 = new System.Windows.Forms.Label();
             this.buttonQuantita2 = new System.Windows.Forms.Button();
             this.TotVar2 = new System.Windows.Forms.Label();
@@ -80,6 +85,8 @@
             this.CostoUomo2 = new System.Windows.Forms.Label();
             this.CostoMac2 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.RicavoSing3 = new System.Windows.Forms.Label();
+            this.CostoSing3 = new System.Windows.Forms.Label();
             this.Articoli3 = new System.Windows.Forms.Label();
             this.buttonQuantita3 = new System.Windows.Forms.Button();
             this.TotVar3 = new System.Windows.Forms.Label();
@@ -87,7 +94,9 @@
             this.CostoUomo3 = new System.Windows.Forms.Label();
             this.CostoMac3 = new System.Windows.Forms.Label();
             this.groupBoxTotPerQuant = new System.Windows.Forms.GroupBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -220,7 +229,7 @@
             // textBoxVariazione
             // 
             this.textBoxVariazione.Enabled = false;
-            this.textBoxVariazione.Location = new System.Drawing.Point(479, 166);
+            this.textBoxVariazione.Location = new System.Drawing.Point(482, 166);
             this.textBoxVariazione.MaxLength = 18;
             this.textBoxVariazione.Name = "textBoxVariazione";
             this.textBoxVariazione.Size = new System.Drawing.Size(77, 30);
@@ -233,7 +242,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(302, 169);
+            this.label6.Location = new System.Drawing.Point(305, 169);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(171, 24);
             this.label6.TabIndex = 10;
@@ -244,9 +253,9 @@
             this.textBoxNote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxNote.Location = new System.Drawing.Point(127, 202);
-            this.textBoxNote.MaxLength = 60;
+            this.textBoxNote.MaxLength = 253;
             this.textBoxNote.Name = "textBoxNote";
-            this.textBoxNote.Size = new System.Drawing.Size(813, 30);
+            this.textBoxNote.Size = new System.Drawing.Size(1081, 30);
             this.textBoxNote.TabIndex = 6;
             // 
             // label7
@@ -263,9 +272,9 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1026, 116);
+            this.pictureBox1.Location = new System.Drawing.Point(1352, 21);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(194, 77);
+            this.pictureBox1.Size = new System.Drawing.Size(145, 53);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 16;
             this.pictureBox1.TabStop = false;
@@ -281,6 +290,7 @@
             // 
             // btnRefresh
             // 
+            this.btnRefresh.Enabled = false;
             this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
             this.btnRefresh.Location = new System.Drawing.Point(458, 21);
             this.btnRefresh.Name = "btnRefresh";
@@ -291,6 +301,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonModificaQuantita);
             this.groupBox1.Controls.Add(this.buttonStampa);
             this.groupBox1.Controls.Add(this.buttonPulisci);
             this.groupBox1.Controls.Add(this.buttonEspandi);
@@ -299,6 +310,7 @@
             this.groupBox1.Controls.Add(this.btnReset);
             this.groupBox1.Controls.Add(this.btnNuovo);
             this.groupBox1.Controls.Add(this.btnMeno);
+            this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.btnConferma);
             this.groupBox1.Controls.Add(this.btnPiu);
             this.groupBox1.Controls.Add(this.btnRefresh);
@@ -306,9 +318,19 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1235, 83);
+            this.groupBox1.Size = new System.Drawing.Size(1503, 83);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
+            // 
+            // buttonModificaQuantita
+            // 
+            this.buttonModificaQuantita.Image = ((System.Drawing.Image)(resources.GetObject("buttonModificaQuantita.Image")));
+            this.buttonModificaQuantita.Location = new System.Drawing.Point(520, 21);
+            this.buttonModificaQuantita.Name = "buttonModificaQuantita";
+            this.buttonModificaQuantita.Size = new System.Drawing.Size(56, 53);
+            this.buttonModificaQuantita.TabIndex = 29;
+            this.buttonModificaQuantita.UseVisualStyleBackColor = true;
+            this.buttonModificaQuantita.Click += new System.EventHandler(this.buttonModificaQuantita_Click);
             // 
             // buttonStampa
             // 
@@ -333,7 +355,7 @@
             // buttonEspandi
             // 
             this.buttonEspandi.Image = ((System.Drawing.Image)(resources.GetObject("buttonEspandi.Image")));
-            this.buttonEspandi.Location = new System.Drawing.Point(148, 21);
+            this.buttonEspandi.Location = new System.Drawing.Point(334, 21);
             this.buttonEspandi.Name = "buttonEspandi";
             this.buttonEspandi.Size = new System.Drawing.Size(56, 53);
             this.buttonEspandi.TabIndex = 26;
@@ -343,7 +365,7 @@
             // btnCarica
             // 
             this.btnCarica.Image = ((System.Drawing.Image)(resources.GetObject("btnCarica.Image")));
-            this.btnCarica.Location = new System.Drawing.Point(334, 21);
+            this.btnCarica.Location = new System.Drawing.Point(86, 21);
             this.btnCarica.Name = "btnCarica";
             this.btnCarica.Size = new System.Drawing.Size(56, 53);
             this.btnCarica.TabIndex = 25;
@@ -353,7 +375,7 @@
             // btnModifica
             // 
             this.btnModifica.Image = ((System.Drawing.Image)(resources.GetObject("btnModifica.Image")));
-            this.btnModifica.Location = new System.Drawing.Point(86, 21);
+            this.btnModifica.Location = new System.Drawing.Point(148, 21);
             this.btnModifica.Name = "btnModifica";
             this.btnModifica.Size = new System.Drawing.Size(56, 53);
             this.btnModifica.TabIndex = 24;
@@ -363,7 +385,7 @@
             // btnReset
             // 
             this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
-            this.btnReset.Location = new System.Drawing.Point(644, 21);
+            this.btnReset.Location = new System.Drawing.Point(706, 21);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(56, 53);
             this.btnReset.TabIndex = 23;
@@ -383,7 +405,7 @@
             // btnMeno
             // 
             this.btnMeno.Image = ((System.Drawing.Image)(resources.GetObject("btnMeno.Image")));
-            this.btnMeno.Location = new System.Drawing.Point(582, 21);
+            this.btnMeno.Location = new System.Drawing.Point(644, 21);
             this.btnMeno.Name = "btnMeno";
             this.btnMeno.Size = new System.Drawing.Size(56, 53);
             this.btnMeno.TabIndex = 22;
@@ -405,7 +427,7 @@
             this.btnPiu.AccessibleName = "";
             this.btnPiu.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnPiu.Image = ((System.Drawing.Image)(resources.GetObject("btnPiu.Image")));
-            this.btnPiu.Location = new System.Drawing.Point(520, 21);
+            this.btnPiu.Location = new System.Drawing.Point(582, 21);
             this.btnPiu.Name = "btnPiu";
             this.btnPiu.Size = new System.Drawing.Size(56, 53);
             this.btnPiu.TabIndex = 21;
@@ -415,7 +437,7 @@
             // btnEsci
             // 
             this.btnEsci.Image = ((System.Drawing.Image)(resources.GetObject("btnEsci.Image")));
-            this.btnEsci.Location = new System.Drawing.Point(706, 21);
+            this.btnEsci.Location = new System.Drawing.Point(768, 21);
             this.btnEsci.Name = "btnEsci";
             this.btnEsci.Size = new System.Drawing.Size(56, 53);
             this.btnEsci.TabIndex = 20;
@@ -441,12 +463,14 @@
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(122, 24);
             this.label13.TabIndex = 29;
-            this.label13.Text = "Costo Totale";
+            this.label13.Text = "Costo Singolo";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox3.Controls.Add(this.RicavoSing1);
+            this.groupBox3.Controls.Add(this.CostoSing1);
             this.groupBox3.Controls.Add(this.Articoli1);
             this.groupBox3.Controls.Add(this.buttonQuantita1);
             this.groupBox3.Controls.Add(this.TotVar1);
@@ -455,9 +479,29 @@
             this.groupBox3.Controls.Add(this.CostoMac1);
             this.groupBox3.Location = new System.Drawing.Point(12, 39);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(749, 57);
+            this.groupBox3.Size = new System.Drawing.Size(1014, 57);
             this.groupBox3.TabIndex = 22;
             this.groupBox3.TabStop = false;
+            // 
+            // RicavoSing1
+            // 
+            this.RicavoSing1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.RicavoSing1.Location = new System.Drawing.Point(607, 22);
+            this.RicavoSing1.Name = "RicavoSing1";
+            this.RicavoSing1.Size = new System.Drawing.Size(122, 24);
+            this.RicavoSing1.TabIndex = 36;
+            this.RicavoSing1.Text = "0";
+            this.RicavoSing1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CostoSing1
+            // 
+            this.CostoSing1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CostoSing1.Location = new System.Drawing.Point(479, 21);
+            this.CostoSing1.Name = "CostoSing1";
+            this.CostoSing1.Size = new System.Drawing.Size(122, 24);
+            this.CostoSing1.TabIndex = 35;
+            this.CostoSing1.Text = "0";
+            this.CostoSing1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Articoli1
             // 
@@ -485,7 +529,7 @@
             // TotVar1
             // 
             this.TotVar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TotVar1.Location = new System.Drawing.Point(613, 22);
+            this.TotVar1.Location = new System.Drawing.Point(864, 22);
             this.TotVar1.Name = "TotVar1";
             this.TotVar1.Size = new System.Drawing.Size(121, 24);
             this.TotVar1.TabIndex = 30;
@@ -495,7 +539,7 @@
             // Tot1
             // 
             this.Tot1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Tot1.Location = new System.Drawing.Point(485, 22);
+            this.Tot1.Location = new System.Drawing.Point(735, 22);
             this.Tot1.Name = "Tot1";
             this.Tot1.Size = new System.Drawing.Size(122, 24);
             this.Tot1.TabIndex = 28;
@@ -530,7 +574,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(122, 24);
             this.label15.TabIndex = 31;
-            this.label15.Text = "Ricavo Totale";
+            this.label15.Text = "Ricavo Singolo";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label12
@@ -547,6 +591,8 @@
             // groupBox4
             // 
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox4.Controls.Add(this.RicavoSing2);
+            this.groupBox4.Controls.Add(this.CostoSing2);
             this.groupBox4.Controls.Add(this.Articoli2);
             this.groupBox4.Controls.Add(this.buttonQuantita2);
             this.groupBox4.Controls.Add(this.TotVar2);
@@ -555,9 +601,29 @@
             this.groupBox4.Controls.Add(this.CostoMac2);
             this.groupBox4.Location = new System.Drawing.Point(12, 90);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(748, 57);
+            this.groupBox4.Size = new System.Drawing.Size(1013, 57);
             this.groupBox4.TabIndex = 23;
             this.groupBox4.TabStop = false;
+            // 
+            // RicavoSing2
+            // 
+            this.RicavoSing2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.RicavoSing2.Location = new System.Drawing.Point(607, 22);
+            this.RicavoSing2.Name = "RicavoSing2";
+            this.RicavoSing2.Size = new System.Drawing.Size(122, 24);
+            this.RicavoSing2.TabIndex = 37;
+            this.RicavoSing2.Text = "0";
+            this.RicavoSing2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CostoSing2
+            // 
+            this.CostoSing2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CostoSing2.Location = new System.Drawing.Point(479, 22);
+            this.CostoSing2.Name = "CostoSing2";
+            this.CostoSing2.Size = new System.Drawing.Size(122, 24);
+            this.CostoSing2.TabIndex = 36;
+            this.CostoSing2.Text = "0";
+            this.CostoSing2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Articoli2
             // 
@@ -585,7 +651,7 @@
             // TotVar2
             // 
             this.TotVar2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TotVar2.Location = new System.Drawing.Point(613, 22);
+            this.TotVar2.Location = new System.Drawing.Point(864, 22);
             this.TotVar2.Name = "TotVar2";
             this.TotVar2.Size = new System.Drawing.Size(121, 24);
             this.TotVar2.TabIndex = 30;
@@ -595,7 +661,7 @@
             // Tot2
             // 
             this.Tot2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Tot2.Location = new System.Drawing.Point(485, 22);
+            this.Tot2.Location = new System.Drawing.Point(735, 22);
             this.Tot2.Name = "Tot2";
             this.Tot2.Size = new System.Drawing.Size(122, 24);
             this.Tot2.TabIndex = 28;
@@ -625,6 +691,8 @@
             // groupBox5
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox5.Controls.Add(this.RicavoSing3);
+            this.groupBox5.Controls.Add(this.CostoSing3);
             this.groupBox5.Controls.Add(this.Articoli3);
             this.groupBox5.Controls.Add(this.buttonQuantita3);
             this.groupBox5.Controls.Add(this.TotVar3);
@@ -633,9 +701,29 @@
             this.groupBox5.Controls.Add(this.CostoMac3);
             this.groupBox5.Location = new System.Drawing.Point(11, 141);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(748, 57);
+            this.groupBox5.Size = new System.Drawing.Size(1013, 57);
             this.groupBox5.TabIndex = 24;
             this.groupBox5.TabStop = false;
+            // 
+            // RicavoSing3
+            // 
+            this.RicavoSing3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.RicavoSing3.Location = new System.Drawing.Point(608, 22);
+            this.RicavoSing3.Name = "RicavoSing3";
+            this.RicavoSing3.Size = new System.Drawing.Size(122, 24);
+            this.RicavoSing3.TabIndex = 37;
+            this.RicavoSing3.Text = "0";
+            this.RicavoSing3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CostoSing3
+            // 
+            this.CostoSing3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CostoSing3.Location = new System.Drawing.Point(480, 22);
+            this.CostoSing3.Name = "CostoSing3";
+            this.CostoSing3.Size = new System.Drawing.Size(122, 24);
+            this.CostoSing3.TabIndex = 36;
+            this.CostoSing3.Text = "0";
+            this.CostoSing3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Articoli3
             // 
@@ -663,7 +751,7 @@
             // TotVar3
             // 
             this.TotVar3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TotVar3.Location = new System.Drawing.Point(613, 22);
+            this.TotVar3.Location = new System.Drawing.Point(865, 22);
             this.TotVar3.Name = "TotVar3";
             this.TotVar3.Size = new System.Drawing.Size(121, 24);
             this.TotVar3.TabIndex = 30;
@@ -673,7 +761,7 @@
             // Tot3
             // 
             this.Tot3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Tot3.Location = new System.Drawing.Point(485, 22);
+            this.Tot3.Location = new System.Drawing.Point(736, 22);
             this.Tot3.Name = "Tot3";
             this.Tot3.Size = new System.Drawing.Size(122, 24);
             this.Tot3.TabIndex = 28;
@@ -704,21 +792,34 @@
             // 
             this.groupBoxTotPerQuant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxTotPerQuant.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.groupBoxTotPerQuant.Controls.Add(this.label20);
             this.groupBoxTotPerQuant.Controls.Add(this.label13);
             this.groupBoxTotPerQuant.Controls.Add(this.label10);
             this.groupBoxTotPerQuant.Controls.Add(this.label5);
             this.groupBoxTotPerQuant.Controls.Add(this.groupBox5);
             this.groupBoxTotPerQuant.Controls.Add(this.groupBox4);
+            this.groupBoxTotPerQuant.Controls.Add(this.label18);
             this.groupBoxTotPerQuant.Controls.Add(this.label12);
             this.groupBoxTotPerQuant.Controls.Add(this.label15);
             this.groupBoxTotPerQuant.Controls.Add(this.groupBox3);
             this.groupBoxTotPerQuant.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.groupBoxTotPerQuant.Location = new System.Drawing.Point(13, 572);
             this.groupBoxTotPerQuant.Name = "groupBoxTotPerQuant";
-            this.groupBoxTotPerQuant.Size = new System.Drawing.Size(766, 210);
+            this.groupBoxTotPerQuant.Size = new System.Drawing.Size(1031, 210);
             this.groupBoxTotPerQuant.TabIndex = 21;
             this.groupBoxTotPerQuant.TabStop = false;
             this.groupBoxTotPerQuant.Text = "Totali per Quantità";
+            // 
+            // label20
+            // 
+            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label20.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.label20.Location = new System.Drawing.Point(875, 24);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(122, 24);
+            this.label20.TabIndex = 34;
+            this.label20.Text = "Ricavo Totale";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label5
             // 
@@ -730,6 +831,17 @@
             this.label5.TabIndex = 32;
             this.label5.Text = "Costo Materiali";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label18
+            // 
+            this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label18.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.label18.Location = new System.Drawing.Point(747, 24);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(122, 24);
+            this.label18.TabIndex = 33;
+            this.label18.Text = "Costo Totale";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
             // 
@@ -844,7 +956,7 @@
             this.groupBoxQI.Controls.Add(this.QIcostomac);
             this.groupBoxQI.Controls.Add(this.label8);
             this.groupBoxQI.Controls.Add(this.label4);
-            this.groupBoxQI.Location = new System.Drawing.Point(785, 572);
+            this.groupBoxQI.Location = new System.Drawing.Point(1053, 572);
             this.groupBoxQI.Name = "groupBoxQI";
             this.groupBoxQI.Size = new System.Drawing.Size(435, 210);
             this.groupBoxQI.TabIndex = 22;
@@ -953,39 +1065,39 @@
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.Honeydew;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Honeydew;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.Gold;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gold;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView.EnableHeadersVisualStyles = false;
             this.dataGridView.GridColor = System.Drawing.Color.Black;
             this.dataGridView.Location = new System.Drawing.Point(13, 246);
             this.dataGridView.Name = "dataGridView";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.Lime;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.White;
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Lime;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
-            this.dataGridView.Size = new System.Drawing.Size(1208, 320);
+            this.dataGridView.Size = new System.Drawing.Size(1476, 320);
             this.dataGridView.TabIndex = 24;
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             // 
@@ -1000,7 +1112,7 @@
             // textBoxVariazioneLav
             // 
             this.textBoxVariazioneLav.Enabled = false;
-            this.textBoxVariazioneLav.Location = new System.Drawing.Point(863, 166);
+            this.textBoxVariazioneLav.Location = new System.Drawing.Point(866, 166);
             this.textBoxVariazioneLav.MaxLength = 18;
             this.textBoxVariazioneLav.Name = "textBoxVariazioneLav";
             this.textBoxVariazioneLav.Size = new System.Drawing.Size(77, 30);
@@ -1012,7 +1124,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(671, 169);
+            this.label9.Location = new System.Drawing.Point(674, 169);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(186, 24);
             this.label9.TabIndex = 27;
@@ -1022,17 +1134,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(1235, 791);
+            this.ClientSize = new System.Drawing.Size(1503, 791);
             this.Controls.Add(this.textBoxVariazioneLav);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.groupBoxQI);
-            this.Controls.Add(this.groupBoxTotPerQuant);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBoxCliente);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.textBoxNote);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxVariazione);
@@ -1046,12 +1157,15 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.groupBoxQI);
+            this.Controls.Add(this.groupBoxTotPerQuant);
             this.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1251, 824);
             this.Name = "Form1";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "Preventivazione Rapida";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TerminaProgramma);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
@@ -1062,8 +1176,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TerminaProgramma);
-
 
         }
 
@@ -1144,6 +1256,15 @@
         private System.Windows.Forms.Label labelIDpreventivo;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Button buttonStampa;
+        private System.Windows.Forms.Button buttonModificaQuantita;
+        private System.Windows.Forms.Label RicavoSing1;
+        private System.Windows.Forms.Label CostoSing1;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label RicavoSing2;
+        private System.Windows.Forms.Label CostoSing2;
+        private System.Windows.Forms.Label RicavoSing3;
+        private System.Windows.Forms.Label CostoSing3;
     }
 }
 

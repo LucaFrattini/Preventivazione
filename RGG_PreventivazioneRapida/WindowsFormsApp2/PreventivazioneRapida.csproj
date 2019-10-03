@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>LOGO COMPUTER SRL_SMALL.ico</ApplicationIcon>
+    <ApplicationIcon>iconfinder_Document_Contract_1215327 %281%29.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HelperLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -69,6 +69,12 @@
     </Compile>
     <Compile Include="ConfermaSalvataggio.Designer.cs">
       <DependentUpon>ConfermaSalvataggio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModificaQuantita.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModificaQuantita.Designer.cs">
+      <DependentUpon>ModificaQuantita.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -107,6 +113,9 @@
     <EmbeddedResource Include="InserisciRigo.resx">
       <DependentUpon>InserisciRigo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ModificaQuantita.resx">
+      <DependentUpon>ModificaQuantita.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -129,7 +138,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="HelpXML_PreventivazioneRapida\Help_clienti_RGG.xml">
@@ -147,8 +158,11 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="HelpXML_PreventivazioneRapida\Help_centro_RGG.xml" />
-    <Content Include="HelpXML_PreventivazioneRapida\Help_lavorazioniesterne_RGG.xml" />
+    <Content Include="HelpXML_PreventivazioneRapida\Help_lavorazioniesterne_RGG.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="HelpXML_PreventivazioneRapida\Help_centroesterno_RGG.xml" />
+    <Content Include="iconfinder_Document_Contract_1215327 %281%29.ico" />
     <Content Include="LOGO COMPUTER SRL_SMALL.ico" />
     <Content Include="PreventivazioneRapidaConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -3,25 +3,20 @@
   <intestazione>Help lavorazioni esterne</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select '', codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
+    select '', tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
   </query>
 
   <queryDescrizione>
-    select '', codditt, tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
+    select '', tb_codlavo, tb_deslavo from tablavo where tb_codlavo &gt; 500
   </queryDescrizione>
   <campoRitorno>tb_codlavo</campoRitorno>
   <inserimento></inserimento>
   <modifica></modifica>
   <campi>
     <campo>
-      <nomeSql>codditt</nomeSql>
-      <descrizione>Ditta</descrizione>
-      <numerico>false</numerico>
-    </campo>
-    <campo>
       <nomeSql>tb_codlavo</nomeSql>
       <descrizione>Lavorazione</descrizione>
-      <numerico>false</numerico>
+      <numerico>true</numerico>
     </campo>
     <campo>
       <nomeSql>tb_deslavo</nomeSql>

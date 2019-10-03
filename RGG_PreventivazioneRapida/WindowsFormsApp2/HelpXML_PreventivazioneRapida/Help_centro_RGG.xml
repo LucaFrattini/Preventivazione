@@ -3,25 +3,20 @@
   <intestazione>Help centri</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select '',codditt, tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
+    select '', tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
   </query>
 
   <queryDescrizione>
-    select '',codditt, tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
+    select '', tb_codcent, tb_descent, tb_cmacoratt, tb_pagaoratt, tb_cmacora, tb_pagaora from tabcent where tb_codcent &lt; 500
   </queryDescrizione>
   <campoRitorno>tb_codcent</campoRitorno>
   <inserimento></inserimento>
   <modifica></modifica>
   <campi>
     <campo>
-      <nomeSql>codditt</nomeSql>
-      <descrizione>Ditta</descrizione>
-      <numerico>false</numerico>
-    </campo>
-    <campo>
       <nomeSql>tb_codcent</nomeSql>
       <descrizione>Codice centro</descrizione>
-      <numerico>false</numerico>
+      <numerico>true</numerico>
     </campo>
     <campo>
       <nomeSql>tb_descent</nomeSql>
@@ -32,22 +27,22 @@
     <campo>
       <nomeSql>tb_cmacoratt</nomeSql>
       <descrizione>Costo att mac</descrizione>
-      <numerico>false</numerico>
+      <numerico>true</numerico>
     </campo>
     <campo>
       <nomeSql>tb_pagaoratt</nomeSql>
       <descrizione>Costo att uomo</descrizione>
-      <numerico>false</numerico>
+      <numerico>true</numerico>
     </campo>
     <campo>
       <nomeSql>tb_cmacora</nomeSql>
       <descrizione>Costo mac</descrizione>
-      <numerico>false</numerico>
+      <numerico>true</numerico>
     </campo>
     <campo>
       <nomeSql>tb_pagaora</nomeSql>
       <descrizione>Costo uomo</descrizione>
-      <numerico>false</numerico>
+      <numerico>true</numerico>
     </campo>
   </campi>
 </help>

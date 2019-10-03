@@ -8,57 +8,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Preventivazione_RGG
 {
-    public partial class ConfermaSalvataggio : Form
+    public partial class ModificaQuantita : Form
     {
-        string codArticoloOriginale;
-        string[] valoriTestata;
-        Model m;
-        bool stampa;
-
-        public ConfermaSalvataggio(Model m, String[] valoriTestata, bool stampa)
+        Form1 f;
+        public ModificaQuantita(Form1 f)
         {
             InitializeComponent();
-            textBoxArticolo.Text = valoriTestata[1];
-            codArticoloOriginale = valoriTestata[1];
-            this.stampa = stampa;
-            this.valoriTestata = valoriTestata;
-            this.m = m;
+            numericUpDown1.Value = Int32.Parse(Setting.Istance.Q1);
+            numericUpDown2.Value = Int32.Parse(Setting.Istance.Q2);
+            numericUpDown3.Value = Int32.Parse(Setting.Istance.Q3);
+            this.f = f;
             SetFont(Setting.Istance.Font);
-
         }
 
-        private void buttonConferma_Click(object sender, EventArgs e)
+        private void Accedi_Click(object sender, EventArgs e)
         {
-            if(textBoxArticolo.Text != "")
-            {
-                try {
-                    foreach (DataRow row in m.ds.Tables["DistintaBase"].Rows)
-                    {
-                        if(row["Codice Padre"].ToString() == codArticoloOriginale)
-                        {
-                            row["Codice Padre"] = textBoxArticolo.Text;
-                        }
-                    }
-                }
-                catch { }
-                
-                valoriTestata[1] = textBoxArticolo.Text;
-                this.Close();
-                m.InsertPreventivo(valoriTestata);
-                if (stampa)
-                {
-                    string fileSTAMPA = "StampaPreventivoRGG.xml";
-                    m.ScriviXMLperStampa(fileSTAMPA, valoriTestata);
-                }
-                
-            }
-            else
-            {
-                MessageBox.Show("Indicare un codice articolo nuovo non nullo!");
-            }
+            XmlDocument doc = new XmlDocument();
+            doc.Load("PreventivazioneRapidaConfig.xml");
+            XmlNode XMLquantita = doc.SelectSingleNode("configuration/Quantita/q1");
+            XMLquantita.InnerText = numericUpDown1.Value.ToString();
+            Setting.Istance.Q1 = numericUpDown1.Value.ToString();
+            XMLquantita = doc.SelectSingleNode("configuration/Quantita/q2");
+            XMLquantita.InnerText = numericUpDown2.Value.ToString();
+            Setting.Istance.Q2 = numericUpDown2.Value.ToString();
+            XMLquantita = doc.SelectSingleNode("configuration/Quantita/q3");
+            XMLquantita.InnerText = numericUpDown3.Value.ToString();
+            Setting.Istance.Q3 = numericUpDown3.Value.ToString();
+            doc.Save("PreventivazioneRapidaConfig.xml");
+            f.CaricaQuantita();
+            this.Close();
         }
 
 
@@ -103,5 +85,5 @@ namespace Preventivazione_RGG
         }
     }
 
-
+ 
 }

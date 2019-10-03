@@ -41,9 +41,19 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioButtonLavorazioneEsterna = new System.Windows.Forms.RadioButton();
             this.groupBoxNuovo = new System.Windows.Forms.GroupBox();
+            this.textBoxUM3Nuovo = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.textBoxQuantita3Nuovo = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.textBoxUM2Nuovo = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBoxQuantita2Nuovo = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.textBoxUMNuovo = new System.Windows.Forms.TextBox();
             this.textBoxCostoLavEst = new System.Windows.Forms.TextBox();
             this.labelCostoLavEst = new System.Windows.Forms.Label();
             this.textBoxCostoTempoUomo = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.textBoxCostoTempoMac = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -69,6 +79,16 @@
             this.label5 = new System.Windows.Forms.Label();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.groupBoxImporta = new System.Windows.Forms.GroupBox();
+            this.textBoxQuantita3 = new System.Windows.Forms.TextBox();
+            this.labelQuantita3 = new System.Windows.Forms.Label();
+            this.textBoxQuantita2 = new System.Windows.Forms.TextBox();
+            this.labelQuantita2 = new System.Windows.Forms.Label();
+            this.textBoxUM3 = new System.Windows.Forms.TextBox();
+            this.labelUM3 = new System.Windows.Forms.Label();
+            this.textBoxUM2 = new System.Windows.Forms.TextBox();
+            this.labelUM2 = new System.Windows.Forms.Label();
+            this.textBoxUM = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.labelCentro = new System.Windows.Forms.Label();
             this.buttonHelpCentri = new System.Windows.Forms.Button();
             this.textBoxCentro = new System.Windows.Forms.TextBox();
@@ -236,9 +256,19 @@
             // 
             // groupBoxNuovo
             // 
+            this.groupBoxNuovo.Controls.Add(this.textBoxUM3Nuovo);
+            this.groupBoxNuovo.Controls.Add(this.label19);
+            this.groupBoxNuovo.Controls.Add(this.textBoxQuantita3Nuovo);
+            this.groupBoxNuovo.Controls.Add(this.label20);
+            this.groupBoxNuovo.Controls.Add(this.textBoxUM2Nuovo);
+            this.groupBoxNuovo.Controls.Add(this.label17);
+            this.groupBoxNuovo.Controls.Add(this.textBoxQuantita2Nuovo);
+            this.groupBoxNuovo.Controls.Add(this.label18);
+            this.groupBoxNuovo.Controls.Add(this.textBoxUMNuovo);
             this.groupBoxNuovo.Controls.Add(this.textBoxCostoLavEst);
             this.groupBoxNuovo.Controls.Add(this.labelCostoLavEst);
             this.groupBoxNuovo.Controls.Add(this.textBoxCostoTempoUomo);
+            this.groupBoxNuovo.Controls.Add(this.label8);
             this.groupBoxNuovo.Controls.Add(this.label16);
             this.groupBoxNuovo.Controls.Add(this.textBoxCostoTempoMac);
             this.groupBoxNuovo.Controls.Add(this.label15);
@@ -265,16 +295,106 @@
             this.groupBoxNuovo.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.groupBoxNuovo.Location = new System.Drawing.Point(15, 247);
             this.groupBoxNuovo.Name = "groupBoxNuovo";
-            this.groupBoxNuovo.Size = new System.Drawing.Size(550, 304);
+            this.groupBoxNuovo.Size = new System.Drawing.Size(550, 413);
             this.groupBoxNuovo.TabIndex = 28;
             this.groupBoxNuovo.TabStop = false;
             this.groupBoxNuovo.Text = "Inserisci un nuovo articolo:";
             this.groupBoxNuovo.Visible = false;
             // 
+            // textBoxUM3Nuovo
+            // 
+            this.textBoxUM3Nuovo.Location = new System.Drawing.Point(249, 224);
+            this.textBoxUM3Nuovo.MaxLength = 18;
+            this.textBoxUM3Nuovo.Name = "textBoxUM3Nuovo";
+            this.textBoxUM3Nuovo.Size = new System.Drawing.Size(77, 30);
+            this.textBoxUM3Nuovo.TabIndex = 59;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.label19.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label19.Location = new System.Drawing.Point(188, 230);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(56, 24);
+            this.label19.TabIndex = 58;
+            this.label19.Text = "UM 3:";
+            // 
+            // textBoxQuantita3Nuovo
+            // 
+            this.textBoxQuantita3Nuovo.Location = new System.Drawing.Point(105, 224);
+            this.textBoxQuantita3Nuovo.MaxLength = 18;
+            this.textBoxQuantita3Nuovo.Name = "textBoxQuantita3Nuovo";
+            this.textBoxQuantita3Nuovo.Size = new System.Drawing.Size(77, 30);
+            this.textBoxQuantita3Nuovo.TabIndex = 57;
+            this.textBoxQuantita3Nuovo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.label20.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label20.Location = new System.Drawing.Point(6, 230);
+            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(91, 24);
+            this.label20.TabIndex = 56;
+            this.label20.Text = "Quantità 3:";
+            // 
+            // textBoxUM2Nuovo
+            // 
+            this.textBoxUM2Nuovo.Location = new System.Drawing.Point(249, 188);
+            this.textBoxUM2Nuovo.MaxLength = 18;
+            this.textBoxUM2Nuovo.Name = "textBoxUM2Nuovo";
+            this.textBoxUM2Nuovo.Size = new System.Drawing.Size(77, 30);
+            this.textBoxUM2Nuovo.TabIndex = 55;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.label17.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label17.Location = new System.Drawing.Point(188, 194);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(56, 24);
+            this.label17.TabIndex = 54;
+            this.label17.Text = "UM 2:";
+            // 
+            // textBoxQuantita2Nuovo
+            // 
+            this.textBoxQuantita2Nuovo.Location = new System.Drawing.Point(105, 188);
+            this.textBoxQuantita2Nuovo.MaxLength = 18;
+            this.textBoxQuantita2Nuovo.Name = "textBoxQuantita2Nuovo";
+            this.textBoxQuantita2Nuovo.Size = new System.Drawing.Size(77, 30);
+            this.textBoxQuantita2Nuovo.TabIndex = 53;
+            this.textBoxQuantita2Nuovo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.label18.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label18.Location = new System.Drawing.Point(6, 194);
+            this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(91, 24);
+            this.label18.TabIndex = 52;
+            this.label18.Text = "Quantità 2:";
+            // 
+            // textBoxUMNuovo
+            // 
+            this.textBoxUMNuovo.Location = new System.Drawing.Point(249, 80);
+            this.textBoxUMNuovo.MaxLength = 18;
+            this.textBoxUMNuovo.Name = "textBoxUMNuovo";
+            this.textBoxUMNuovo.Size = new System.Drawing.Size(77, 30);
+            this.textBoxUMNuovo.TabIndex = 51;
+            // 
             // textBoxCostoLavEst
             // 
             this.textBoxCostoLavEst.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoLavEst.Location = new System.Drawing.Point(461, 116);
+            this.textBoxCostoLavEst.Location = new System.Drawing.Point(461, 152);
             this.textBoxCostoLavEst.MaxLength = 18;
             this.textBoxCostoLavEst.Name = "textBoxCostoLavEst";
             this.textBoxCostoLavEst.Size = new System.Drawing.Size(77, 30);
@@ -286,7 +406,7 @@
             this.labelCostoLavEst.AutoSize = true;
             this.labelCostoLavEst.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.labelCostoLavEst.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelCostoLavEst.Location = new System.Drawing.Point(398, 122);
+            this.labelCostoLavEst.Location = new System.Drawing.Point(398, 158);
             this.labelCostoLavEst.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelCostoLavEst.Name = "labelCostoLavEst";
             this.labelCostoLavEst.Size = new System.Drawing.Size(58, 24);
@@ -296,19 +416,31 @@
             // textBoxCostoTempoUomo
             // 
             this.textBoxCostoTempoUomo.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoTempoUomo.Location = new System.Drawing.Point(371, 257);
+            this.textBoxCostoTempoUomo.Location = new System.Drawing.Point(374, 365);
             this.textBoxCostoTempoUomo.MaxLength = 18;
             this.textBoxCostoTempoUomo.Name = "textBoxCostoTempoUomo";
             this.textBoxCostoTempoUomo.Size = new System.Drawing.Size(167, 30);
             this.textBoxCostoTempoUomo.TabIndex = 41;
             this.textBoxCostoTempoUomo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.label8.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label8.Location = new System.Drawing.Point(202, 86);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(42, 24);
+            this.label8.TabIndex = 50;
+            this.label8.Text = "UM:";
+            // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label16.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label16.Location = new System.Drawing.Point(308, 263);
+            this.label16.Location = new System.Drawing.Point(311, 371);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(58, 24);
@@ -318,7 +450,7 @@
             // textBoxCostoTempoMac
             // 
             this.textBoxCostoTempoMac.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoTempoMac.Location = new System.Drawing.Point(371, 224);
+            this.textBoxCostoTempoMac.Location = new System.Drawing.Point(374, 332);
             this.textBoxCostoTempoMac.MaxLength = 18;
             this.textBoxCostoTempoMac.Name = "textBoxCostoTempoMac";
             this.textBoxCostoTempoMac.Size = new System.Drawing.Size(167, 30);
@@ -330,7 +462,7 @@
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label15.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label15.Location = new System.Drawing.Point(308, 230);
+            this.label15.Location = new System.Drawing.Point(311, 338);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(58, 24);
@@ -340,7 +472,7 @@
             // textBoxCostoSetupUomo
             // 
             this.textBoxCostoSetupUomo.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoSetupUomo.Location = new System.Drawing.Point(371, 188);
+            this.textBoxCostoSetupUomo.Location = new System.Drawing.Point(374, 296);
             this.textBoxCostoSetupUomo.MaxLength = 18;
             this.textBoxCostoSetupUomo.Name = "textBoxCostoSetupUomo";
             this.textBoxCostoSetupUomo.Size = new System.Drawing.Size(167, 30);
@@ -352,7 +484,7 @@
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label14.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label14.Location = new System.Drawing.Point(308, 194);
+            this.label14.Location = new System.Drawing.Point(311, 302);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(58, 24);
@@ -362,7 +494,7 @@
             // textBoxTempoUomo
             // 
             this.textBoxTempoUomo.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxTempoUomo.Location = new System.Drawing.Point(124, 260);
+            this.textBoxTempoUomo.Location = new System.Drawing.Point(127, 368);
             this.textBoxTempoUomo.MaxLength = 18;
             this.textBoxTempoUomo.Name = "textBoxTempoUomo";
             this.textBoxTempoUomo.Size = new System.Drawing.Size(162, 30);
@@ -374,7 +506,7 @@
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label13.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label13.Location = new System.Drawing.Point(2, 266);
+            this.label13.Location = new System.Drawing.Point(5, 374);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(117, 24);
@@ -384,7 +516,7 @@
             // textBoxTempoMac
             // 
             this.textBoxTempoMac.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxTempoMac.Location = new System.Drawing.Point(124, 224);
+            this.textBoxTempoMac.Location = new System.Drawing.Point(127, 332);
             this.textBoxTempoMac.MaxLength = 18;
             this.textBoxTempoMac.Name = "textBoxTempoMac";
             this.textBoxTempoMac.Size = new System.Drawing.Size(162, 30);
@@ -396,7 +528,7 @@
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label12.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label12.Location = new System.Drawing.Point(2, 230);
+            this.label12.Location = new System.Drawing.Point(5, 338);
             this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(104, 24);
@@ -406,7 +538,7 @@
             // textBoxSetupUomo
             // 
             this.textBoxSetupUomo.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxSetupUomo.Location = new System.Drawing.Point(124, 188);
+            this.textBoxSetupUomo.Location = new System.Drawing.Point(127, 296);
             this.textBoxSetupUomo.MaxLength = 18;
             this.textBoxSetupUomo.Name = "textBoxSetupUomo";
             this.textBoxSetupUomo.Size = new System.Drawing.Size(162, 30);
@@ -417,7 +549,7 @@
             // 
             this.label11.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label11.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label11.Location = new System.Drawing.Point(2, 194);
+            this.label11.Location = new System.Drawing.Point(5, 302);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(108, 24);
@@ -427,7 +559,7 @@
             // textBoxCostoSetupMac
             // 
             this.textBoxCostoSetupMac.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoSetupMac.Location = new System.Drawing.Point(371, 152);
+            this.textBoxCostoSetupMac.Location = new System.Drawing.Point(374, 260);
             this.textBoxCostoSetupMac.MaxLength = 18;
             this.textBoxCostoSetupMac.Name = "textBoxCostoSetupMac";
             this.textBoxCostoSetupMac.Size = new System.Drawing.Size(167, 30);
@@ -439,7 +571,7 @@
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label10.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label10.Location = new System.Drawing.Point(308, 158);
+            this.label10.Location = new System.Drawing.Point(311, 266);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(58, 24);
@@ -449,7 +581,7 @@
             // textBoxSetupMac
             // 
             this.textBoxSetupMac.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxSetupMac.Location = new System.Drawing.Point(124, 152);
+            this.textBoxSetupMac.Location = new System.Drawing.Point(127, 260);
             this.textBoxSetupMac.MaxLength = 18;
             this.textBoxSetupMac.Name = "textBoxSetupMac";
             this.textBoxSetupMac.Size = new System.Drawing.Size(162, 30);
@@ -461,7 +593,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label9.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label9.Location = new System.Drawing.Point(2, 158);
+            this.label9.Location = new System.Drawing.Point(5, 266);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(95, 24);
@@ -471,7 +603,7 @@
             // textBoxCostoArticolo
             // 
             this.textBoxCostoArticolo.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxCostoArticolo.Location = new System.Drawing.Point(105, 116);
+            this.textBoxCostoArticolo.Location = new System.Drawing.Point(105, 152);
             this.textBoxCostoArticolo.MaxLength = 18;
             this.textBoxCostoArticolo.Name = "textBoxCostoArticolo";
             this.textBoxCostoArticolo.Size = new System.Drawing.Size(221, 30);
@@ -483,7 +615,7 @@
             this.labelPrezzo.AutoSize = true;
             this.labelPrezzo.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.labelPrezzo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelPrezzo.Location = new System.Drawing.Point(35, 122);
+            this.labelPrezzo.Location = new System.Drawing.Point(35, 158);
             this.labelPrezzo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelPrezzo.Name = "labelPrezzo";
             this.labelPrezzo.Size = new System.Drawing.Size(65, 24);
@@ -495,7 +627,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label7.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label7.Location = new System.Drawing.Point(2, 86);
+            this.label7.Location = new System.Drawing.Point(2, 122);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(98, 24);
@@ -516,7 +648,7 @@
             // 
             // textBoxQuantitaNuovo
             // 
-            this.textBoxQuantitaNuovo.Location = new System.Drawing.Point(461, 44);
+            this.textBoxQuantitaNuovo.Location = new System.Drawing.Point(105, 80);
             this.textBoxQuantitaNuovo.MaxLength = 18;
             this.textBoxQuantitaNuovo.Name = "textBoxQuantitaNuovo";
             this.textBoxQuantitaNuovo.Size = new System.Drawing.Size(77, 30);
@@ -527,7 +659,7 @@
             // textBoxDescrizione
             // 
             this.textBoxDescrizione.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.textBoxDescrizione.Location = new System.Drawing.Point(105, 80);
+            this.textBoxDescrizione.Location = new System.Drawing.Point(105, 116);
             this.textBoxDescrizione.MaxLength = 18;
             this.textBoxDescrizione.Name = "textBoxDescrizione";
             this.textBoxDescrizione.Size = new System.Drawing.Size(433, 30);
@@ -547,7 +679,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label5.Location = new System.Drawing.Point(379, 50);
+            this.label5.Location = new System.Drawing.Point(20, 86);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 24);
@@ -571,6 +703,16 @@
             // 
             // groupBoxImporta
             // 
+            this.groupBoxImporta.Controls.Add(this.textBoxQuantita3);
+            this.groupBoxImporta.Controls.Add(this.labelQuantita3);
+            this.groupBoxImporta.Controls.Add(this.textBoxQuantita2);
+            this.groupBoxImporta.Controls.Add(this.labelQuantita2);
+            this.groupBoxImporta.Controls.Add(this.textBoxUM3);
+            this.groupBoxImporta.Controls.Add(this.labelUM3);
+            this.groupBoxImporta.Controls.Add(this.textBoxUM2);
+            this.groupBoxImporta.Controls.Add(this.labelUM2);
+            this.groupBoxImporta.Controls.Add(this.textBoxUM);
+            this.groupBoxImporta.Controls.Add(this.label1);
             this.groupBoxImporta.Controls.Add(this.labelCentro);
             this.groupBoxImporta.Controls.Add(this.buttonHelpCentri);
             this.groupBoxImporta.Controls.Add(this.textBoxCentro);
@@ -583,9 +725,112 @@
             this.groupBoxImporta.Location = new System.Drawing.Point(15, 247);
             this.groupBoxImporta.Name = "groupBoxImporta";
             this.groupBoxImporta.Size = new System.Drawing.Size(551, 183);
-            this.groupBoxImporta.TabIndex = 25;
+            this.groupBoxImporta.TabIndex = 33;
             this.groupBoxImporta.TabStop = false;
             this.groupBoxImporta.Text = "Dichiara articolo da importare:";
+            // 
+            // textBoxQuantita3
+            // 
+            this.textBoxQuantita3.Location = new System.Drawing.Point(348, 143);
+            this.textBoxQuantita3.MaxLength = 18;
+            this.textBoxQuantita3.Name = "textBoxQuantita3";
+            this.textBoxQuantita3.Size = new System.Drawing.Size(77, 30);
+            this.textBoxQuantita3.TabIndex = 37;
+            this.textBoxQuantita3.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
+            // 
+            // labelQuantita3
+            // 
+            this.labelQuantita3.AutoSize = true;
+            this.labelQuantita3.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.labelQuantita3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelQuantita3.Location = new System.Drawing.Point(249, 149);
+            this.labelQuantita3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelQuantita3.Name = "labelQuantita3";
+            this.labelQuantita3.Size = new System.Drawing.Size(91, 24);
+            this.labelQuantita3.TabIndex = 39;
+            this.labelQuantita3.Text = "Quantità 3:";
+            // 
+            // textBoxQuantita2
+            // 
+            this.textBoxQuantita2.Location = new System.Drawing.Point(348, 108);
+            this.textBoxQuantita2.MaxLength = 18;
+            this.textBoxQuantita2.Name = "textBoxQuantita2";
+            this.textBoxQuantita2.Size = new System.Drawing.Size(77, 30);
+            this.textBoxQuantita2.TabIndex = 35;
+            this.textBoxQuantita2.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
+            // 
+            // labelQuantita2
+            // 
+            this.labelQuantita2.AutoSize = true;
+            this.labelQuantita2.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.labelQuantita2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelQuantita2.Location = new System.Drawing.Point(249, 114);
+            this.labelQuantita2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelQuantita2.Name = "labelQuantita2";
+            this.labelQuantita2.Size = new System.Drawing.Size(91, 24);
+            this.labelQuantita2.TabIndex = 37;
+            this.labelQuantita2.Text = "Quantità 2:";
+            // 
+            // textBoxUM3
+            // 
+            this.textBoxUM3.Location = new System.Drawing.Point(84, 143);
+            this.textBoxUM3.MaxLength = 18;
+            this.textBoxUM3.Name = "textBoxUM3";
+            this.textBoxUM3.Size = new System.Drawing.Size(77, 30);
+            this.textBoxUM3.TabIndex = 36;
+            // 
+            // labelUM3
+            // 
+            this.labelUM3.AutoSize = true;
+            this.labelUM3.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.labelUM3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelUM3.Location = new System.Drawing.Point(2, 149);
+            this.labelUM3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelUM3.Name = "labelUM3";
+            this.labelUM3.Size = new System.Drawing.Size(56, 24);
+            this.labelUM3.TabIndex = 35;
+            this.labelUM3.Text = "UM 3:";
+            // 
+            // textBoxUM2
+            // 
+            this.textBoxUM2.Location = new System.Drawing.Point(84, 108);
+            this.textBoxUM2.MaxLength = 18;
+            this.textBoxUM2.Name = "textBoxUM2";
+            this.textBoxUM2.Size = new System.Drawing.Size(77, 30);
+            this.textBoxUM2.TabIndex = 34;
+            // 
+            // labelUM2
+            // 
+            this.labelUM2.AutoSize = true;
+            this.labelUM2.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.labelUM2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelUM2.Location = new System.Drawing.Point(2, 114);
+            this.labelUM2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelUM2.Name = "labelUM2";
+            this.labelUM2.Size = new System.Drawing.Size(56, 24);
+            this.labelUM2.TabIndex = 33;
+            this.labelUM2.Text = "UM 2:";
+            // 
+            // textBoxUM
+            // 
+            this.textBoxUM.Location = new System.Drawing.Point(461, 25);
+            this.textBoxUM.MaxLength = 18;
+            this.textBoxUM.Name = "textBoxUM";
+            this.textBoxUM.Size = new System.Drawing.Size(77, 30);
+            this.textBoxUM.TabIndex = 32;
+            this.textBoxUM.Text = "NR";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label1.Location = new System.Drawing.Point(379, 31);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 24);
+            this.label1.TabIndex = 31;
+            this.label1.Text = "UM:";
             // 
             // labelCentro
             // 
@@ -628,11 +873,11 @@
             // 
             // textBoxQuantita
             // 
-            this.textBoxQuantita.Location = new System.Drawing.Point(461, 47);
+            this.textBoxQuantita.Location = new System.Drawing.Point(461, 58);
             this.textBoxQuantita.MaxLength = 18;
             this.textBoxQuantita.Name = "textBoxQuantita";
             this.textBoxQuantita.Size = new System.Drawing.Size(77, 30);
-            this.textBoxQuantita.TabIndex = 27;
+            this.textBoxQuantita.TabIndex = 33;
             this.textBoxQuantita.Text = "1";
             this.textBoxQuantita.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
@@ -641,7 +886,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label4.Location = new System.Drawing.Point(379, 53);
+            this.label4.Location = new System.Drawing.Point(379, 64);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(77, 24);
@@ -683,6 +928,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBox);
             this.Controls.Add(this.label2);
+            this.MinimumSize = new System.Drawing.Size(598, 530);
             this.Name = "InserisciRigo";
             this.Text = "Inserisci Rigo";
             this.groupBox1.ResumeLayout(false);
@@ -748,5 +994,25 @@
         private System.Windows.Forms.RadioButton radioButtonLavorazioneEsterna;
         private System.Windows.Forms.TextBox textBoxCostoLavEst;
         private System.Windows.Forms.Label labelCostoLavEst;
+        private System.Windows.Forms.TextBox textBoxQuantita3;
+        private System.Windows.Forms.Label labelQuantita3;
+        private System.Windows.Forms.TextBox textBoxQuantita2;
+        private System.Windows.Forms.Label labelQuantita2;
+        private System.Windows.Forms.TextBox textBoxUM3;
+        private System.Windows.Forms.Label labelUM3;
+        private System.Windows.Forms.TextBox textBoxUM2;
+        private System.Windows.Forms.Label labelUM2;
+        private System.Windows.Forms.TextBox textBoxUM;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBoxUM2Nuovo;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox textBoxQuantita2Nuovo;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox textBoxUMNuovo;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBoxUM3Nuovo;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox textBoxQuantita3Nuovo;
+        private System.Windows.Forms.Label label20;
     }
 }

@@ -3,13 +3,13 @@
   <intestazione>Help preventivi</intestazione>
   <tipodatabase>SQLSERVER</tipodatabase>
   <query>
-    select '' as ciccio, id, ROW_NUMBER() OVER (partition by cliente order by cliente) as idpreventivocliente, cliente, an_descr1, articolo, totale, totalevar, datacreazione, note from preventivi
-    left join anagra on cast(cliente as varchar) = cast(an_conto as varchar) order by id desc
+    select '' as ciccio, id, ROW_NUMBER() OVER (partition by cliente order by cliente) as idpreventivocliente,  utente, cliente, an_descr1, articolo, quantita, QIcostosingolo, QIricavosingolo, totale, totalevar, datacreazione, note from preventivi
+    left join anagra on cast(cliente as varchar) = cast(an_conto as varchar)
   </query>
 
   <queryDescrizione>
-    select '' as ciccio, id, ROW_NUMBER() OVER (partition by cliente order by cliente) as idpreventivocliente, cliente, an_descr1, articolo, totale, totalevar, datacreazione, note from preventivi
-    left join anagra on cast(cliente as varchar) = cast(an_conto as varchar) order by id desc
+    select '' as ciccio, id, ROW_NUMBER() OVER (partition by cliente order by cliente) as idpreventivocliente,  utente, cliente, an_descr1, articolo, quantita, QIcostosingolo, QIricavosingolo, totale, totalevar, datacreazione, note from preventivi
+    left join anagra on cast(cliente as varchar) = cast(an_conto as varchar) 
   </queryDescrizione>
   <campoRitorno>id</campoRitorno>
   <inserimento></inserimento>
@@ -21,8 +21,8 @@
       <numerico>false</numerico>
     </campo>
     <campo>
-      <nomeSql>idpreventivocliente</nomeSql>
-      <descrizione>ID preventivo/cliente</descrizione>
+      <nomeSql>utente</nomeSql>
+      <descrizione>Utente</descrizione>
       <numerico>false</numerico>
     </campo>
     <campo>
@@ -42,13 +42,28 @@
       <numerico>false</numerico>
     </campo>
     <campo>
+      <nomeSql>quantita</nomeSql>
+      <descrizione>Quantità</descrizione>
+      <numerico>true</numerico>
+    </campo>
+    <campo>
+      <nomeSql>QIcostosingolo</nomeSql>
+      <descrizione>Costo singolo</descrizione>
+      <numerico>true</numerico>
+    </campo>
+    <campo>
+      <nomeSql>QIricavosingolo</nomeSql>
+      <descrizione>Ricavo singolo</descrizione>
+      <numerico>true</numerico>
+    </campo>
+    <campo>
       <nomeSql>totale</nomeSql>
-      <descrizione>Costo</descrizione>
+      <descrizione>Costo totale</descrizione>
       <numerico>true</numerico>
     </campo>
     <campo>
       <nomeSql>totalevar</nomeSql>
-      <descrizione>Ricavo</descrizione>
+      <descrizione>Ricavo totale</descrizione>
       <numerico>true</numerico>
     </campo>
     <campo>

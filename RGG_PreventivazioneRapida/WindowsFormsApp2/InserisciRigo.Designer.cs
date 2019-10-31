@@ -731,6 +731,7 @@
             // 
             // textBoxQuantita3
             // 
+            this.textBoxQuantita3.Enabled = false;
             this.textBoxQuantita3.Location = new System.Drawing.Point(348, 143);
             this.textBoxQuantita3.MaxLength = 18;
             this.textBoxQuantita3.Name = "textBoxQuantita3";
@@ -752,6 +753,7 @@
             // 
             // textBoxQuantita2
             // 
+            this.textBoxQuantita2.Enabled = false;
             this.textBoxQuantita2.Location = new System.Drawing.Point(348, 108);
             this.textBoxQuantita2.MaxLength = 18;
             this.textBoxQuantita2.Name = "textBoxQuantita2";
@@ -773,6 +775,7 @@
             // 
             // textBoxUM3
             // 
+            this.textBoxUM3.Enabled = false;
             this.textBoxUM3.Location = new System.Drawing.Point(84, 143);
             this.textBoxUM3.MaxLength = 18;
             this.textBoxUM3.Name = "textBoxUM3";
@@ -793,6 +796,7 @@
             // 
             // textBoxUM2
             // 
+            this.textBoxUM2.Enabled = false;
             this.textBoxUM2.Location = new System.Drawing.Point(84, 108);
             this.textBoxUM2.MaxLength = 18;
             this.textBoxUM2.Name = "textBoxUM2";

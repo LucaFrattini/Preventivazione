@@ -185,6 +185,7 @@ namespace PreventivazioneRapida
             float.TryParse(font.Split('-')[1], out fontSize);
 
             Font f = new Font(fontFamil, fontSize);
+            Font bold = new Font(fontFamil, fontSize, FontStyle.Bold);
             // this.Font = f;
             //MessageBox.Show( this.groupBox1.Controls.ToString());
             if (f != null)
@@ -207,12 +208,17 @@ namespace PreventivazioneRapida
                 }
                 foreach(Control c in groupBoxQI.Controls)
                 {
-                    c.Font = f;
+                    if(c.Name=="label24" || c.Name == "QIRicavoSingolo")
+                    {
+                        c.Font = bold;
+                    }
+                    else
+                    {
+                        c.Font = f;
+                    }
                 }
                 //this.dataGridView.Font = f;
             }
-
-
         }
 
         /// <summary>
@@ -754,6 +760,14 @@ namespace PreventivazioneRapida
                     c.Height = c.Height + size;
                     c.Width = c.Width + size;
                     c.Font = new Font(c.Font.FontFamily, c.Font.Size + size);
+                    if (c.Name == "label15")
+                    {
+                        c.Font = new Font(c.Font.FontFamily, c.Font.Size + size, FontStyle.Bold);
+                    }
+                    else
+                    {
+                        c.Font = new Font(c.Font.FontFamily, c.Font.Size + size);
+                    }
                 }
             }
             foreach (Control c in groupBoxQI.Controls)
@@ -762,7 +776,14 @@ namespace PreventivazioneRapida
                 {
                     c.Height = c.Height + size;
                     c.Width = c.Width + size;
-                    c.Font = new Font(c.Font.FontFamily, c.Font.Size + size);
+                    if (c.Name == "label24" || c.Name == "QIRicavoSingolo")
+                    {
+                        c.Font = new Font(c.Font.FontFamily, c.Font.Size + size, FontStyle.Bold);
+                    }
+                    else
+                    {
+                        c.Font = new Font(c.Font.FontFamily, c.Font.Size + size);
+                    }
                 }
             }
             try
@@ -1193,12 +1214,31 @@ namespace PreventivazioneRapida
                     }
                     else
                     {
-                        r[colindex] = r[colindex].ToString() + ",0000";
+                        /*r[colindex] = r[colindex].ToString() + ",0000";*/
+                        //SE LENGTH = 6 ALLORA SPLITTA I PRIMI 2 CARATTERI E METTI LA VIRGOLA... ANCHE SE LENGTH = 4
+                        if(r[colindex].ToString().Length == 4 || r[colindex].ToString().Length == 6)
+                        {
+                            r[colindex] = Int32.Parse(r[colindex].ToString().Substring(0, 2)).ToString() + "," + (r[colindex].ToString().Length == 6? r[colindex].ToString().Substring(2) : r[colindex].ToString().Substring(2) + "00");
+                        }else if(r[colindex].ToString().Length == 2)
+                        {
+                            r[colindex] = Int32.Parse(r[colindex].ToString()).ToString() + ",0000";
+                        }
+                        else
+                        {
+                            r[colindex] = Int32.Parse(r[colindex].ToString()).ToString();
+                        }
                     }
+                }
+                else if (r[colindex].ToString().IndexOf(',') != r[colindex].ToString().LastIndexOf(','))
+                {
+                    MessageBox.Show("Il valore inserito non è valido!\nI formati consentiti sono della forma:\nHH - HHMM - HHMMSS - HHH\nHH,MM - HH,MMSS - HHH,MM - HHH,MMSS\nHH.MM - HH.MMSS - HHH.MM - HHH.MMSS");
+                    r[colindex] = "0";
                 }
                 else
                 {
                     int aggiungizeri = r[colindex].ToString().Substring(r[colindex].ToString().IndexOf(',')).Length;
+                    string decimaliAppoggio = r[colindex].ToString().Substring(r[colindex].ToString().IndexOf(','));
+                    r[colindex] = Int32.Parse(r[colindex].ToString().Substring(0, r[colindex].ToString().IndexOf(','))).ToString() + r[colindex].ToString().Substring(r[colindex].ToString().IndexOf(','));
                     if (colindex > 11 && colindex != 16)
                     {
                         for(int z = aggiungizeri; z <= 4; z++)

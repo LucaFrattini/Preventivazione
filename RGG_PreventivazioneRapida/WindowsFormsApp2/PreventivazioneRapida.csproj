@@ -64,6 +64,7 @@
     <Compile Include="CaricaPreventivo.Designer.cs">
       <DependentUpon>CaricaPreventivo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Class1.cs" />
     <Compile Include="ConfermaSalvataggio.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +101,7 @@
     <Compile Include="Setting.cs" />
     <EmbeddedResource Include="CaricaPreventivo.resx">
       <DependentUpon>CaricaPreventivo.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

@@ -52,6 +52,7 @@ namespace Preventivazione_RGG
                         MessageBox.Show("Utente e password non corrispondono!");
                     }
                 }
+                connection.Close();
             }
             else
             {

@@ -128,7 +128,8 @@ namespace WindowsFormsApp2
         }
 
         /// <summary>
-        /// Funzione che serve solo per la convalida degli input nelle textbox e trasforma il '.' in ','
+        /// Funzione che serve solo per la convalida degli input nelle textbox e trasforma il '.' in 
+        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -255,7 +256,10 @@ namespace WindowsFormsApp2
         }
 
         /// <summary>
-        /// Evento checkchanged. Ad ogni selezione diversa la form farà visualizzare dettagli specifici.
+        /// Evento check
+        /// 
+        /// . Ad ogni selezione diversa la 
+        /// farà visualizzare dettagli specifici.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

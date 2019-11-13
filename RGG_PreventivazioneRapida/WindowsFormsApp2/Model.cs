@@ -22,6 +22,8 @@ namespace PreventivazioneRapida
         public DataSet ds;
         //private DataTable Articoli, Clienti;
         private static SqlConnection sqlserverConn;
+        //lock
+        private readonly object connectionLock = new object();
 
         /// <summary>
         /// Funzione costruttore per inizializzare il dataset.
@@ -59,6 +61,8 @@ namespace PreventivazioneRapida
                     listaClienti.Add(cliente);
                 }
                 Clienti = listaClienti.ToArray();*/
+                //sqlserverConn = new SqlConnection(Setting.Istance.ConnStr);
+                sqlserverConn.Open();
             }
             catch
             {
@@ -164,17 +168,21 @@ namespace PreventivazioneRapida
         public int VerificaSemilavorato(DataRow row)
         {
             SqlDataAdapter da;
-            sqlserverConn.Open();
             try
             {
-                string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", row["CODICE ART"].ToString());
-                da = new SqlDataAdapter(distintaBase, sqlserverConn);
-                if (ds.Tables["DistintaBase"].PrimaryKey.Length > 0)
+                int count;
+                lock (connectionLock)
                 {
-                    ds.Tables["DistintaBase"].PrimaryKey = null;
-                }
-                int count = da.Fill(ds.Tables["DistintaBase"]);
-                sqlserverConn.Close();
+                    sqlserverConn.Open();
+                    string distintaBase = Setting.Istance.QueryDistintaBase.Replace("@CodDistBase", row["CODICE ART"].ToString());
+                    da = new SqlDataAdapter(distintaBase, sqlserverConn);
+                    if (ds.Tables["DistintaBase"].PrimaryKey.Length > 0)
+                    {
+                        ds.Tables["DistintaBase"].PrimaryKey = null;
+                    }
+                    count = da.Fill(ds.Tables["DistintaBase"]);
+                    sqlserverConn.Close();
+                }               
                 return count;
             }
             catch(Exception e)
@@ -618,31 +626,39 @@ namespace PreventivazioneRapida
         /// <param name="articolo"></param>
         public void GestisciLavorazioneEsterna(DataRow rowLavorazione, string articolo)
         {
-            rowLavorazione["Codice Art"] = rowLavorazione["Descrizione art / Centro di Lavoro"].ToString();
-            string query = Setting.Istance.QueryLavorazioneEsterna.Replace("@LavorazioneCentro", rowLavorazione["Codice Centro"].ToString());
-            query = query.Replace("@LavorazioneEsterna", articolo);
-            sqlserverConn.Open();
-            string prezzo = "0";
-            using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))
+            try
             {
-                SqlDataReader dr = cmd.ExecuteReader();
-                dr.Read();
-                if (dr.HasRows)
+                lock (connectionLock)
                 {
-                    prezzo = dr[0].ToString();
+                    rowLavorazione["Codice Art"] = rowLavorazione["Descrizione art / Centro di Lavoro"].ToString();
+                    string query = Setting.Istance.QueryLavorazioneEsterna.Replace("@LavorazioneCentro", rowLavorazione["Codice Centro"].ToString());
+                    query = query.Replace("@LavorazioneEsterna", articolo);
+                    sqlserverConn.Open();
+                    string prezzo = "0";
+                    using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        dr.Read();
+                        if (dr.HasRows)
+                        {
+                            prezzo = dr[0].ToString();
+                        }
+                        dr.Close();
+                    }
+                    sqlserverConn.Close();
+                    rowLavorazione["Costo art"] = prezzo;
+                    rowLavorazione["Setup mac"] = "";
+                    rowLavorazione["Setup uomo"] = "";
+                    rowLavorazione["Tempo mac"] = "";
+                    rowLavorazione["Tempo uomo"] = "";
+                    rowLavorazione["Costo att mac"] = "";
+                    rowLavorazione["Costo att uomo"] = "";
+                    rowLavorazione["Costo mac"] = "";
+                    rowLavorazione["Costo uomo"] = "";
                 }
-                dr.Close();
             }
-            sqlserverConn.Close();
-            rowLavorazione["Costo art"] = prezzo;
-            rowLavorazione["Setup mac"] = "";
-            rowLavorazione["Setup uomo"] = "";
-            rowLavorazione["Tempo mac"] = "";
-            rowLavorazione["Tempo uomo"] = "";
-            rowLavorazione["Costo att mac"] = "";
-            rowLavorazione["Costo att uomo"] = "";
-            rowLavorazione["Costo mac"] = "";
-            rowLavorazione["Costo uomo"] = "";
+            catch { MessageBox.Show("Errore gestione lavorazione esterna."); }
+            
         }
 
         public void ScriviXMLperStampa(string fileSTAMPA, string[] valoriTestata)

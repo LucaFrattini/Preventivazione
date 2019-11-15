@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModificaQuantita));
             this.Accedi = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -113,6 +114,7 @@
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.Accedi);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(220, 250);
             this.MinimumSize = new System.Drawing.Size(220, 250);
             this.Name = "ModificaQuantita";

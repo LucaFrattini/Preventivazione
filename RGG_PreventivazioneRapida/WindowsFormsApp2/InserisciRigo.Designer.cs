@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InserisciRigo));
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox = new System.Windows.Forms.ComboBox();
             this.radioButtonAgilis = new System.Windows.Forms.RadioButton();
@@ -208,10 +209,10 @@
             this.buttonConferma.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConferma.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.buttonConferma.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConferma.Location = new System.Drawing.Point(12, 442);
+            this.buttonConferma.Location = new System.Drawing.Point(12, 481);
             this.buttonConferma.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonConferma.Name = "buttonConferma";
-            this.buttonConferma.Size = new System.Drawing.Size(559, 37);
+            this.buttonConferma.Size = new System.Drawing.Size(575, 37);
             this.buttonConferma.TabIndex = 20;
             this.buttonConferma.Text = "Conferma inserimento";
             this.buttonConferma.UseVisualStyleBackColor = false;
@@ -932,6 +933,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBox);
             this.Controls.Add(this.label2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(598, 530);
             this.Name = "InserisciRigo";
             this.Text = "Inserisci Rigo";

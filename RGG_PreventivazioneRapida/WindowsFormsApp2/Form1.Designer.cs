@@ -1108,9 +1108,12 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(358, 364);
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(24, 364);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(567, 80);
+            this.progressBar1.Size = new System.Drawing.Size(1458, 80);
             this.progressBar1.TabIndex = 25;
             this.progressBar1.Visible = false;
             // 
@@ -1137,14 +1140,16 @@
             // 
             // labelElaborazione
             // 
-            this.labelElaborazione.AutoSize = true;
-            this.labelElaborazione.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelElaborazione.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelElaborazione.Font = new System.Drawing.Font("Arial Narrow", 25F);
-            this.labelElaborazione.Location = new System.Drawing.Point(476, 314);
+            this.labelElaborazione.Location = new System.Drawing.Point(25, 314);
             this.labelElaborazione.Name = "labelElaborazione";
-            this.labelElaborazione.Size = new System.Drawing.Size(337, 42);
+            this.labelElaborazione.Size = new System.Drawing.Size(1457, 42);
             this.labelElaborazione.TabIndex = 28;
             this.labelElaborazione.Text = "...elaborazione in corso...";
+            this.labelElaborazione.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelElaborazione.Visible = false;
             // 
             // Form1

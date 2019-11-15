@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfermaSalvataggio));
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxArticolo = new System.Windows.Forms.TextBox();
             this.buttonConferma = new System.Windows.Forms.Button();
@@ -80,6 +81,7 @@
             this.Controls.Add(this.textBoxArticolo);
             this.Controls.Add(this.label2);
             this.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.MaximumSize = new System.Drawing.Size(300, 187);
             this.MinimumSize = new System.Drawing.Size(300, 187);

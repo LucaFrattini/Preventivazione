@@ -964,6 +964,5 @@ namespace WindowsFormsApp2
                 textBoxQuantita.Focus();
             }
         }
-
     }
 }

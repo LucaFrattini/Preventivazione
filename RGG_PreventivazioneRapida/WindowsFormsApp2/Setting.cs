@@ -73,6 +73,8 @@ namespace PreventivazioneRapida
 
                 this.foxitReader = xmlDoc.SelectSingleNode("configuration/FoxitReader").InnerText;
 
+                this.debugTempo = xmlDoc.SelectSingleNode("configuration/DebugTempo").InnerText;
+
                 if (xmlDoc.SelectSingleNode("configuration/FL") != null)
                 {
                     this.fontlabel = xmlDoc.SelectSingleNode("configuration/FL").InnerText;
@@ -203,5 +205,8 @@ namespace PreventivazioneRapida
 
         private string font = "";
         public string Font { get { return this.font; } }
+
+        private string debugTempo = "";
+        public string DebugTempo { get { return this.debugTempo; } }
     }
 }

@@ -235,5 +235,8 @@
   
   <!-- se TRUE esegue l'apertura del pdf con il foxitreade... altrimenti utilizza il programma predefinito-->
   <FoxitReader>FALSE</FoxitReader>
+
+  <!-- se TRUE mostra dei messaggi per monitorare la tempistica delle operazioni per esplosione distinta e cambio quantità-->
+  <DebugTempo>false</DebugTempo>
 </configuration>
 

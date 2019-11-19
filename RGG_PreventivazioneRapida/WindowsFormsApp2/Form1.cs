@@ -590,7 +590,10 @@ namespace PreventivazioneRapida
                 catch { MessageBox.Show("Errore nella creazione della distinta"); }
             }
             stopWatch.Stop();
-            MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            if(Setting.Istance.DebugTempo == "TRUE")
+            {
+                MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            }
         }
 
         /// <summary>
@@ -975,6 +978,8 @@ namespace PreventivazioneRapida
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
+            labelElaborazione.Text = "...aggiorno la nuova percentuale...";
+            this.Update();
             if (textBoxVariazione.Text == "")
             {
                 textBoxVariazione.Text = "0";
@@ -987,34 +992,41 @@ namespace PreventivazioneRapida
                 {
                     double variazioneInserita = Double.Parse(textBoxVariazione.Text);
                     double Totale, variazione;
-                    //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo
-                    for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
+                    //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo                   
+                    List<DataRow> listaFigli = new List<DataRow>();
+                    listaFigli = (from rows in m.ds.Tables["DistintaBase"].AsEnumerable() where rows["Codice Padre"].ToString() == textBoxArticolo.Text select rows).ToList();
+                    ThreadWithState tws;
+                    Thread t;
+                    List<Thread> threads = new List<Thread>();
+                    labelElaborazione.Text = "...calcolo e aggiorno la distinta base con la nuova percentuale...";
+                    this.Update();
+                    foreach (DataRow figlio in listaFigli)
                     {
-                        labelElaborazione.Text = "...calcolo totali riga " + (rowcount + 1) + " di " + (dataGridView.Rows.Count - 1 + "...");
-                        this.Update();
-                        DataGridViewRow row = dataGridView.Rows[rowcount];
                         try
                         {
-                            if (row.Cells["Totale"].ToString() != null && row.Cells["Codice Art"].Value.ToString() != "" && row.Cells["Codice centro"].Value.ToString() == "")
+                            if (figlio["Totale"].ToString() != null && figlio["Codice Art"].ToString() != "" && figlio["Codice centro"].ToString() == "")
                             {
-                                Totale = Double.Parse(row.Cells["Totale"].Value.ToString());
-                                if (rowcount!= dataGridView.Rows.Count - 2)
-                                {
-
-                                    if (row.Cells["Codice Art"].Value.ToString() != dataGridView.Rows[rowcount + 1].Cells["Codice Padre"].Value.ToString())
-                                    {
-                                        variazione = Double.Parse(textBoxVariazione.Text.Replace('.', ','));
-                                        row.Cells["Totale + %Var"].Value = Math.Round((Totale + (variazione * Totale / 100)), 2);
-                                    }
-                                }
-                                else
-                                {
-                                    variazione = Double.Parse(textBoxVariazione.Text.Replace('.', ','));
-                                    row.Cells["Totale + %Var"].Value = Math.Round((Totale + (variazione * Totale / 100)), 2);
-                                }                                     
+                                Totale = Double.Parse(figlio["Totale"].ToString());
+                                variazione = Double.Parse(textBoxVariazione.Text.Replace('.', ','));
+                                figlio["Totale + %Var"] = Math.Round((Totale + (variazione * Totale / 100)), 2);                               
                             }
                         }
                         catch { }
+                        tws = new ThreadWithState(figlio, this, m, precedenteQuantita, precedenteQuantita, Double.Parse(textBoxVariazione.Text), Double.Parse(this.variazionelav));
+
+                        // Create a thread to execute the task, and then
+                        // start the thread.
+                        t = new Thread(new ThreadStart(tws.ThreadCambiaQuantita));
+                        //t.Start();
+                        threads.Add(t);
+                    }
+                    foreach (Thread thread in threads)
+                    {
+                        thread.Start();
+                    }
+                    foreach (Thread thread in threads)
+                    {
+                        thread.Join();
                     }
                     //Infine si aggiornano i valori nella form ricalcolando il tutto
                     BindingGrid();                   
@@ -1027,7 +1039,10 @@ namespace PreventivazioneRapida
                 labelElaborazione.Visible = false;
             }
             stopWatch.Stop();
-            MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            if (Setting.Istance.DebugTempo == "TRUE")
+            {
+                MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            }
         }
 
 
@@ -1040,7 +1055,9 @@ namespace PreventivazioneRapida
         private void textBoxVariazioneLav_TextChanged(object sender, EventArgs e)
         {
             Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();            
+            stopWatch.Start();
+            labelElaborazione.Text = "...aggiorno la nuova percentuale...";
+            this.Update();
             if (textBoxVariazioneLav.Text == "")
             {
                 textBoxVariazioneLav.Text = "0";
@@ -1054,16 +1071,20 @@ namespace PreventivazioneRapida
                     double variazioneInserita = Double.Parse(textBoxVariazioneLav.Text);
                     double Totale, variazione;
                     //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo
-                    for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
+                    List<DataRow> listaFigli = new List<DataRow>();
+                    listaFigli = (from rows in m.ds.Tables["DistintaBase"].AsEnumerable() where rows["Codice Padre"].ToString() == textBoxArticolo.Text select rows).ToList();
+                    ThreadWithState tws;
+                    Thread t;
+                    List<Thread> threads = new List<Thread>();
+                    labelElaborazione.Text = "...calcolo e aggiorno la distinta base con la nuova percentuale...";
+                    this.Update();
+                    foreach (DataRow figlio in listaFigli)
                     {
-                        DataGridViewRow row = dataGridView.Rows[rowcount];
-                        labelElaborazione.Text = "...calcolo totali riga " + (rowcount + 1) + " di " + (dataGridView.Rows.Count - 1 + "...");
-                        this.Update();
                         try
                         {
-                            if ((row.Cells["Totale"].ToString() != null && row.Cells["Codice Art"].Value.ToString() == "") || Double.Parse(row.Cells["Codice Centro"].Value.ToString()) > 499)
+                            if ((figlio["Totale"].ToString() != null && figlio["Codice Art"].ToString() == "") || Double.Parse(figlio["Codice Centro"].ToString()) > 499)
                             {
-                                Totale = Double.Parse(row.Cells["Totale"].Value.ToString());
+                                Totale = Double.Parse(figlio["Totale"].ToString());
                                 if (textBoxVariazioneLav.Text != "")
                                 {
 
@@ -1073,14 +1094,29 @@ namespace PreventivazioneRapida
                                 {
                                     variazione = 0;
                                 }
-                                double toto = Math.Round((Totale + (variazione * Totale / 100)), 2);
-                                row.Cells["Totale + %Var"].Value = Math.Round((Totale + (variazione * Totale / 100)), 2);
+                                figlio["Totale + %Var"] = Math.Round((Totale + (variazione * Totale / 100)), 2);
                             }
                         }
                         catch { }
+                        tws = new ThreadWithState(figlio, this, m, precedenteQuantita, precedenteQuantita, Double.Parse(this.variazione), Double.Parse(textBoxVariazioneLav.Text));
+
+                        // Create a thread to execute the task, and then
+                        // start the thread.
+                        t = new Thread(new ThreadStart(tws.ThreadCambiaQuantita));
+                        //t.Start();
+                        threads.Add(t);
+                    }
+                    foreach (Thread thread in threads)
+                    {
+                        thread.Start();
+                    }
+                    foreach (Thread thread in threads)
+                    {
+                        thread.Join();
                     }
                     //Infine si aggiornano i valori nella form ricalcolando il tutto
-                    BindingGrid();                   
+                    BindingGrid();
+                    this.variazionelav = textBoxVariazioneLav.Text;
                 }
                 catch
                 {
@@ -1090,7 +1126,10 @@ namespace PreventivazioneRapida
                 labelElaborazione.Visible = false;
             }
             stopWatch.Stop();
-            MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            if (Setting.Istance.DebugTempo == "TRUE")
+            {
+                MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            }
         }
 
         /// <summary>
@@ -1104,80 +1143,6 @@ namespace PreventivazioneRapida
             inserisciRigo.Show();
         }
 
-        /// <summary>
-        /// Funzione per modificare la quantità richiesta dall'utente, quindi vado a modificare ogni quantità delle lavorazioni, semilavorati e materie prime.
-        /// Eseguo di nuovo tutti i calcoli per calcolarmi i costi e i totali e aggiorno la form.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /*private void textBoxQuantita_TextChanged(object sender, EventArgs e)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();            
-            if (textBoxQuantita.Text != quantita)
-            {
-                dataGridView.Visible = false;
-                labelElaborazione.Visible = true;
-                try
-                {
-                    double quantitaNuova;
-                    if (textBoxQuantita.Text == "" || textBoxQuantita.Text == "0" || textBoxQuantita.Text == "0.")
-                    {
-                        quantitaNuova = 1;
-                    }
-                    else
-                    {
-                        quantitaNuova = Double.Parse(textBoxQuantita.Text.Replace('.', ','));
-                    }
-                    double quantitaPrecedente = 1;
-                    if (dataGridView.Rows.Count > 0)
-                    {
-                        //Solito ciclo che scorre il dataset, cerca le righe interessate e va a modificare il valore del giusto campo
-                        for (int rowcount = 0; rowcount <= dataGridView.Rows.Count - 2; rowcount++)
-                        {
-                            labelElaborazione.Text = "...calcolo totali riga " + (rowcount + 1) + " di " + (dataGridView.Rows.Count - 1+"...");
-                            this.Update();
-                            //Thread.Sleep(100);
-                            DataGridViewRow row = dataGridView.Rows[rowcount];
-                            quantitaPrecedente = Double.Parse(row.Cells["Quantita` 1"].Value.ToString());
-                            row.Cells["Quantita` 1"].Value = Math.Round(Double.Parse(row.Cells["Quantita` 1"].Value.ToString()) / precedenteQuantita * quantitaNuova, 4);
-                            if((row.Cells["Qta 2"].Value.ToString() != ""))
-                            {
-                                quantitaPrecedente = Double.Parse(row.Cells["Qta 2"].Value.ToString());
-                                row.Cells["Qta 2"].Value = Math.Round(Double.Parse(row.Cells["Qta 2"].Value.ToString()) / precedenteQuantita * quantitaNuova, 4);
-                            }
-                            if ((row.Cells["Qta 3"].Value.ToString() != ""))
-                            {
-                                quantitaPrecedente = Double.Parse(row.Cells["Qta 3"].Value.ToString());
-                                row.Cells["Qta 3"].Value = Math.Round(Double.Parse(row.Cells["Qta 3"].Value.ToString()) / precedenteQuantita * quantitaNuova, 4);
-                            }
-                        }
-                        List<String> query = new List<string>();
-                        labelElaborazione.Text = "...calcolo e aggiornamento semilavorati...";
-                        this.Update();
-                        query = (from rows in m.ds.Tables["DistintaBase"].AsEnumerable() where !(from rroowwss in m.ds.Tables["DistintaBase"].AsEnumerable() select rroowwss["Codice Padre"].ToString().Distinct()).Contains(rows["Codice Art"].ToString()) && rows["Codice Padre"].ToString() != textBoxArticolo.Text orderby FindNumberOfChar(',', rows["Rigo"].ToString()) descending select rows["Rigo"].ToString().Substring(0, rows["Rigo"].ToString().LastIndexOf(',')+1)).Distinct().ToList();
-                        foreach (String foglia in query)
-                        {
-                            DataRow rigoFoglia = (from rows in m.ds.Tables["DistintaBase"].AsEnumerable() where rows["Rigo"].ToString() == foglia+"1" select rows).ToList().First();
-                            AggiornaParentela(rigoFoglia);
-                        }
-                        //Mi tengo salvato la quantità precedente in modo da eseguire i calcoli corretti. 
-                        BindingGrid();
-                        
-                    }
-                    precedenteQuantita = quantitaNuova;
-                    groupBoxQI.Text = "Quantità impostata: " + quantitaNuova;                   
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show("Il valore inserito non è valido!\n"+ex);
-                }
-                dataGridView.Visible = true;
-                labelElaborazione.Visible = false;
-            }
-            stopWatch.Stop();
-            MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
-        }*/
 
         /// <summary>
         /// Funzione per modificare la quantità richiesta dall'utente, quindi vado a modificare ogni quantità delle lavorazioni, semilavorati e materie prime.
@@ -1259,7 +1224,10 @@ namespace PreventivazioneRapida
                 labelElaborazione.Visible = false;
             }
             stopWatch.Stop();
-            MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            if (Setting.Istance.DebugTempo == "TRUE")
+            {
+                MessageBox.Show("Fine:" + stopWatch.Elapsed.ToString());
+            }
         }
 
 
@@ -1269,32 +1237,49 @@ namespace PreventivazioneRapida
             {
                 List<DataRow> listaFigli = new List<DataRow>();
                 listaFigli = (from rows in m.ds.Tables["DistintaBase"].AsEnumerable() where rows["Codice Padre"].ToString() == rowpadre["Codice Art"].ToString() select rows).ToList();
+                double quantitaNuova = Double.Parse(textBoxQuantita.Text);
+                double variazioneNuova = Double.Parse(textBoxVariazione.Text);
+                double variazionelavNuova = Double.Parse(textBoxVariazioneLav.Text);
                 if (listaFigli.Count > 0)
                 {
                     //Inizializzo le variabili per poter estrarre il costo totale del padre dalla somma dei costi dei figli.
                     double totalePadre = 0, totalevarPadre = 0;
                     double quantitaPrecedente = 1;
-                    double quantitaNuova = Double.Parse(textBoxQuantita.Text);
+                    //Ogni volta che trovo un figlio, quindi che il codice articolo "padre" corrisponde al codice padre delle DataRow che sto scorrendo nel Dataset,
+                    //faccio il richiamo di questa stessa funzione in modalità ricorsiva. Inoltre setto il rowindex che mi permette di capire la gerarchia e i livelli
+                    //dei vari figli e della distinta base, aggiorno il valore del costo del padre e quindi proseguo con la ricerca.                        
+                    //In base se il "padre" è un articolo o una lavorazione effettuo dei calcoli diversi per poter calcolare i costi totali del rigo.
+
                     foreach (DataRow figlio in listaFigli)
                     {
-                        //Ogni volta che trovo un figlio, quindi che il codice articolo "padre" corrisponde al codice padre delle DataRow che sto scorrendo nel Dataset,
-                        //faccio il richiamo di questa stessa funzione in modalità ricorsiva. Inoltre setto il rowindex che mi permette di capire la gerarchia e i livelli
-                        //dei vari figli e della distinta base, aggiorno il valore del costo del padre e quindi proseguo con la ricerca.
-                        quantitaPrecedente = Double.Parse(figlio["Quantita` 1"].ToString());
-                        figlio["Quantita` 1"] = Math.Round(Double.Parse(figlio["Quantita` 1"].ToString()) / precedenteQuantita * quantitaNuova, 4);
-                        if ((figlio["Qta 2"].ToString() != ""))
+                        if (this.variazione != textBoxVariazione.Text)
                         {
-                            quantitaPrecedente = Double.Parse(figlio["Qta 2"].ToString());
-                            figlio["Qta 2"] = Math.Round(Double.Parse(figlio["Qta 2"].ToString()) / precedenteQuantita * quantitaNuova, 4);
+
                         }
-                        if ((figlio["Qta 3"].ToString() != ""))
+                        if (precedenteQuantita != quantitaNuova)
                         {
-                            quantitaPrecedente = Double.Parse(figlio["Qta 3"].ToString());
-                            figlio["Qta 3"] = Math.Round(Double.Parse(figlio["Qta 3"].ToString()) / precedenteQuantita * quantitaNuova, 4);
+                            if (precedenteQuantita != quantitaNuova)
+                            {
+                                quantitaPrecedente = Double.Parse(figlio["Quantita` 1"].ToString());
+                                figlio["Quantita` 1"] = Math.Round(Double.Parse(figlio["Quantita` 1"].ToString()) / precedenteQuantita * quantitaNuova, 4);
+                                if ((figlio["Qta 2"].ToString() != ""))
+                                {
+                                    quantitaPrecedente = Double.Parse(figlio["Qta 2"].ToString());
+                                    figlio["Qta 2"] = Math.Round(Double.Parse(figlio["Qta 2"].ToString()) / precedenteQuantita * quantitaNuova, 4);
+                                }
+                                if ((figlio["Qta 3"].ToString() != ""))
+                                {
+                                    quantitaPrecedente = Double.Parse(figlio["Qta 3"].ToString());
+                                    figlio["Qta 3"] = Math.Round(Double.Parse(figlio["Qta 3"].ToString()) / precedenteQuantita * quantitaNuova, 4);
+                                }
+                            }
                         }
+                       
                         EsplodiDistintaBaseThread(figlio);
+
                         totalePadre += Double.Parse(figlio["Totale"].ToString());
                         totalevarPadre += Double.Parse(figlio["Totale + %Var"].ToString());
+
                     }
                     //Una volta terminato il ciclo vado a calcolarmi i vari costi del rigo del padre.
                     rowpadre["Totale"] = Math.Round(totalePadre, 2);
@@ -1304,39 +1289,66 @@ namespace PreventivazioneRapida
                 //Altrimenti significa che il rigo passato alla funzione non ha figli, e quindi posso procedere con il calcolo dei costi di questa stessa riga.
                 else
                 {
-                    //In base se il "padre" è un articolo o una lavorazione effettuo dei calcoli diversi per poter calcolare i costi totali del rigo.
-                    if (rowpadre["CODICE ART"].ToString() != "")
+                    if (this.variazione != textBoxVariazione.Text)
                     {
-
-                        rowpadre["Totale"] = Math.Round(Double.Parse(rowpadre["Costo Art"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString()), 3);
-                        rowpadre["Costo Art"] = Math.Round(Double.Parse(rowpadre["Totale"].ToString()) / Double.Parse(rowpadre["Quantita` 1"].ToString()), 2);
-                        //Controllo se il rigo sia una lavorazione, quindi dovrebbe essere trattata in maniera diverso da una materia prima.
-                        //In caso negativo la catch raccoglie l'errore e quindi viene trattato come una semplice materia prima.
                         try
                         {
-                            if (Double.Parse(rowpadre["Codice Centro"].ToString()) < 499)
+                            if (rowpadre["Totale"].ToString() != null && rowpadre["Codice Art"].ToString() != "" && rowpadre["Codice centro"].ToString() == "")
+                            {
+                                double Totale = Double.Parse(rowpadre["Totale"].ToString());
+                                rowpadre["Totale + %Var"] = Math.Round((Totale + (variazioneNuova * Totale / 100)), 2);
+                            }
+                        }
+                        catch { }
+                    }
+                    if (this.variazionelav != textBoxVariazioneLav.Text)
+                    {
+                        try
+                        {
+                            if ((rowpadre["Totale"].ToString() != null && rowpadre["Codice Art"].ToString() == "") || Double.Parse(rowpadre["Codice Centro"].ToString()) > 499)
+                            {
+                                double Totale = Double.Parse(rowpadre["Totale"].ToString());
+                                rowpadre["Totale + %Var"] = Math.Round((Totale + (variazionelavNuova * Totale / 100)), 2);
+                            }
+                        }
+                        catch { }                       
+                    }
+                    if (precedenteQuantita != quantitaNuova)
+                    {
+                        //In base se il "padre" è un articolo o una lavorazione effettuo dei calcoli diversi per poter calcolare i costi totali del rigo.
+                        if (rowpadre["CODICE ART"].ToString() != "")
+                        {
+
+                            rowpadre["Totale"] = Math.Round(Double.Parse(rowpadre["Costo Art"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString()), 3);
+                            rowpadre["Costo Art"] = Math.Round(Double.Parse(rowpadre["Totale"].ToString()) / Double.Parse(rowpadre["Quantita` 1"].ToString()), 2);
+                            //Controllo se il rigo sia una lavorazione, quindi dovrebbe essere trattata in maniera diverso da una materia prima.
+                            //In caso negativo la catch raccoglie l'errore e quindi viene trattato come una semplice materia prima.
+                            try
+                            {
+                                if (Double.Parse(rowpadre["Codice Centro"].ToString()) < 499)
+                                {
+                                    rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazione) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
+                                }
+                                else
+                                {
+                                    rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazionelav) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
+                                }
+                            }
+                            catch
                             {
                                 rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazione) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
                             }
-                            else
-                            {
-                                rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazionelav) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
-                            }
                         }
-                        catch
+                        else
                         {
-                            rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazione) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
-                        }
-                    }
-                    else
-                    {
-                        rowpadre["Totale"] = Math.Round((Double.Parse(rowpadre["Costo Att Mac"].ToString()) * Double.Parse(rowpadre["Setup Mac decimale"].ToString()))
-                                            + (Double.Parse(rowpadre["Costo Att Uomo"].ToString()) * Double.Parse(rowpadre["Setup Uomo decimale"].ToString()))
-                                            + (Double.Parse(rowpadre["Costo Mac"].ToString()) * Double.Parse(rowpadre["Tempo Mac decimale"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString()))
-                                            + (Double.Parse(rowpadre["Costo Uomo"].ToString()) * Double.Parse(rowpadre["Tempo Uomo decimale"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString())), 2);
-                        rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazionelav) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
+                            rowpadre["Totale"] = Math.Round((Double.Parse(rowpadre["Costo Att Mac"].ToString()) * Double.Parse(rowpadre["Setup Mac decimale"].ToString()))
+                                                + (Double.Parse(rowpadre["Costo Att Uomo"].ToString()) * Double.Parse(rowpadre["Setup Uomo decimale"].ToString()))
+                                                + (Double.Parse(rowpadre["Costo Mac"].ToString()) * Double.Parse(rowpadre["Tempo Mac decimale"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString()))
+                                                + (Double.Parse(rowpadre["Costo Uomo"].ToString()) * Double.Parse(rowpadre["Tempo Uomo decimale"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString())), 2);
+                            rowpadre["Totale + %Var"] = Math.Round((Convert.ToDouble(rowpadre["Totale"].ToString()) * Convert.ToDouble(variazionelav) / 100) + Convert.ToDouble(rowpadre["Totale"].ToString()), 2);
 
-                    }
+                        }
+                    }                   
                 }
             }
         }
@@ -1507,7 +1519,7 @@ namespace PreventivazioneRapida
 
                 //Quindi aggiorniamo tutta la distinta base partendo dalla riga modificata, se è possibile si cerca di saltare cicli e aggiornamenti in quanto richiedono tempo
                 //e rallentano il software.             
-                if (/*nomeColonna != "Quantita` 1" && query.Count > 0 &&*/ nomeColonna != "Qta 2" && nomeColonna != "Qta 3" && nomeColonna != "Totale + %Var" && nomeColonna != "Totale")
+                if (nomeColonna != "Quantita` 1" && nomeColonna != "Qta 2" && nomeColonna != "Qta 3" && nomeColonna != "Totale + %Var" && nomeColonna != "Totale")
                 {
                     //BindingGrid();
                     //Se è un semilavorato il totale viene eseguito in una certa maniera altrimenti lo tratto come una lavorazione
@@ -1546,13 +1558,10 @@ namespace PreventivazioneRapida
                             r["Totale + %Var"] = Math.Round((Convert.ToDouble(r["Totale"].ToString()) * Convert.ToDouble(textBoxVariazioneLav.Text) / 100) + Convert.ToDouble(r["Totale"].ToString()), 2);
                         }
                     }
-                    if(nomeColonna != "Quantita` 1")
-                    {
-                        AggiornaParentela(r);
-                        CalcolaPrezzoQuantitaImpostata();
-                        CalcolaPrezzoTotaliPerQuantita();
-                    }                    
-                }             
+                    AggiornaParentela(r);
+                    CalcolaPrezzoQuantitaImpostata();
+                    CalcolaPrezzoTotaliPerQuantita();                
+                }
             }
             catch
             {

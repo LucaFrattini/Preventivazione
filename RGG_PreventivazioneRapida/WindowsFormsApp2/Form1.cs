@@ -353,14 +353,14 @@ namespace PreventivazioneRapida
                             if (figlio["Codice Padre"].ToString() == rowpadre["CODICE ART"].ToString())
                             {
                                 figlio["Rigo"] = rowpadre["Rigo"].ToString() + "," + index;
-                                figlio["Quantita` 1"] = Math.Round(Double.Parse(figlio["Quantita` 1"].ToString()) * Double.Parse(rowpadre["Quantita` 1"].ToString()), 4);
+                                figlio["Quantita` 1"] = Math.Round(Double.Parse(figlio["Quantita` 1"].ToString()) * Double.Parse(textBoxQuantita.Text.Replace('.', ',')), 4);
                                 if (figlio["Qta 2"].ToString() != "" && rowpadre["Qta 2"].ToString() != "")
                                 {
-                                    figlio["Qta 2"] = Math.Round(Double.Parse(figlio["Qta 2"].ToString()) * Double.Parse(rowpadre["Qta 2"].ToString()), 4);
+                                    figlio["Qta 2"] = Math.Round((Double.Parse(figlio["Qta 2"].ToString()) * (Double.Parse(figlio["Quantita` 1"].ToString()) / Double.Parse(textBoxQuantita.Text))) * Double.Parse(textBoxQuantita.Text), 4);
                                 }
                                 if (figlio["Qta 3"].ToString() != "" && rowpadre["Qta 3"].ToString() != "")
                                 {
-                                    figlio["Qta 3"] = Math.Round(Double.Parse(figlio["Qta 3"].ToString()) * Double.Parse(rowpadre["Qta 3"].ToString()), 4);
+                                    figlio["Qta 3"] = Math.Round(((Double.Parse(figlio["Quantita` 1"].ToString()) / Double.Parse(textBoxQuantita.Text)) / Double.Parse(figlio["Qta 3"].ToString())) * Double.Parse(textBoxQuantita.Text), 4);
                                 }
                                 EsplodiDistintaBase(figlio["Rigo"].ToString(), ++livello);
                                 totalePadre += Double.Parse(figlio["Totale"].ToString());
@@ -484,11 +484,11 @@ namespace PreventivazioneRapida
                                 figlio["Quantita` 1"] = Math.Round(Double.Parse(figlio["Quantita` 1"].ToString()) * Double.Parse(textBoxQuantita.Text.Replace('.', ',')), 4);
                                 if(figlio["Qta 2"].ToString() != "")
                                 {
-                                    figlio["Qta 2"] = Math.Round(Double.Parse(figlio["Qta 2"].ToString()) * Double.Parse(textBoxQuantita.Text.Replace('.', ',')), 4);
+                                    figlio["Qta 2"] = Math.Round((Double.Parse(figlio["Qta 2"].ToString()) * (Double.Parse(figlio["Quantita` 1"].ToString()) / Double.Parse(textBoxQuantita.Text))) * Double.Parse(textBoxQuantita.Text), 4);
                                 }
                                 if (figlio["Qta 3"].ToString() != "")
                                 {
-                                    figlio["Qta 3"] = Math.Round(Double.Parse(figlio["Qta 3"].ToString()) * Double.Parse(textBoxQuantita.Text.Replace('.', ',')), 4);
+                                    figlio["Qta 3"] = Math.Round(((Double.Parse(figlio["Quantita` 1"].ToString()) / Double.Parse(textBoxQuantita.Text)) / Double.Parse(figlio["Qta 3"].ToString())) * Double.Parse(textBoxQuantita.Text), 4);
                                 }
                                 string rowindex = figlio["Rigo"].ToString();
                                 //EsplodiDistintaBase(rowindex, livello);
@@ -601,6 +601,7 @@ namespace PreventivazioneRapida
         /// </summary>
         private void ColoraDataGrid()
         {
+            dataGridView.Columns["Codice Centro"].Visible = false;
             foreach (DataGridViewRow padre in dataGridView.Rows)
             {
                 if (padre.Cells["Rigo"].Value != null)

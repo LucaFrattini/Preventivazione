@@ -238,5 +238,11 @@
 
   <!-- se TRUE mostra dei messaggi per monitorare la tempistica delle operazioni per esplosione distinta e cambio quantità-->
   <DebugTempo>false</DebugTempo>
+
+  <!--Inserire la dicitura da utilizzare al posto di "ERP"-->
+  <DicituraERP>Agilis</DicituraERP>
+  
+  <!-- se TRUE la colonna "codice centro" sarà visibile, altrimenti invisibile-->
+  <CodiceCentroVisible>TRUE</CodiceCentroVisible>
 </configuration>
 

@@ -75,6 +75,10 @@ namespace PreventivazioneRapida
 
                 this.debugTempo = xmlDoc.SelectSingleNode("configuration/DebugTempo").InnerText;
 
+                this.dicituraERP = xmlDoc.SelectSingleNode("configuration/DicituraERP").InnerText;
+
+                this.codiceCentroVisible = xmlDoc.SelectSingleNode("configuration/CodiceCentroVisible").InnerText;
+
                 if (xmlDoc.SelectSingleNode("configuration/FL") != null)
                 {
                     this.fontlabel = xmlDoc.SelectSingleNode("configuration/FL").InnerText;
@@ -86,9 +90,9 @@ namespace PreventivazioneRapida
                     this.font = xmlDoc.SelectSingleNode("configuration/FO").InnerText;
                 }
             }
-            catch
+            catch ( Exception e)
             {
-                MessageBox.Show("Impossibile leggere correttamente i dati dal file di configurazione \"PreventivazioneRapidaConfig.xml\"!");
+                MessageBox.Show("Impossibile leggere correttamente i dati dal file di configurazione \"PreventivazioneRapidaConfig.xml\"!\n"+e.Message);
             }     
         }
 
@@ -207,6 +211,12 @@ namespace PreventivazioneRapida
         public string Font { get { return this.font; } }
 
         private string debugTempo = "";
-        public string DebugTempo { get { return this.debugTempo; } }
+        public string DebugTempo { get { return this.debugTempo.ToUpper(); } }
+
+        private string dicituraERP = "";
+        public string DicituraERP { get { if (this.dicituraERP == "") { return "ERP"; } else { return this.dicituraERP; } } }
+
+        private string codiceCentroVisible = "";
+        public string CodiceCentroVisible { get { return this.codiceCentroVisible.ToUpper(); } }
     }
 }

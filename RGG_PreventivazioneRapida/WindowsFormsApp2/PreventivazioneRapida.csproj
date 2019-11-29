@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>preventivo.ico</ApplicationIcon>
+    <ApplicationIcon>preventivo_luca.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <Win32Resource>
@@ -189,6 +189,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="preventivo.ico" />
+    <Content Include="preventivo_luca.ico" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

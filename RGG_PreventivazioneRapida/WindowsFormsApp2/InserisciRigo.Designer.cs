@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InserisciRigo));
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox = new System.Windows.Forms.ComboBox();
-            this.radioButtonAgilis = new System.Windows.Forms.RadioButton();
+            this.radioButtonERP = new System.Windows.Forms.RadioButton();
             this.radioButtonPreventivi = new System.Windows.Forms.RadioButton();
             this.radioButtonNuovo = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
@@ -125,19 +125,19 @@
             this.comboBox.Size = new System.Drawing.Size(456, 32);
             this.comboBox.TabIndex = 12;
             // 
-            // radioButtonAgilis
+            // radioButtonERP
             // 
-            this.radioButtonAgilis.AutoSize = true;
-            this.radioButtonAgilis.Checked = true;
-            this.radioButtonAgilis.Font = new System.Drawing.Font("Arial Narrow", 15F);
-            this.radioButtonAgilis.Location = new System.Drawing.Point(6, 34);
-            this.radioButtonAgilis.Name = "radioButtonAgilis";
-            this.radioButtonAgilis.Size = new System.Drawing.Size(65, 28);
-            this.radioButtonAgilis.TabIndex = 14;
-            this.radioButtonAgilis.TabStop = true;
-            this.radioButtonAgilis.Text = "Agilis";
-            this.radioButtonAgilis.UseVisualStyleBackColor = true;
-            this.radioButtonAgilis.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            this.radioButtonERP.AutoSize = true;
+            this.radioButtonERP.Checked = true;
+            this.radioButtonERP.Font = new System.Drawing.Font("Arial Narrow", 15F);
+            this.radioButtonERP.Location = new System.Drawing.Point(6, 34);
+            this.radioButtonERP.Name = "radioButtonERP";
+            this.radioButtonERP.Size = new System.Drawing.Size(62, 28);
+            this.radioButtonERP.TabIndex = 14;
+            this.radioButtonERP.TabStop = true;
+            this.radioButtonERP.Text = "ERP";
+            this.radioButtonERP.UseVisualStyleBackColor = true;
+            this.radioButtonERP.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // radioButtonPreventivi
             // 
@@ -209,7 +209,7 @@
             this.buttonConferma.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConferma.Font = new System.Drawing.Font("Arial Narrow", 15F);
             this.buttonConferma.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConferma.Location = new System.Drawing.Point(12, 481);
+            this.buttonConferma.Location = new System.Drawing.Point(7, 446);
             this.buttonConferma.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonConferma.Name = "buttonConferma";
             this.buttonConferma.Size = new System.Drawing.Size(575, 37);
@@ -220,7 +220,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButtonAgilis);
+            this.groupBox1.Controls.Add(this.radioButtonERP);
             this.groupBox1.Controls.Add(this.radioButtonPreventivi);
             this.groupBox1.Controls.Add(this.radioButtonNuovo);
             this.groupBox1.Font = new System.Drawing.Font("Arial Narrow", 15F);
@@ -515,7 +515,7 @@
             this.textBoxDescrizione.MaxLength = 18;
             this.textBoxDescrizione.Name = "textBoxDescrizione";
             this.textBoxDescrizione.Size = new System.Drawing.Size(433, 30);
-            this.textBoxDescrizione.TabIndex = 28;
+            this.textBoxDescrizione.TabIndex = 26;
             // 
             // textBoxQuantitaNuovo
             // 
@@ -523,7 +523,7 @@
             this.textBoxQuantitaNuovo.MaxLength = 18;
             this.textBoxQuantitaNuovo.Name = "textBoxQuantitaNuovo";
             this.textBoxQuantitaNuovo.Size = new System.Drawing.Size(77, 30);
-            this.textBoxQuantitaNuovo.TabIndex = 27;
+            this.textBoxQuantitaNuovo.TabIndex = 24;
             this.textBoxQuantitaNuovo.Text = "1";
             this.textBoxQuantitaNuovo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
@@ -570,7 +570,7 @@
             this.textBoxCostoArticolo.MaxLength = 18;
             this.textBoxCostoArticolo.Name = "textBoxCostoArticolo";
             this.textBoxCostoArticolo.Size = new System.Drawing.Size(221, 30);
-            this.textBoxCostoArticolo.TabIndex = 32;
+            this.textBoxCostoArticolo.TabIndex = 27;
             this.textBoxCostoArticolo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
             // label9
@@ -779,7 +779,7 @@
             this.textBoxCostoLavEst.MaxLength = 18;
             this.textBoxCostoLavEst.Name = "textBoxCostoLavEst";
             this.textBoxCostoLavEst.Size = new System.Drawing.Size(77, 30);
-            this.textBoxCostoLavEst.TabIndex = 48;
+            this.textBoxCostoLavEst.TabIndex = 28;
             this.textBoxCostoLavEst.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
             // textBoxUMNuovo
@@ -788,7 +788,7 @@
             this.textBoxUMNuovo.MaxLength = 18;
             this.textBoxUMNuovo.Name = "textBoxUMNuovo";
             this.textBoxUMNuovo.Size = new System.Drawing.Size(77, 30);
-            this.textBoxUMNuovo.TabIndex = 51;
+            this.textBoxUMNuovo.TabIndex = 25;
             // 
             // label18
             // 
@@ -808,7 +808,7 @@
             this.textBoxQuantita2Nuovo.MaxLength = 18;
             this.textBoxQuantita2Nuovo.Name = "textBoxQuantita2Nuovo";
             this.textBoxQuantita2Nuovo.Size = new System.Drawing.Size(77, 30);
-            this.textBoxQuantita2Nuovo.TabIndex = 53;
+            this.textBoxQuantita2Nuovo.TabIndex = 29;
             this.textBoxQuantita2Nuovo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
             // label17
@@ -829,7 +829,7 @@
             this.textBoxUM2Nuovo.MaxLength = 18;
             this.textBoxUM2Nuovo.Name = "textBoxUM2Nuovo";
             this.textBoxUM2Nuovo.Size = new System.Drawing.Size(77, 30);
-            this.textBoxUM2Nuovo.TabIndex = 55;
+            this.textBoxUM2Nuovo.TabIndex = 30;
             // 
             // label20
             // 
@@ -849,7 +849,7 @@
             this.textBoxQuantita3Nuovo.MaxLength = 18;
             this.textBoxQuantita3Nuovo.Name = "textBoxQuantita3Nuovo";
             this.textBoxQuantita3Nuovo.Size = new System.Drawing.Size(77, 30);
-            this.textBoxQuantita3Nuovo.TabIndex = 57;
+            this.textBoxQuantita3Nuovo.TabIndex = 31;
             this.textBoxQuantita3Nuovo.Leave += new System.EventHandler(this.ControllaValiditaTextBox);
             // 
             // label19
@@ -870,7 +870,7 @@
             this.textBoxUM3Nuovo.MaxLength = 18;
             this.textBoxUM3Nuovo.Name = "textBoxUM3Nuovo";
             this.textBoxUM3Nuovo.Size = new System.Drawing.Size(77, 30);
-            this.textBoxUM3Nuovo.TabIndex = 59;
+            this.textBoxUM3Nuovo.TabIndex = 32;
             // 
             // groupBoxNuovo
             // 
@@ -955,7 +955,7 @@
 
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBox;
-        private System.Windows.Forms.RadioButton radioButtonAgilis;
+        private System.Windows.Forms.RadioButton radioButtonERP;
         private System.Windows.Forms.RadioButton radioButtonPreventivi;
         private System.Windows.Forms.RadioButton radioButtonNuovo;
         private System.Windows.Forms.Label label3;

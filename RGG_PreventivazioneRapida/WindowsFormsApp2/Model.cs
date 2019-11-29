@@ -62,7 +62,7 @@ namespace PreventivazioneRapida
                 }
                 Clienti = listaClienti.ToArray();*/
                 //sqlserverConn = new SqlConnection(Setting.Istance.ConnStr);
-                sqlserverConn.Open();
+                //sqlserverConn.Open();
             }
             catch
             {
@@ -340,7 +340,7 @@ namespace PreventivazioneRapida
             try
             {
                 SqlDataAdapter da;
-                sqlserverConn.Open();
+                //sqlserverConn.Open();
                 string query = "SELECT rowindex as 'Rigo',codicepadre as 'Codice Padre',codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
                     "um1 AS 'UM 1', quantita1 AS 'Quantita` 1', um2 AS 'UM 2', quantita2 AS 'Qta 2', um3 AS 'UM 3', quantita3 AS 'Qta 3', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
                     "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
@@ -361,7 +361,7 @@ namespace PreventivazioneRapida
                     int count = ds.Tables.Count;
                     ds.Tables[count - 1].TableName = "DistintaBase";
                 }
-                sqlserverConn.Close();
+                //sqlserverConn.Close();
             }
             catch (Exception e)
             {

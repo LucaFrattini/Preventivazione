@@ -28,6 +28,7 @@ namespace WindowsFormsApp2
             PopolaComboBox();
             this.textBoxArticolo.Leave += new System.EventHandler(this.textBoxArticolo_Leave);
             this.textBoxCentro.Leave += new System.EventHandler(this.textBoxCentro_Leave);
+            this.radioButtonERP.Text = Setting.Istance.DicituraERP;
             SetFont(Setting.Istance.Font);
         }
 
@@ -142,17 +143,20 @@ namespace WindowsFormsApp2
                     TextBox t = (TextBox)sender;
                     t.Text = t.Text.Replace('.', ',');
                     if(t.Text != "")
-                    {
+                    {                      
                         if(t.Name == "textBoxQuantita")
                         {
-                            if(drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
+                            if (drAgilis != null)
                             {
-                                textBoxQuantita2.Text = (Double.Parse(t.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
-                            }
-                            if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
-                            {
-                                textBoxQuantita3.Text = (Double.Parse(t.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
-                            }
+                                if (drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
+                                {
+                                    textBoxQuantita2.Text = (Double.Parse(t.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                                }
+                                if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
+                                {
+                                    textBoxQuantita3.Text = (Double.Parse(t.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                                }
+                            }                               
                         }
                         else if(t.Name == "textBoxQuantita2")
                         {
@@ -178,7 +182,7 @@ namespace WindowsFormsApp2
                         }
                         Double prova = double.Parse(t.Text);
                     }
-                    if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
+                    if (radioButtonERP.Checked == true && radioButtonArticolo.Checked == true)
                     {                       
                         if(textBoxQuantita.Text != "" && textBoxUM.Text != "" && textBoxArticolo.BackColor == Color.LightGreen)
                         {
@@ -189,7 +193,7 @@ namespace WindowsFormsApp2
                             buttonConferma.Enabled = false;
                         }
                     }
-                    else if (radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
+                    else if (radioButtonERP.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
                     {                      
                         if (textBoxQuantita.Text != "" && textBoxUM.Text != "" && textBoxArticolo.BackColor == Color.LightGreen && textBoxCentro.BackColor == Color.LightGreen)
                         {
@@ -307,7 +311,7 @@ namespace WindowsFormsApp2
             textBoxCentro.Visible = false;
             buttonHelpCentri.Visible = false;
             buttonConferma.Enabled = false;
-            if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
+            if (radioButtonERP.Checked == true && radioButtonArticolo.Checked == true)
             {
                 this.Height = 530;
                 groupBox2.Enabled = true;
@@ -327,7 +331,7 @@ namespace WindowsFormsApp2
                 textBoxUM3.Visible = true;
                 textBoxUM.Enabled = true;
             }
-            else if(radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
+            else if(radioButtonERP.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
             {
                 this.Height = 530;
                 groupBox2.Enabled = true;
@@ -428,7 +432,7 @@ namespace WindowsFormsApp2
         /// <param name="e"></param>
         private void textBoxArticolo_Leave(object sender, EventArgs e)
         {
-            if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
+            if (radioButtonERP.Checked == true && radioButtonArticolo.Checked == true)
             {
                 //string query = Setting.Istance.QueryCercaArticolo.Replace("@CodArticolo", textBoxArticolo.Text);
                 drAgilis = m.ds.Tables["Articoli"].Rows.Find(textBoxArticolo.Text);
@@ -476,7 +480,7 @@ namespace WindowsFormsApp2
                     buttonConferma.Enabled = false;
                 }
             }
-            else if (radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
+            else if (radioButtonERP.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
             {
                 try
                 {
@@ -493,7 +497,7 @@ namespace WindowsFormsApp2
                     {
                         textBoxArticolo.BackColor = Color.LightGreen;
                         labelImportaDescrizione.Text = dr[1].ToString();
-                        if(textBoxCentro.BackColor == Color.LightGreen)
+                        if(textBoxCentro.BackColor == Color.LightGreen && comboBox.Text != "")
                         {
                             buttonConferma.Enabled = true;
                         }
@@ -587,7 +591,7 @@ namespace WindowsFormsApp2
                     dr.Read();
                     textBoxCentro.BackColor = Color.LightGreen;
                     labelCentro.Text = dr["tb_descent"].ToString();
-                    if(textBoxArticolo.BackColor == Color.LightGreen)
+                    if(textBoxArticolo.BackColor == Color.LightGreen && comboBox.Text != "")
                     {
                         buttonConferma.Enabled = true;
                     }
@@ -629,7 +633,7 @@ namespace WindowsFormsApp2
                 }
                 else
                 {
-                    if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
+                    if (radioButtonERP.Checked == true && radioButtonArticolo.Checked == true)
                     {
                         tipologiaInserimento = 1;
                         query = Setting.Istance.QueryCercaArticolo.Replace("@CodArticolo", textBoxArticolo.Text);
@@ -646,7 +650,7 @@ namespace WindowsFormsApp2
                         datatable.Reset();
                         //InserisciRiga(tipologiaInserimento, textBoxArticolo.Text, textBoxQuantita.Text);
                     }
-                    else if (radioButtonAgilis.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
+                    else if (radioButtonERP.Checked == true && (radioButtonLavorazione.Checked == true || radioButtonLavorazioneEsterna.Checked == true))
                     {
                         tipologiaInserimento = 2;
                         query = Setting.Istance.QueryCercaLavorazione.Replace("@CodLav", textBoxArticolo.Text);
@@ -918,15 +922,15 @@ namespace WindowsFormsApp2
             Helper h = new Helper();
             String[] par = { };
             string temp = "";
-            if (radioButtonAgilis.Checked == true && radioButtonArticolo.Checked == true)
+            if (radioButtonERP.Checked == true && radioButtonArticolo.Checked == true)
             {
                 temp = h.StartHelper(Setting.Istance.HelpArticolo, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);           
             }
-            else if (radioButtonAgilis.Checked == true && radioButtonLavorazione.Checked == true)
+            else if (radioButtonERP.Checked == true && radioButtonLavorazione.Checked == true)
             {
                 temp = h.StartHelper(Setting.Istance.HelpLavorazione, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
             }
-            else if (radioButtonAgilis.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
+            else if (radioButtonERP.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
             {
                 temp = h.StartHelper(Setting.Istance.HelpLavorazioneEsterna, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
             }
@@ -949,11 +953,11 @@ namespace WindowsFormsApp2
             Helper h = new Helper();
             String[] par = { };
             string temp = "";
-            if (radioButtonAgilis.Checked == true && radioButtonLavorazione.Checked == true)
+            if (radioButtonERP.Checked == true && radioButtonLavorazione.Checked == true)
             {
                 temp = h.StartHelper(Setting.Istance.HelpCentro, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
             }
-            else if (radioButtonAgilis.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
+            else if (radioButtonERP.Checked == true && radioButtonLavorazioneEsterna.Checked == true)
             {
                 temp = h.StartHelper(Setting.Istance.HelpCentroEsterno, Setting.Istance.Ip, Setting.Istance.Port, Setting.Istance.Database, Setting.Istance.User, Setting.Istance.Password, "", "", "", par, "", Setting.Istance.Font, Setting.Istance.FontLabel);
             }

@@ -1,0 +1,18 @@
+Note programma preventivi per RGG:
+
+---Aggiornamento 20/11/2019 ---
+1)Modificata leggermente la parte grafica:
+-Nascosta la colonna del codice centro perchè non interessava visualizzarla dato che centro e lavorazione sono collegate biunivocamente.
+-Modificata la larghezza delle colonne per farne vedere il più possibile in una unica schermata senza dover scorrere la scroll bar orizzontale.
+2)Risolto il problema della conversione delle unità di misura:
+Guardando il programma dei preventivi, all'interno della datagrid sono presenti 3 colonne per quantità diverse.
+La prima è presa dal database Agilis. Per valorizzare la seconda quantità si è preso il fattore di conversione in Agilis (ar_conver) e questo moltiplica
+la prima quantità. La terza quantità si è preso il fattore di conversione in Agilis (ar_qtacon2) e questo divide la prima quantità.
+
+---Aggiornamento 22/11/2019 ---
+Modifica dell'icona del programma.
+La dicitura del nome del gestionale è modificabile da configuration con il tag <DicituraERP>Agilis</DicituraERP>... se si lascia il tag vuoto
+di default avrà la scritta "ERP".
+- La colonna che hai nascosto, è possibile renderla visibile o nascondarla da configuration ? Se si, facciamolo.
+La colonna "Codice centro" è visibile solo se il tag <CodiceCentroVisible>TRUE</CodiceCentroVisible> nel configuration sia impostato su "TRUE",
+altrimenti la colonna sarà invisibile. 

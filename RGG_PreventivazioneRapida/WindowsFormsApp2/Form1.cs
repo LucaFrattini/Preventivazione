@@ -601,7 +601,10 @@ namespace PreventivazioneRapida
         /// </summary>
         private void ColoraDataGrid()
         {
-            dataGridView.Columns["Codice Centro"].Visible = false;
+            if(Setting.Istance.CodiceCentroVisible != "TRUE")
+            {
+                dataGridView.Columns["Codice Centro"].Visible = false;
+            }
             foreach (DataGridViewRow padre in dataGridView.Rows)
             {
                 if (padre.Cells["Rigo"].Value != null)
@@ -1957,9 +1960,9 @@ namespace PreventivazioneRapida
 
                     BindingGrid();
                 }
-                catch
+                catch(Exception ex)
                 {
-                    MessageBox.Show("Errore! Verificare di aver inserito un ID di preventivo corretto per il cliente selezionato.");
+                    MessageBox.Show("Errore! Verificare di aver inserito un ID di preventivo corretto per il cliente selezionato.\n"+ex.Message.ToString());
                 }
             }
 
@@ -2078,7 +2081,8 @@ namespace PreventivazioneRapida
             //dall'utente, quindi quello inserito nella testata.
             switch (tipologiaInserimento)
             {
-                //1--> inserimento di una materia prima o semilavorato preso dal database delle distinte base di agilis
+                //1--> inserimento di una materia prima o semilavorato preso dal database delle distinte base di 
+
                 case 1:
                     {
                         if(textBoxArticolo.Text == padre)

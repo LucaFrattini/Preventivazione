@@ -517,10 +517,50 @@ namespace PreventivazioneRapida
                             //Ordino la cella e imposto alcune regole
                             dataGridView.Sort(dataGridView.Columns["Rigo"], ListSortDirection.Ascending);
                             //dataGridView.ReadOnly = true;
+                            //Resize della larghezza delle colonne
+                            switch (Setting.Istance.SizeColumnsMode)
+                            {
+                                case "DisplayedCells":
+                                    dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+                                    break;
+                                case "DisplayedCellsExceptHeader":
+                                    dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
+                                    break;
+                                case "ColumnHeader":
+                                    dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader;
+                                    break;
+                                case "Fill":
+                                    dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                                    break;
+                                default:
+                                    dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                                    break;
+                            }
+                            //Resize dell'altezza delle righe
+                            switch (Setting.Istance.SizeRowsMode)
+                            {
+                                case "DisplayedCells":
+                                    dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+                                    break;
+                                case "DisplayedCellsExceptHeader":
+                                    dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+                                    break;
+                                case "DisplayedHeaders":
+                                    dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedHeaders;
+                                    break;
+                                default:
+                                    dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+                                    break;
+                            }
+
                             foreach (DataGridViewColumn column in dataGridView.Columns)
                             {
-                                //column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                                column.SortMode = DataGridViewColumnSortMode.NotSortable;
                                 column.ReadOnly = true;
+                                if(column.HeaderText == "setup mac decimale" || column.HeaderText == "setup uomo decimale" || column.HeaderText == "tempo mac decimale" || column.HeaderText == "tempo uomo decimale")
+                                {
+                                    column.Visible = false;
+                                }
                             }
                             //Fare il test con questo codice --> SB02AL1505.0-1_02
                             //Infine coloro la griglia e faccio i calcoli relativi ai costi

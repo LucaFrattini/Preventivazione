@@ -244,5 +244,20 @@
   
   <!-- se TRUE la colonna "codice centro" sarà visibile, altrimenti invisibile-->
   <CodiceCentroVisible>TRUE</CodiceCentroVisible>
+  
+  <!-- Tag per modificare il ridimensionamento delle colonne-->
+  <!-- "DisplayedCells" = La dimensione viene adattata al contenuto di tutte le celle delle colonne nelle righe attualmente visualizzate sullo schermo, comprese le celle di intestazione.
+       "DisplayedCellsExceptHeader" = La dimensione viene adattata al contenuto di tutte le celle delle colonne nelle righe attualmente visualizzate sullo schermo, escluse le celle di intestazione. 
+       "ColumnHeader" = La larghezza delle colonne viene adattata al contenuto delle celle delle intestazioni di colonna.
+       "Fill" = La larghezza delle colonne viene regolata in modo che la larghezza di tutte le colonne occupi esattamente l'area di visualizzazione del controllo.
+       "None" = La larghezza delle colonne non viene regolata automaticamente.-->
+  <AutoSizeColumnsMode>Fill</AutoSizeColumnsMode>
+
+  <!-- Tag per modificare il ridimensionamento delle righe-->
+  <!-- "DisplayedCells" = L'altezza delle righe viene modificata in base al contenuto di tutte le celle nelle righe attualmente visualizzate, incluse le celle di intestazione.
+       "DisplayedCellsExceptHeader" = L'altezza delle righe viene modificata in base al contenuto di tutte le celle nelle righe attualmente visualizzate, escluse le celle di intestazione. 
+       "DisplayedHeaders" = L'altezza delle righe viene modificata in base al contenuto dell'intestazione delle righe attualmente visualizzate.
+       "None" = L'altezza delle righe non viene modificata automaticamente.-->
+  <AutoSizeRowsMode></AutoSizeRowsMode >
 </configuration>
 

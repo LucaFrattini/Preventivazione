@@ -79,6 +79,9 @@ namespace PreventivazioneRapida
 
                 this.codiceCentroVisible = xmlDoc.SelectSingleNode("configuration/CodiceCentroVisible").InnerText;
 
+                this.sizeColumnsMode = xmlDoc.SelectSingleNode("configuration/AutoSizeColumnsMode").InnerText;
+                this.sizeRowsMode = xmlDoc.SelectSingleNode("configuration/AutoSizeRowsMode").InnerText;
+
                 if (xmlDoc.SelectSingleNode("configuration/FL") != null)
                 {
                     this.fontlabel = xmlDoc.SelectSingleNode("configuration/FL").InnerText;
@@ -218,5 +221,12 @@ namespace PreventivazioneRapida
 
         private string codiceCentroVisible = "";
         public string CodiceCentroVisible { get { return this.codiceCentroVisible.ToUpper(); } }
+
+        private string sizeColumnsMode = "";
+        public string SizeColumnsMode { get { return this.sizeColumnsMode; } }
+
+        private string sizeRowsMode = "";
+        public string SizeRowsMode { get { return this.sizeRowsMode; } }
+        
     }
 }

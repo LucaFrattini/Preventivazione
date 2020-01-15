@@ -190,6 +190,7 @@
     </Content>
     <Content Include="preventivo.ico" />
     <Content Include="preventivo_luca.ico" />
+    <None Include="Resources\COPR.gif" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

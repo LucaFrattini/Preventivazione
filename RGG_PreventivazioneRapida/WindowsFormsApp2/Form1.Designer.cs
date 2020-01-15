@@ -50,6 +50,7 @@
             this.textBoxCliente = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonStampa2 = new System.Windows.Forms.Button();
             this.buttonModificaQuantita = new System.Windows.Forms.Button();
             this.buttonStampa = new System.Windows.Forms.Button();
             this.buttonPulisci = new System.Windows.Forms.Button();
@@ -119,6 +120,8 @@
             this.textBoxVariazioneLav = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.labelElaborazione = new System.Windows.Forms.Label();
+            this.textBoxRicavoTotale = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -256,7 +259,7 @@
             this.textBoxNote.Location = new System.Drawing.Point(127, 202);
             this.textBoxNote.MaxLength = 253;
             this.textBoxNote.Name = "textBoxNote";
-            this.textBoxNote.Size = new System.Drawing.Size(1081, 30);
+            this.textBoxNote.Size = new System.Drawing.Size(1191, 30);
             this.textBoxNote.TabIndex = 6;
             // 
             // label7
@@ -293,7 +296,7 @@
             // 
             this.btnRefresh.Enabled = false;
             this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
-            this.btnRefresh.Location = new System.Drawing.Point(458, 21);
+            this.btnRefresh.Location = new System.Drawing.Point(520, 21);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(56, 53);
             this.btnRefresh.TabIndex = 7;
@@ -302,6 +305,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonStampa2);
             this.groupBox1.Controls.Add(this.buttonModificaQuantita);
             this.groupBox1.Controls.Add(this.buttonStampa);
             this.groupBox1.Controls.Add(this.buttonPulisci);
@@ -323,10 +327,20 @@
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             // 
+            // buttonStampa2
+            // 
+            this.buttonStampa2.BackgroundImage = global::Preventivazione_RGG.Properties.Resources.COPR;
+            this.buttonStampa2.Location = new System.Drawing.Point(458, 21);
+            this.buttonStampa2.Name = "buttonStampa2";
+            this.buttonStampa2.Size = new System.Drawing.Size(56, 53);
+            this.buttonStampa2.TabIndex = 30;
+            this.buttonStampa2.UseVisualStyleBackColor = true;
+            this.buttonStampa2.Click += new System.EventHandler(this.buttonStampa2_Click);
+            // 
             // buttonModificaQuantita
             // 
             this.buttonModificaQuantita.Image = ((System.Drawing.Image)(resources.GetObject("buttonModificaQuantita.Image")));
-            this.buttonModificaQuantita.Location = new System.Drawing.Point(520, 21);
+            this.buttonModificaQuantita.Location = new System.Drawing.Point(582, 21);
             this.buttonModificaQuantita.Name = "buttonModificaQuantita";
             this.buttonModificaQuantita.Size = new System.Drawing.Size(56, 53);
             this.buttonModificaQuantita.TabIndex = 29;
@@ -386,7 +400,7 @@
             // btnReset
             // 
             this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
-            this.btnReset.Location = new System.Drawing.Point(706, 21);
+            this.btnReset.Location = new System.Drawing.Point(768, 21);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(56, 53);
             this.btnReset.TabIndex = 23;
@@ -406,7 +420,7 @@
             // btnMeno
             // 
             this.btnMeno.Image = ((System.Drawing.Image)(resources.GetObject("btnMeno.Image")));
-            this.btnMeno.Location = new System.Drawing.Point(644, 21);
+            this.btnMeno.Location = new System.Drawing.Point(706, 21);
             this.btnMeno.Name = "btnMeno";
             this.btnMeno.Size = new System.Drawing.Size(56, 53);
             this.btnMeno.TabIndex = 22;
@@ -428,7 +442,7 @@
             this.btnPiu.AccessibleName = "";
             this.btnPiu.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnPiu.Image = ((System.Drawing.Image)(resources.GetObject("btnPiu.Image")));
-            this.btnPiu.Location = new System.Drawing.Point(582, 21);
+            this.btnPiu.Location = new System.Drawing.Point(644, 21);
             this.btnPiu.Name = "btnPiu";
             this.btnPiu.Size = new System.Drawing.Size(56, 53);
             this.btnPiu.TabIndex = 21;
@@ -438,7 +452,7 @@
             // btnEsci
             // 
             this.btnEsci.Image = ((System.Drawing.Image)(resources.GetObject("btnEsci.Image")));
-            this.btnEsci.Location = new System.Drawing.Point(768, 21);
+            this.btnEsci.Location = new System.Drawing.Point(830, 21);
             this.btnEsci.Name = "btnEsci";
             this.btnEsci.Size = new System.Drawing.Size(56, 53);
             this.btnEsci.TabIndex = 20;
@@ -1063,10 +1077,12 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AllowDrop = true;
             this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -1097,11 +1113,10 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
-            this.dataGridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView.Size = new System.Drawing.Size(1476, 320);
             this.dataGridView.TabIndex = 24;
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
@@ -1152,6 +1167,27 @@
             this.labelElaborazione.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelElaborazione.Visible = false;
             // 
+            // textBoxRicavoTotale
+            // 
+            this.textBoxRicavoTotale.Location = new System.Drawing.Point(1241, 166);
+            this.textBoxRicavoTotale.MaxLength = 18;
+            this.textBoxRicavoTotale.Name = "textBoxRicavoTotale";
+            this.textBoxRicavoTotale.Size = new System.Drawing.Size(77, 30);
+            this.textBoxRicavoTotale.TabIndex = 29;
+            this.textBoxRicavoTotale.Text = "0,0000";
+            this.textBoxRicavoTotale.Leave += new System.EventHandler(this.textBoxRicavoTotale_Leave);
+            this.textBoxRicavoTotale.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxRicavoTotale_KeyPress);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Arial Narrow", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(1130, 169);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(105, 24);
+            this.label21.TabIndex = 30;
+            this.label21.Text = "Ricavo totale";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1160,6 +1196,8 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1503, 791);
+            this.Controls.Add(this.textBoxRicavoTotale);
+            this.Controls.Add(this.label21);
             this.Controls.Add(this.labelElaborazione);
             this.Controls.Add(this.textBoxVariazioneLav);
             this.Controls.Add(this.label9);
@@ -1289,6 +1327,9 @@
         private System.Windows.Forms.Label RicavoSing3;
         private System.Windows.Forms.Label CostoSing3;
         private System.Windows.Forms.Label labelElaborazione;
+        private System.Windows.Forms.Button buttonStampa2;
+        private System.Windows.Forms.TextBox textBoxRicavoTotale;
+        private System.Windows.Forms.Label label21;
     }
 }
 

@@ -20,83 +20,94 @@
   Cartella HelpXML_PreventivazioneRapida con all'interno: Help_articoli_RGG - Help_centro_RGG - Help_centroesterno_RGG - Help_clienti_RGG - Help_lavorazioni_RGG - Help_lavorazioniesterne_RGG - Help_preventivi_RGG-->
   <AllQuery>
     <CreateTablePreventivi>
-      CREATE TABLE preventivi(
-      id int identity(1,1) PRIMARY KEY,
-      utente varchar(255),
-      cliente varchar(255),
-      desccliente varchar(255),
-      articolo varchar(255),
-      descarticolo varchar(255),
-      quantita float,
-      variazione float,
-      variazionelav float,
-      totale float,
-      totalevar float,
-      datacreazione datetime,
-      note text,
-      QImateriaprima float,
-      QIcostomac float,
-      QIcostouomo float,
-      QIcostosingolo float,
-      QIricavosingolo float,
-      quantita1 float,
-      costoMacchina1 float,
-      costoUomo1 float,
-      costoMateriali1 float,
-      costoSingolo1 float,
-      ricavoSingolo1 float,
-      costoTotale1 float,
-      ricavoTotale1 float,
-      quantita2 float,
-      costoMacchina2 float,
-      costoUomo2 float,
-      costoMateriali2 float,
-      costoSingolo2 float,
-      ricavoSingolo2 float,
-      costoTotale2 float,
-      ricavoTotale2 float,
-      quantita3 float,
-      costoMacchina3 float,
-      costoUomo3 float,
-      costoMateriali3 float,
-      costoSingolo3 float,
-      ricavoSingolo3 float,
-      costoTotale3 float ,
-      ricavoTotale3 float
-      )
+
+      CREATE TABLE [dbo].[preventivi](
+      [id] [int] IDENTITY(1,1) NOT NULL,
+      [utente] [varchar](255) NULL,
+      [cliente] [varchar](255) NULL,
+      [desccliente] [varchar](255) NULL,
+      [articolo] [varchar](255) NULL,
+      [descarticolo] [varchar](255) NULL,
+      [quantita] [float] NULL,
+      [variazione] [float] NULL,
+      [variazionelav] [float] NULL,
+      [totale] [float] NULL,
+      [totalevar] [float] NULL,
+      [datacreazione] [datetime] NULL,
+      [note] [text] NULL,
+      [QImateriaprima] [float] NULL,
+      [QIcostomac] [float] NULL,
+      [QIcostouomo] [float] NULL,
+      [QIcostosingolo] [float] NULL,
+      [QIricavosingolo] [float] NULL,
+      [textBoxRicavoTotale] [float] NULL,
+      [quantita1] [float] NULL,
+      [costoMacchina1] [float] NULL,
+      [costoUomo1] [float] NULL,
+      [costoMateriali1] [float] NULL,
+      [costoSingolo1] [float] NULL,
+      [ricavoSingolo1] [float] NULL,
+      [costoTotale1] [float] NULL,
+      [ricavoTotale1] [float] NULL,
+      [quantita2] [float] NULL,
+      [costoMacchina2] [float] NULL,
+      [costoUomo2] [float] NULL,
+      [costoMateriali2] [float] NULL,
+      [costoSingolo2] [float] NULL,
+      [ricavoSingolo2] [float] NULL,
+      [costoTotale2] [float] NULL,
+      [ricavoTotale2] [float] NULL,
+      [quantita3] [float] NULL,
+      [costoMacchina3] [float] NULL,
+      [costoUomo3] [float] NULL,
+      [costoMateriali3] [float] NULL,
+      [costoSingolo3] [float] NULL,
+      [ricavoSingolo3] [float] NULL,
+      [costoTotale3] [float] NULL,
+      [ricavoTotale3] [float] NULL,
+      PRIMARY KEY CLUSTERED
+      (
+      [id] ASC
+      )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+      ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
     </CreateTablePreventivi>
     <CreateTablePreventiviRighi>
-      CREATE TABLE preventivirighi(
-      id int identity(1,1) primary key,
-      idpreventivo int,
-      rowindex varchar(255),
-      codicepadre varchar(255),
-      codiceart varchar(255),
-      codicecentro varchar(255),
-      codicelav varchar(255),
-      descrizione varchar(255),
-      um1 varchar(255),
-      quantita1 varchar(255),
-      um2 varchar(255),
-      quantita2 varchar(255),
-      um3 varchar(255),
-      quantita3 varchar(255),
-      setupmac varchar(255),
-      setupuomo varchar(255),
-      tempomac varchar(255),
-      tempouomo varchar(255),
-      costoart varchar(255),
-      costoattmac varchar(255),
-      costoattuomo varchar(255),
-      costomac varchar(255),
-      costouomo varchar(255),
-      totale varchar(255),
-      totalevar varchar(255),
-      setupmacdec varchar(255),
-      setupuomodec varchar(255),
-      tempomacdec varchar(255),
-      tempouomodec varchar(255)
-      )
+      CREATE TABLE [dbo].[preventivirighi](
+      [id] [int] IDENTITY(1,1) NOT NULL,
+      [idpreventivo] [int] NULL,
+      [rowindex] [varchar](255) NULL,
+      [codicepadre] [varchar](255) NULL,
+      [codiceart] [varchar](255) NULL,
+      [codicecentro] [varchar](255) NULL,
+      [codicelav] [varchar](255) NULL,
+      [descrizione] [varchar](255) NULL,
+      [quantita] [varchar](255) NULL,
+      [um1] [varchar](255) NULL,
+      [quantita1] [varchar](255) NULL,
+      [um2] [varchar](255) NULL,
+      [quantita2] [varchar](255) NULL,
+      [um3] [varchar](255) NULL,
+      [quantita3] [varchar](255) NULL,
+      [setupmac] [varchar](255) NULL,
+      [setupuomo] [varchar](255) NULL,
+      [tempomac] [varchar](255) NULL,
+      [tempouomo] [varchar](255) NULL,
+      [costoart] [varchar](255) NULL,
+      [costoattmac] [varchar](255) NULL,
+      [costoattuomo] [varchar](255) NULL,
+      [costomac] [varchar](255) NULL,
+      [costouomo] [varchar](255) NULL,
+      [totale] [varchar](255) NULL,
+      [totalevar] [varchar](255) NULL,
+      [setupmacdec] [varchar](255) NULL,
+      [setupuomodec] [varchar](255) NULL,
+      [tempomacdec] [varchar](255) NULL,
+      [tempouomodec] [varchar](255) NULL,
+      PRIMARY KEY CLUSTERED
+      (
+      [id] ASC
+      )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+      ) ON [PRIMARY]
     </CreateTablePreventiviRighi>
     <CreateTableUtenti>
       CREATE TABLE preventiviLogin(
@@ -136,10 +147,10 @@
     <!--Usa questo articolo per fare le prove:
     SB02AL1505.0-1_02: una sola lavorazione e SB02AL1505.0ANELLO: due lavorazioni e un solo materiale-->
     <!--<DistintaBase>
-      select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro], distintabase.[Quantita` 1],
+      select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro], distintabase.[Qta 1],
       distintabase.[Setup Mac], distintabase.[Setup Uomo], distintabase.[Tempo Mac], distintabase.[Tempo Uomo], distintabase.[Costo Art], distintabase.[Costo Att Mac], distintabase.[Costo Att Uomo], distintabase.[Costo Mac], distintabase.[Costo Uomo], distintabase.Totale, distintabase.[Totale + %Var],
       distintabase.[setup mac decimale], distintabase.[setup uomo decimale], distintabase.[tempo mac decimale], distintabase.[tempo uomo decimale] from(
-      (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Quantita` 1',
+      (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Qta 1',
       '' AS 'Setup Mac',  '' AS 'Setup Uomo',
       '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',
       replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var',
@@ -157,11 +168,11 @@
     </DistintaBase>-->
     <DistintaBase>
       select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro], 
-	  distintabase.[UM 1], distintabase.[Quantita` 1], distintabase.[UM 2], distintabase.[Qta 2], distintabase.[UM 3], distintabase.[Qta 3],
+      '' as "Quantità", distintabase.[UM 1], distintabase.[Qta 1], distintabase.[UM 2], distintabase.[Qta 2], distintabase.[UM 3], distintabase.[Qta 3],
       distintabase.[Setup Mac], distintabase.[Setup Uomo], distintabase.[Tempo Mac], distintabase.[Tempo Uomo], distintabase.[Costo Art], distintabase.[Costo Att Mac], distintabase.[Costo Att Uomo], distintabase.[Costo Mac], distintabase.[Costo Uomo], distintabase.Totale, distintabase.[Totale + %Var],
       distintabase.[setup mac decimale], distintabase.[setup uomo decimale], distintabase.[tempo mac decimale], distintabase.[tempo uomo decimale] from(
       (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  
-	  md_quantump AS 'Quantita` 1', ar_unmis AS 'UM 1', IIF(ar_conver = 0, '', REPLACE(CAST(ar_conver AS varchar), '.', ',')) AS 'Qta 2', ISNULL(ar_unmis2, '') AS 'UM 2', IIF(ar_qtacon2 = 0, '', REPLACE(CAST(ar_qtacon2 AS varchar), '.', ',')) AS 'Qta 3', ISNULL(ar_confez2, '') AS 'UM 3',
+      IIF(md_quantump = 0, '', REPLACE(CAST(md_quantump AS varchar), '.', ','))AS 'Qta 1', ar_unmis AS 'UM 1', IIF(ar_conver = 0, '', REPLACE(CAST(ar_conver AS varchar), '.', ',')) AS 'Qta 2', ISNULL(ar_unmis2, '') AS 'UM 2', IIF(ar_qtacon2 = 0, '', REPLACE(CAST(ar_qtacon2 AS varchar), '.', ',')) AS 'Qta 3', ISNULL(ar_confez2, '') AS 'UM 3',
       '' AS 'Setup Mac',  '' AS 'Setup Uomo',
       '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',
       replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var',
@@ -170,7 +181,7 @@
       from movdis left join artico on md_codfigli=ar_codart  left join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' and (apx_fase = 999 or apx_fase = 0 or apx_fase IS NULL))
       UNION
       (select dd_fase AS riga, dd_coddb AS 'Codice Padre', '' AS 'CODICE ART', cast(dd_codcent as varchar) as 'Codice Centro', cast(dd_codlavo as varchar) AS CODICE_LAV, tb_deslavo + ' - ' + tb_descent AS DESCRIZIONE_ART__CENTRO_DI_LAVORO,
-	  1 AS QUANTITA, 'NR' AS UM1, '' AS QUANTITA2, '' AS UM2, '' AS QUANTITA3, '' AS UM3,
+      '1,00' AS QUANTITA, 'NR' AS UM1, '' AS QUANTITA2, '' AS UM2, '' AS QUANTITA3, '' AS UM3,
       '' AS SETUP_MAC, ''  AS SETUP_UOMO,
       '' AS TEMPO_MAC, '' AS TEMPO_UOMO,
       '' AS COSTO_ART, replace(cast(tb_cmacoratt as varchar), '.', ',') AS COSTO_ATT_MACC, replace(cast(tb_pagaoratt as varchar), '.', ',') AS COSTO_ATT_UOMO, replace(cast(tb_cmacora as varchar), '.', ',') AS COSTO_MACC, replace(cast(tb_pagaora as varchar), '.', ',') AS COSTO_UOMO,
@@ -187,13 +198,14 @@
     </LavorazioneEsterna>
     <CercaArticolo>
       select '' AS 'Rigo', '' AS 'Codice Padre', ar_codart AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',
-      '' AS 'UM 1', cast(0 as float) AS 'Quantita` 1', '' AS 'UM 2', cast('' as varchar) AS 'Qta 2', '' AS 'UM 3', cast('' as varchar) AS 'Qta 3', '' AS 'Setup Mac',  '' AS 'Setup Uomo',
+      '' AS 'Quantità', '' AS 'UM 1', cast('' as VARCHAR) AS 'Qta 1', '' AS 'UM 2', cast('' as varchar) AS 'Qta 2', '' AS 'UM 3', cast('' as varchar) AS 'Qta 3', '' AS 'Setup Mac',  '' AS 'Setup Uomo', 
       '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',  replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var',
       '' AS 'setup mac decimale', '' AS 'setup uomo decimale', '' AS 'tempo mac decimale', '' AS 'tempo uomo decimale'
       from artico left join artprox on ar_codart=apx_codart where ar_codart = '@CodArticolo'
     </CercaArticolo>
     <CercaLavorazione>
-      select '' AS 'Rigo', '' AS 'Codice Padre', '' AS 'Codice Art', '' as 'Codice Centro', cast(tb_codlavo as varchar) AS 'Codice Lav', tb_deslavo + ' - ' 'Descrizione art / Centro di Lavoro', '' AS 'UM 1', 1 AS 'Quantita` 1', '0' AS 'Setup Mac', '0'  AS 'Setup Uomo',
+      select '' AS 'Rigo', '' AS 'Codice Padre', '' AS 'Codice Art', '' as 'Codice Centro', cast(tb_codlavo as varchar) AS 'Codice Lav', tb_deslavo + ' - ' 'Descrizione art / Centro di Lavoro','1' AS 'Quantità', '' AS 'UM 1', '1' AS 'Qta 1',
+      '' AS 'UM 2', '1' AS 'Qta 2', '' AS 'UM 3', '1' AS 'Qta 3', '0' AS 'Setup Mac', '0'  AS 'Setup Uomo',
       '0' AS 'Tempo Mac', '0' AS 'Tempo Uomo', '' AS  'Costo Art','0' AS 'Costo Att Mac', '0' AS  'Costo Att Uomo', '0' AS 'Costo Mac', '0' AS  'Costo Uomo',
       '0' as 'Totale', '0' as 'Totale + %Var', '0' AS 'setup mac decimale', '0' AS 'setup uomo decimale', '0' AS 'tempo mac decimale', '0' AS 'tempo uomo decimale'
       from tablavo where tb_codlavo = '@CodLav'
@@ -234,7 +246,7 @@
   <FO>Arial-10</FO>
   
   <!-- se TRUE esegue l'apertura del pdf con il foxitreade... altrimenti utilizza il programma predefinito-->
-  <FoxitReader>FALSE</FoxitReader>
+  <FoxitReader>TRUE</FoxitReader>
 
   <!-- se TRUE mostra dei messaggi per monitorare la tempistica delle operazioni per esplosione distinta e cambio quantità-->
   <DebugTempo>false</DebugTempo>
@@ -258,6 +270,6 @@
        "DisplayedCellsExceptHeader" = L'altezza delle righe viene modificata in base al contenuto di tutte le celle nelle righe attualmente visualizzate, escluse le celle di intestazione. 
        "DisplayedHeaders" = L'altezza delle righe viene modificata in base al contenuto dell'intestazione delle righe attualmente visualizzate.
        "None" = L'altezza delle righe non viene modificata automaticamente.-->
-  <AutoSizeRowsMode></AutoSizeRowsMode >
+  <AutoSizeRowsMode>None</AutoSizeRowsMode >
 </configuration>
 

@@ -207,10 +207,10 @@ namespace PreventivazioneRapida
                 sqlserverConn.Open();
                 int idpreventivo = 0, idpreventivoass = 0;
                 //Prima query utilizzata per il salvataggio dei dati della testata del preventivo.
-                string queryTestata = "INSERT INTO preventivi (utente, cliente, desccliente, articolo, descarticolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note, QImateriaprima,QIcostomac, QIcostouomo, QIcostosingolo, QIricavosingolo, quantita1, costoMacchina1, costoUomo1, costoMateriali1, costoSingolo1, ricavoSingolo1, costoTotale1, ricavoTotale1, quantita2, costoMacchina2, costoUomo2, costoMateriali2, costoSingolo2, ricavoSingolo2, costoTotale2, ricavoTotale2, quantita3, costoMacchina3, costoUomo3, costoMateriali3, costoSingolo3, ricavoSingolo3, costoTotale3, ricavoTotale3) VALUES ('"
+                string queryTestata = "INSERT INTO preventivi (utente, cliente, desccliente, articolo, descarticolo, quantita, variazione, variazionelav, totale, totalevar, datacreazione, note, QImateriaprima,QIcostomac, QIcostouomo, QIcostosingolo, QIricavosingolo, textBoxRicavoTotale, quantita1, costoMacchina1, costoUomo1, costoMateriali1, costoSingolo1, ricavoSingolo1, costoTotale1, ricavoTotale1, quantita2, costoMacchina2, costoUomo2, costoMateriali2, costoSingolo2, ricavoSingolo2, costoTotale2, ricavoTotale2, quantita3, costoMacchina3, costoUomo3, costoMateriali3, costoSingolo3, ricavoSingolo3, costoTotale3, ricavoTotale3) VALUES ('"
                     + valoriTestata[15] + "', '" + valoriTestata[0] + "', '" + valoriTestata[13] + "', '" + valoriTestata[1] + "', '" + valoriTestata[14] + "', " + valoriTestata[2].Replace(',','.') + ", " + valoriTestata[3].Replace(',', '.') + ", " + valoriTestata[4].Replace(',', '.') + ", " 
                     + valoriTestata[5].Replace(',', '.') + ", " + valoriTestata[6].Replace(',', '.') + ", CURRENT_TIMESTAMP, '" + valoriTestata[7] + "', " + valoriTestata[8].Replace(',', '.') + "," + valoriTestata[9].Replace(',', '.') + ", " + valoriTestata[10].Replace(',', '.') + ", " 
-                    + valoriTestata[11].Replace(',', '.') + ", " + valoriTestata[12].Replace(',', '.') + ", "
+                    + valoriTestata[11].Replace(',', '.') + ", " + valoriTestata[12].Replace(',', '.') + ", " + valoriTestata[40].Replace(',', '.') + ", " 
                     + valoriTestata[16].Replace(',', '.') + ", " + valoriTestata[17].Replace(',', '.') + ", " + valoriTestata[18].Replace(',', '.') + ", " + valoriTestata[19].Replace(',', '.') + ", " + valoriTestata[20].Replace(',', '.') + ", " + valoriTestata[21].Replace(',', '.') + ", " + valoriTestata[22].Replace(',', '.') + ", " + valoriTestata[23].Replace(',', '.') + ", "
                     + valoriTestata[24].Replace(',', '.') + ", " + valoriTestata[25].Replace(',', '.') + ", " + valoriTestata[26].Replace(',', '.') + ", " + valoriTestata[27].Replace(',', '.') + ", " + valoriTestata[28].Replace(',', '.') + ", " + valoriTestata[29].Replace(',', '.') + ", " + valoriTestata[30].Replace(',', '.') + ", " + valoriTestata[31].Replace(',', '.') + ", "
                     + valoriTestata[32].Replace(',', '.') + ", " + valoriTestata[33].Replace(',', '.') + ", " + valoriTestata[34].Replace(',', '.') + ", " + valoriTestata[35].Replace(',', '.') + ", " + valoriTestata[36].Replace(',', '.') + ", " + valoriTestata[37].Replace(',', '.') + ", " + valoriTestata[38].Replace(',', '.') + ", " + valoriTestata[39].Replace(',', '.') 
@@ -231,10 +231,10 @@ namespace PreventivazioneRapida
                 //Quindi scorro il dataset e salvo nel database (tabella dei righi) tutte le righe che sono visualizzate nella datagrid della form, e quindi presenti nel dataset.
                 foreach (DataRow row in ds.Tables["DistintaBase"].Rows)
                 {
-                    string queryRighi = "INSERT INTO preventivirighi (idpreventivo, rowindex, codicepadre, codiceart, codicecentro, codicelav, descrizione, um1, quantita1, um2, quantita2, um3, quantita3, setupmac, setupuomo, tempomac, tempouomo, costoart" +
+                    string queryRighi = "INSERT INTO preventivirighi (idpreventivo, rowindex, codicepadre, codiceart, codicecentro, codicelav, descrizione, quantita, um1, quantita1, um2, quantita2, um3, quantita3, setupmac, setupuomo, tempomac, tempouomo, costoart" +
                     ", costoattmac, costoattuomo, costomac, costouomo, totale, totalevar, setupmacdec, setupuomodec, tempomacdec, tempouomodec) VALUES (" + idpreventivo + ", '" + row["Rigo"].ToString() + "', '" + row["Codice Padre"].ToString() + "', '" +
-                    row["CODICE ART"].ToString() + "', '" +row["Codice centro"].ToString() + "', '" + row["Codice lav"].ToString() + "', '" + row["Descrizione art / Centro di Lavoro"].ToString() + 
-                    "', '" + row["UM 1"].ToString() +"', '" + row["Quantita` 1"].ToString() + "', '" + row["UM 2"].ToString() + "', '" + row["Qta 2"].ToString() + "', '" + row["UM 3"].ToString() + "', '" + row["Qta 3"].ToString() +
+                    row["CODICE ART"].ToString() + "', '" +row["Codice centro"].ToString() + "', '" + row["Codice lav"].ToString() + "', '" + row["Descrizione art / Centro di Lavoro"].ToString() + "', '" + row["Quantità"].ToString() +
+                    "', '" + row["UM 1"].ToString() +"', '" + row["Qta 1"].ToString() + "', '" + row["UM 2"].ToString() + "', '" + row["Qta 2"].ToString() + "', '" + row["UM 3"].ToString() + "', '" + row["Qta 3"].ToString() +
                     "', '" + row["Setup Mac"].ToString() + "', '" + row["Setup Uomo"].ToString() + "', '" + row["Tempo Mac"].ToString() + "', '" + row["Tempo Uomo"].ToString() +
                     "', '" + row["Costo Art"].ToString() + "', '" + row["Costo Att Mac"].ToString() + "', '" + row["Costo Att Uomo"].ToString() + "', '" + row["Costo Mac"].ToString() +
                     "', '" + row["Costo Uomo"].ToString() + "', '" + row["Totale"].ToString() + "', '" + row["Totale + %Var"].ToString() +
@@ -305,7 +305,7 @@ namespace PreventivazioneRapida
         public List<string> OttieniTestata(string idpreventivo)
         {
             List<string> testata = new List<string>();
-            string query = "select cliente, articolo, quantita, note, variazione, variazionelav, datacreazione, desccliente, descarticolo from preventivi where id = '" + idpreventivo + "'";
+            string query = "select cliente, articolo, quantita, note, variazione, variazionelav, datacreazione, desccliente, descarticolo, textBoxRicavoTotale from preventivi where id = '" + idpreventivo + "'";
             sqlserverConn.Open();
             using (SqlCommand cmd = new SqlCommand(query, sqlserverConn))
             {
@@ -322,6 +322,7 @@ namespace PreventivazioneRapida
                     testata.Add(dr[6].ToString());
                     testata.Add(dr[7].ToString());
                     testata.Add(dr[8].ToString());
+                    testata.Add(dr[9].ToString());
 
                 }
                 dr.Close();
@@ -341,8 +342,8 @@ namespace PreventivazioneRapida
             {
                 SqlDataAdapter da;
                 //sqlserverConn.Open();
-                string query = "SELECT rowindex as 'Rigo',codicepadre as 'Codice Padre',codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro'," +
-                    "um1 AS 'UM 1', quantita1 AS 'Quantita` 1', um2 AS 'UM 2', quantita2 AS 'Qta 2', um3 AS 'UM 3', quantita3 AS 'Qta 3', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
+                string query = "SELECT rowindex as 'Rigo',codicepadre as 'Codice Padre',codiceart AS 'Codice Art', codicecentro AS 'Codice Centro', codicelav AS 'Codice Lav', descrizione AS 'Descrizione art / Centro di Lavoro', quantita AS 'Quantità'," +
+                    "um1 AS 'UM 1', quantita1 AS 'Qta 1', um2 AS 'UM 2', quantita2 AS 'Qta 2', um3 AS 'UM 3', quantita3 AS 'Qta 3', setupmac AS 'Setup Mac', setupuomo AS 'Setup Uomo', tempomac AS 'Tempo Mac', tempouomo AS 'Tempo Uomo', costoart AS 'Costo Art', " +
                     "costoattmac AS 'Costo Att Mac', costoattuomo AS 'Costo Att Uomo'," +
                     "costomac AS 'Costo Mac', costouomo AS 'Costo Uomo', totale AS 'Totale', totalevar AS 'Totale + %Var', setupmacdec AS 'setup mac decimale', setupuomodec AS 'setup uomo decimale'," +
                     " tempomacdec AS 'tempo mac decimale', tempouomodec AS 'tempo uomo decimale'  FROM preventivirighi WHERE idpreventivo = "+Int32.Parse(idpreventivo);
@@ -688,7 +689,7 @@ namespace PreventivazioneRapida
                     outputFile.WriteLine("      <CostoSingolo>" + valoriTestata[11] + "</CostoSingolo>");
                     outputFile.WriteLine("      <RicavoSingolo>" + valoriTestata[12] + "</RicavoSingolo>");
                     outputFile.WriteLine("      <CostoTotale>" + valoriTestata[5] + "</CostoTotale>");
-                    outputFile.WriteLine("      <RicavoTotale>" + valoriTestata[6] + "</RicavoTotale>");
+                    outputFile.WriteLine("      <RicavoTotale>" + valoriTestata[40] + "</RicavoTotale>");
                     outputFile.WriteLine("      <Livello>" + row["Rigo"].ToString() + "</Livello>");
                     outputFile.WriteLine("      <Padre>" + row["Codice Padre"].ToString() + "</Padre>");
                     outputFile.WriteLine("      <Articolo>" + row["Codice Art"].ToString() + "</Articolo>");
@@ -696,7 +697,7 @@ namespace PreventivazioneRapida
                     outputFile.WriteLine("      <Lavorazione>" + row["Codice Lav"].ToString() + "</Lavorazione>");
                     outputFile.WriteLine("      <Descrizione>" + row["Descrizione art / Centro di Lavoro"].ToString().Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;") + "</Descrizione>");
                     outputFile.WriteLine("      <UM1>" + row["UM 1"].ToString() + "</UM1>");
-                    outputFile.WriteLine("      <QuantitaRigo1>" + row["Quantita` 1"].ToString() + "</QuantitaRigo1>");
+                    outputFile.WriteLine("      <QuantitaRigo1>" + row["Qta 1"].ToString() + "</QuantitaRigo1>");
                     outputFile.WriteLine("      <UM2>" + row["UM 2"].ToString() + "</UM2>");
                     outputFile.WriteLine("      <QuantitaRigo2>" + row["Qta 2"].ToString() + "</QuantitaRigo2>");
                     outputFile.WriteLine("      <UM3>" + row["UM 3"].ToString() + "</UM3>");
@@ -852,11 +853,9 @@ namespace PreventivazioneRapida
                 {
                     proc = Process.Start(nomePdf);
                 }
-
                 //p.WaitForExit();
-
                 //ATTENDO FINO A QUANDO IL FILE NON SARà PIU BLOCCATO
-                FileInfo fileInfo = new FileInfo(nomePdf);
+                /*FileInfo fileInfo = new FileInfo(nomePdf);
 
 
                 FileStream stream = null;
@@ -886,8 +885,9 @@ namespace PreventivazioneRapida
                     //ATTENDI .. SECONDI PER NON CICLARE TROPPE VOLTE INUTILMENTE
                     Thread.Sleep(1500);
                 }
+
                 proc.Close();
-                proc.Dispose();
+                proc.Dispose();*/
             }
 
             catch(Exception e)
@@ -895,9 +895,17 @@ namespace PreventivazioneRapida
                 MessageBox.Show(e.Message);
                 Environment.Exit(1);
             }
-
-
+            bool esci = false;
+            do
+            {
+                try
+                {
+                    Thread.Sleep(1000);
             File.Delete(nomePdf);
+                    esci = true;
+                }
+                catch { }
+            } while (!esci);
         }
     }
 }

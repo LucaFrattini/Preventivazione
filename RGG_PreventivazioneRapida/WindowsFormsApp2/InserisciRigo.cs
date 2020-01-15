@@ -150,11 +150,11 @@ namespace WindowsFormsApp2
                             {
                                 if (drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
                                 {
-                                    textBoxQuantita2.Text = (Double.Parse(t.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                                    textBoxQuantita2.Text = Math.Round(((Double.Parse(t.Text) * Double.Parse(drAgilis["ar_conver"].ToString()))), 4).ToString();
                                 }
                                 if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
                                 {
-                                    textBoxQuantita3.Text = (Double.Parse(t.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                                    textBoxQuantita3.Text = Math.Round(((Double.Parse(t.Text) * Double.Parse(drAgilis["ar_qtacon2"].ToString()))), 4).ToString();
                                 }
                             }                               
                         }
@@ -162,22 +162,22 @@ namespace WindowsFormsApp2
                         {
                             if (drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
                             {
-                                textBoxQuantita.Text = (Double.Parse(t.Text) / Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                                textBoxQuantita.Text = Math.Round(((Double.Parse(t.Text) / Double.Parse(drAgilis["ar_conver"].ToString()))), 4).ToString();
                             }
                             if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
                             {
-                                textBoxQuantita3.Text = (Double.Parse(textBoxQuantita.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                                textBoxQuantita3.Text = Math.Round(((Double.Parse(textBoxQuantita.Text) * Double.Parse(drAgilis["ar_qtacon2"].ToString()))), 4).ToString();
                             }
                         }
                         else if(t.Name == "textBoxQuantita3")
                         {
                             if (drAgilis["ar_qtacon2"].ToString() != "" && drAgilis["ar_qtacon2"].ToString() != "0")
                             {
-                                textBoxQuantita.Text = (Double.Parse(t.Text) * Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                                textBoxQuantita.Text = Math.Round(((Double.Parse(t.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString()))), 4).ToString();
                             }
                             if (drAgilis["ar_conver"].ToString() != "" && drAgilis["ar_conver"].ToString() != "0")
                             {
-                                textBoxQuantita2.Text = (Double.Parse(textBoxQuantita.Text) * Double.Parse(drAgilis["ar_conver"].ToString())).ToString();
+                                textBoxQuantita2.Text = Math.Round(((Double.Parse(textBoxQuantita.Text) * Double.Parse(drAgilis["ar_conver"].ToString()))), 4).ToString();
                             }
                         }
                         Double prova = double.Parse(t.Text);
@@ -464,7 +464,7 @@ namespace WindowsFormsApp2
                     else
                     {
                         textBoxUM3.Text = drAgilis["ar_confez2"].ToString();
-                        textBoxQuantita3.Text = (Double.Parse(textBoxQuantita.Text) / Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
+                        textBoxQuantita3.Text = (Double.Parse(textBoxQuantita.Text) * Double.Parse(drAgilis["ar_qtacon2"].ToString())).ToString();
                         textBoxUM3.Enabled = true;
                         textBoxQuantita3.Enabled = true;
                     }
@@ -640,8 +640,9 @@ namespace WindowsFormsApp2
                         SqlDataAdapter da = new SqlDataAdapter(query, connection);
                         da.Fill(datatable);
                         datarow = datatable.Rows[0];
+                        datarow["Quantità"] = textBoxQuantita.Text;
                         datarow["UM 1"] = textBoxUM.Text;
-                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantita.Text);
+                        datarow["Qta 1"] = textBoxQuantita.Text;
                         datarow["UM 2"] = textBoxUM2.Text;
                         datarow["Qta 2"] = textBoxQuantita2.Text;
                         datarow["UM 3"] = textBoxUM3.Text;
@@ -661,8 +662,9 @@ namespace WindowsFormsApp2
                         SqlDataAdapter da = new SqlDataAdapter(query, connection);
                         da.Fill(datatable);
                         datarow = datatable.Rows[0];
+                        datarow["Quantità"] = textBoxQuantita.Text;
                         datarow["UM 1"] = textBoxUM.Text;
-                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantita.Text); 
+                        datarow["Qta 1"] = textBoxQuantita.Text; 
                         connection = new SqlConnection(Setting.Istance.ConnStr);
                         connection.Open();
                         query = Setting.Istance.QueryCercaCentro.Replace("@CodCent", textBoxCentro.Text);
@@ -723,8 +725,9 @@ namespace WindowsFormsApp2
                         datatable.Columns.Add("Codice Centro");
                         datatable.Columns.Add("Codice Lav");
                         datatable.Columns.Add("Descrizione art / Centro di Lavoro");
+                        datatable.Columns.Add("Quantità");
                         datatable.Columns.Add("UM 1");
-                        datatable.Columns.Add("Quantita` 1");
+                        datatable.Columns.Add("Qta 1");
                         datatable.Columns.Add("UM 2");
                         datatable.Columns.Add("Qta 2");
                         datatable.Columns.Add("UM 3");
@@ -751,8 +754,9 @@ namespace WindowsFormsApp2
                         datarow["Codice Art"] = textBoxNome.Text;
                         datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
                         datarow["Costo Art"] = Double.Parse(textBoxCostoArticolo.Text);
+                        datarow["Quantità"] = textBoxQuantitaNuovo.Text;
                         datarow["UM 1"] = textBoxUMNuovo.Text;
-                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantitaNuovo.Text);
+                        datarow["Qta 1"] = textBoxQuantitaNuovo.Text;
                         datarow["UM 2"] = textBoxUM2Nuovo.Text;
                         datarow["Qta 2"] = textBoxQuantita2Nuovo.Text;
                         datarow["UM 3"] = textBoxUM3Nuovo.Text;
@@ -786,8 +790,9 @@ namespace WindowsFormsApp2
                         datatable.Columns.Add("Codice Centro");
                         datatable.Columns.Add("Codice Lav");
                         datatable.Columns.Add("Descrizione art / Centro di Lavoro");
+                        datatable.Columns.Add("Quantità");
                         datatable.Columns.Add("UM 1");
-                        datatable.Columns.Add("Quantita` 1");
+                        datatable.Columns.Add("Qta 1");
                         datatable.Columns.Add("UM 2");
                         datatable.Columns.Add("Qta 2");
                         datatable.Columns.Add("UM 3");
@@ -816,8 +821,9 @@ namespace WindowsFormsApp2
                         datarow["Codice Centro"] = Double.Parse(textBoxCostoArticolo.Text);
                         datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
                         datarow["Costo Art"] = "";
+                        datarow["Quantità"] = textBoxQuantitaNuovo.Text;
                         datarow["UM 1"] = textBoxUMNuovo.Text;
-                        datarow["Quantita` 1"] = Double.Parse(textBoxQuantitaNuovo.Text);
+                        datarow["Qta 1"] = textBoxQuantitaNuovo.Text;
                         datarow["UM 2"] = "";
                         datarow["Qta 2"] = "";
                         datarow["UM 3"] = "";
@@ -850,8 +856,9 @@ namespace WindowsFormsApp2
                         datatable.Columns.Add("Codice Centro");
                         datatable.Columns.Add("Codice Lav");
                         datatable.Columns.Add("Descrizione art / Centro di Lavoro");
+                        datatable.Columns.Add("Quantità");
                         datatable.Columns.Add("UM 1");
-                        datatable.Columns.Add("Quantita` 1");
+                        datatable.Columns.Add("Qta 1");
                         datatable.Columns.Add("UM 2");
                         datatable.Columns.Add("Qta 2");
                         datatable.Columns.Add("UM 3");
@@ -879,8 +886,9 @@ namespace WindowsFormsApp2
                         datarow["Codice Art"] = textBoxDescrizione.Text;
                         datarow["Descrizione art / Centro di Lavoro"] = textBoxDescrizione.Text;
                         datarow["Codice Centro"] = textBoxCostoArticolo.Text;
+                        datarow["Quantità"] = textBoxQuantitaNuovo.Text;
                         datarow["UM 1"] = textBoxUMNuovo.Text;
-                        datarow["Quantita` 1"] = textBoxQuantitaNuovo.Text;
+                        datarow["Qta 1"] = textBoxQuantitaNuovo.Text;
                         datarow["UM 2"] = "";
                         datarow["Qta 2"] = "";
                         datarow["UM 3"] = "";

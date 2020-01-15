@@ -51,5 +51,10 @@ namespace Preventivazione_RGG
             f.EsplodiDistintaBaseThread(padre);
         }
        
+        public void AssociaImmagine()
+        {
+            f.EsplodiDistintaBaseThread(padre);
+        }
+
     }
 }

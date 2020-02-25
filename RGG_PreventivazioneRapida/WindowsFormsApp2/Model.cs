@@ -768,7 +768,7 @@ namespace PreventivazioneRapida
                 return;
             }
             DataSet dataSet = new DataSet();
-            dataSet.ReadXml("StampaPreventivoRGG.xml");
+            dataSet.ReadXml(fileSTAMPA);
             localReport.DataSources.Add(new ReportDataSource("DataSet1", dataSet.Tables[0]));
             Export(localReport);
 

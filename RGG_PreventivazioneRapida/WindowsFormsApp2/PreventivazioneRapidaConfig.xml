@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-  <ip>LUCA</ip>
+  <ip>10.32.11.73</ip>
   <port>1434</port><!-- la porta non viene presa per il momento-->
   <database>RGG</database>
   <user>sa</user>
@@ -143,35 +143,13 @@
     <CodDistintaBase>
       SELECT  ar_coddb FROM artico WHERE ar_codart = '@articolo' AND ar_coddb IS NOT NULL
     </CodDistintaBase>
-    <!--Query per popolare la datagrid del programma. Rinominare le colonne con un "as" per avere la giusta intestazione anche nella datagrid.-->
-    <!--Usa questo articolo per fare le prove:
-    SB02AL1505.0-1_02: una sola lavorazione e SB02AL1505.0ANELLO: due lavorazioni e un solo materiale-->
-    <!--<DistintaBase>
-      select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro], distintabase.[Qta 1],
-      distintabase.[Setup Mac], distintabase.[Setup Uomo], distintabase.[Tempo Mac], distintabase.[Tempo Uomo], distintabase.[Costo Art], distintabase.[Costo Att Mac], distintabase.[Costo Att Uomo], distintabase.[Costo Mac], distintabase.[Costo Uomo], distintabase.Totale, distintabase.[Totale + %Var],
-      distintabase.[setup mac decimale], distintabase.[setup uomo decimale], distintabase.[tempo mac decimale], distintabase.[tempo uomo decimale] from(
-      (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  md_quantump AS 'Qta 1',
-      '' AS 'Setup Mac',  '' AS 'Setup Uomo',
-      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',
-      replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var',
-      '' AS 'setup mac decimale',  '' AS 'setup uomo decimale',
-      '' AS 'tempo mac decimale',  '' AS 'tempo uomo decimale'
-      from movdis left join artico on md_codfigli=ar_codart  left join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' and (apx_fase = 999 or apx_fase = 0 or apx_fase IS NULL))
-      UNION
-      (select dd_fase AS riga, dd_coddb AS 'Codice Padre', '' AS 'CODICE ART', cast(dd_codcent as varchar) as 'Codice Centro', cast(dd_codlavo as varchar) AS CODICE_LAV, tb_deslavo + ' - ' + tb_descent AS DESCRIZIONE_ART__CENTRO_DI_LAVORO, 1 AS QUANTITA,
-      '' AS SETUP_MAC, ''  AS SETUP_UOMO,
-      '' AS TEMPO_MAC, '' AS TEMPO_UOMO,
-      '' AS COSTO_ART, replace(cast(tb_cmacoratt as varchar), '.', ',') AS COSTO_ATT_MACC, replace(cast(tb_pagaoratt as varchar), '.', ',') AS COSTO_ATT_UOMO, replace(cast(tb_cmacora as varchar), '.', ',') AS COSTO_MACC, replace(cast(tb_pagaora as varchar), '.', ',') AS COSTO_UOMO,
-      '0' as Totale, '0' as TotaleVar, replace(cast(dd_tempatt as varchar), '.', ',') AS 'setup mac decimale', replace(cast(dd_tempattmo as varchar), '.', ',')  AS 'setup uomo decimale',
-      replace(cast(dd_tempese as varchar), '.', ',') AS 'tempo ma decimale', replace(cast(dd_tempesemo as varchar), '.', ',') AS 'tempo uomo decimale'
-      from cicli join tablavo on dd_codlavo=tb_codlavo  join tabcent on dd_codcent=tb_codcent where dd_coddb = '@CodDistBase')) as distintabase order by riga ASC
-    </DistintaBase>-->
     <DistintaBase>
-      select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro], 
+      <!--
+      select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro],
       '' as "Quantità", distintabase.[UM 1], distintabase.[Qta 1], distintabase.[UM 2], distintabase.[Qta 2], distintabase.[UM 3], distintabase.[Qta 3],
       distintabase.[Setup Mac], distintabase.[Setup Uomo], distintabase.[Tempo Mac], distintabase.[Tempo Uomo], distintabase.[Costo Art], distintabase.[Costo Att Mac], distintabase.[Costo Att Uomo], distintabase.[Costo Mac], distintabase.[Costo Uomo], distintabase.Totale, distintabase.[Totale + %Var],
       distintabase.[setup mac decimale], distintabase.[setup uomo decimale], distintabase.[tempo mac decimale], distintabase.[tempo uomo decimale] from(
-      (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',  
+      (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',
       IIF(md_quantump = 0, '', REPLACE(CAST(md_quantump AS varchar), '.', ','))AS 'Qta 1', ar_unmis AS 'UM 1', IIF(ar_conver = 0, '', REPLACE(CAST(ar_conver AS varchar), '.', ',')) AS 'Qta 2', ISNULL(ar_unmis2, '') AS 'UM 2', IIF(ar_qtacon2 = 0, '', REPLACE(CAST(ar_qtacon2 AS varchar), '.', ',')) AS 'Qta 3', ISNULL(ar_confez2, '') AS 'UM 3',
       '' AS 'Setup Mac',  '' AS 'Setup Uomo',
       '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',
@@ -188,6 +166,29 @@
       '0' as Totale, '0' as TotaleVar, replace(cast(dd_tempatt as varchar), '.', ',') AS 'setup mac decimale', replace(cast(dd_tempattmo as varchar), '.', ',')  AS 'setup uomo decimale',
       replace(cast(dd_tempese as varchar), '.', ',') AS 'tempo ma decimale', replace(cast(dd_tempesemo as varchar), '.', ',') AS 'tempo uomo decimale'
       from cicli join tablavo on dd_codlavo=tb_codlavo  join tabcent on dd_codcent=tb_codcent where dd_coddb = '@CodDistBase')) as distintabase order by riga ASC
+      -->
+      select cast(ROW_NUMBER()OVER(ORDER BY distintabase.[Codice Padre]) as varchar) as Rigo, distintabase.[Codice Padre], distintabase.[Codice Art], distintabase.[Codice Centro], distintabase.[Codice Lav], distintabase.[Descrizione art / Centro di Lavoro],
+      '' as "Quantità", distintabase.[UM 1], distintabase.[Qta 1], distintabase.[UM 2], distintabase.[Qta 2], distintabase.[UM 3], distintabase.[Qta 3],
+      distintabase.[Setup Mac], distintabase.[Setup Uomo], distintabase.[Tempo Mac], distintabase.[Tempo Uomo], distintabase.[Costo Art], distintabase.[Costo Att Mac], distintabase.[Costo Att Uomo], distintabase.[Costo Mac], distintabase.[Costo Uomo], distintabase.Totale, distintabase.[Totale + %Var],
+      distintabase.[setup mac decimale], distintabase.[setup uomo decimale], distintabase.[tempo mac decimale], distintabase.[tempo uomo decimale] from(
+      (select 9999+md_riga AS riga, md_coddb AS 'Codice Padre', md_codfigli AS 'Codice Art', '' as 'Codice Centro', '' AS 'Codice Lav', ar_descr AS 'Descrizione art / Centro di Lavoro',
+      IIF(md_quantump = 0, '', REPLACE(CAST(md_quantump AS varchar), '.', ','))AS 'Qta 1', ar_unmis AS 'UM 1', IIF(ar_qtacon2 = 0, '', REPLACE(CAST(ar_qtacon2 AS varchar), '.', ',')) AS 'Qta 2', ISNULL(ar_confez2, '') AS 'UM 2', IIF(ar_conver = 0, '', REPLACE(CAST(ar_conver AS varchar), '.', ',')) AS 'Qta 3', ISNULL(ar_unmis2, '') AS 'UM 3',
+      '' AS 'Setup Mac',  '' AS 'Setup Uomo',
+      '' AS 'Tempo Mac',  '' AS 'Tempo Uomo',
+      replace(cast(ISNULL(apx_ultcos, 0) as varchar), '.', ',') AS 'Costo Art',  '' AS 'Costo Att Mac',  '' AS 'Costo Att Uomo',  '' AS 'Costo Mac',  '' AS 'Costo Uomo',  '0' as 'Totale',  '0' as 'Totale + %Var',
+      '' AS 'setup mac decimale',  '' AS 'setup uomo decimale',
+      '' AS 'tempo mac decimale',  '' AS 'tempo uomo decimale'
+      from movdis left join artico on md_codfigli=ar_codart  left join artprox on ar_codart=apx_codart where md_coddb = '@CodDistBase' and (apx_fase = 999 or apx_fase = 0 or apx_fase IS NULL))
+      UNION
+      (select dd_fase AS riga, dd_coddb AS 'Codice Padre', '' AS 'CODICE ART', cast(dd_codcent as varchar) as 'Codice Centro', cast(dd_codlavo as varchar) AS CODICE_LAV, tb_deslavo + ' - ' + tb_descent AS DESCRIZIONE_ART__CENTRO_DI_LAVORO,
+      '1,00' AS QUANTITA, 'NR' AS UM1, '' AS QUANTITA2, '' AS UM2, '' AS QUANTITA3, '' AS UM3,
+      '' AS SETUP_MAC, ''  AS SETUP_UOMO,
+      '' AS TEMPO_MAC, '' AS TEMPO_UOMO,
+      '' AS COSTO_ART, replace(cast(tb_cmacoratt as varchar), '.', ',') AS COSTO_ATT_MACC, replace(cast(tb_pagaoratt as varchar), '.', ',') AS COSTO_ATT_UOMO, replace(cast(tb_cmacora as varchar), '.', ',') AS COSTO_MACC, replace(cast(tb_pagaora as varchar), '.', ',') AS COSTO_UOMO,
+      '0' as Totale, '0' as TotaleVar, replace(cast(dd_tempatt as varchar), '.', ',') AS 'setup mac decimale', replace(cast(dd_tempattmo as varchar), '.', ',')  AS 'setup uomo decimale',
+      replace(cast(dd_tempese as varchar), '.', ',') AS 'tempo ma decimale', replace(cast(dd_tempesemo as varchar), '.', ',') AS 'tempo uomo decimale'
+      from cicli join tablavo on dd_codlavo=tb_codlavo  join tabcent on dd_codcent=tb_codcent where dd_coddb = '@CodDistBase')) as distintabase order by riga ASC
+
     </DistintaBase>
     <LavorazioneEsterna>
       select lc_prezzo from cicli
